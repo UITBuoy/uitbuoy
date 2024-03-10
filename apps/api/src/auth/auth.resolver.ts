@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { CurrentUser } from './decorators/current-user.decorator';
+import { User } from 'src/user/entities/user.entity';
 
 @Resolver(() => AuthEntity)
 export class AuthResolver {
@@ -13,7 +14,7 @@ export class AuthResolver {
         private readonly jwtService: JwtService,
     ) {}
 
-    @Query(() => AuthEntity, { name: 'login' })
+    @Query(() => AuthEntity)
     async login(
         @Args('username', { type: () => String }) username: string,
         @Args('password', { type: () => String }) password: string,
@@ -23,19 +24,16 @@ export class AuthResolver {
         );
         return {
             access_token: this.jwtService.sign({
+                ...data,
                 sub: data.username,
-                id: data.id,
-                fullname: data.fullname,
-                email: data.email,
-                username: data.username,
             }),
             ...data,
         };
     }
 
-    @Query(() => AuthEntity)
+    @Query(() => User)
     @UseGuards(JwtAuthGuard)
-    whoAmI(@CurrentUser() user: AuthEntity) {
+    profile(@CurrentUser() user: User) {
         return user;
     }
 }

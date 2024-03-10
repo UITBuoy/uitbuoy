@@ -28,8 +28,7 @@ type AuthEntity {
 
 type Query {
   login(password: String!, username: String!): AuthEntity!
-  user(id: Int!): User!
-  whoAmI: AuthEntity!
+  profile: User!
 }
 
 type User {
@@ -51,6 +50,7 @@ type User {
   suspended: String
   theme: String
   timezone: String
+  token: String!
   username: String!
 }
 

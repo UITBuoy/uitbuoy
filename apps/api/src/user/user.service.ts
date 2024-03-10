@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import axios from 'axios';
 import { ApiService } from 'src/api/api.service';
-import WS_FUNCTION from 'src/common/constants/function-name';
 
 @Injectable()
 export class UserService {

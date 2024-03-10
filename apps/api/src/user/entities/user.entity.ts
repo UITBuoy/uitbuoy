@@ -59,6 +59,9 @@ export class User {
     @Field(() => [UserPreference])
     preferences: UserPreference[];
 
+    @Field()
+    token: string;
+
     constructor(data: any) {
         this.id = data.id;
         this.username = data.username;
@@ -79,6 +82,7 @@ export class User {
         this.theme = data.theme;
         this.timezone = data.timezone;
         this.preferences = data.preferences;
+        this.token = data.token;
     }
 }
 

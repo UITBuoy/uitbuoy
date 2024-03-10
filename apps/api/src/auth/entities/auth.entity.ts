@@ -4,9 +4,6 @@ import { User } from 'src/user/entities/user.entity';
 @ObjectType()
 export class AuthEntity extends User {
     @Field()
-    token: string;
-
-    @Field()
     access_token: string;
 
     constructor(data: any) {
