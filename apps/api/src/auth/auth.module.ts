@@ -7,15 +7,15 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthResolver } from './auth.resolver';
 
 @Module({
-  imports: [
-    UserModule,
-    PassportModule,
-    JwtModule.register({
-      secret: 'secret',
-      signOptions: { expiresIn: '60s' },
-    }),
-  ],
-  providers: [AuthService, JwtStrategy, AuthResolver],
-  exports: [AuthService],
+    imports: [
+        UserModule,
+        PassportModule,
+        JwtModule.register({
+            secret: 'secret',
+            signOptions: { expiresIn: '60m' },
+        }),
+    ],
+    providers: [AuthService, JwtStrategy, AuthResolver],
+    exports: [AuthService],
 })
 export class AuthModule {}

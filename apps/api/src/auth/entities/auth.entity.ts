@@ -1,16 +1,16 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { User } from 'src/user/entities/user.entity';
 
 @ObjectType()
-export class AuthEntity {
-  @Field()
-  token: string;
+export class AuthEntity extends User {
+    @Field()
+    token: string;
 
-  @Field()
-  id: string;
+    @Field()
+    access_token: string;
 
-  @Field()
-  username: string;
-
-  @Field()
-  fullname: string;
+    constructor(data: any) {
+        super(data);
+        this.token = data.token;
+    }
 }

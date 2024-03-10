@@ -3,8 +3,25 @@
 # ------------------------------------------------------
 
 type AuthEntity {
+  access_token: String!
+  auth: String
+  city: String
+  confirmed: String
+  country: String
+  department: String
+  email: String!
+  firstaccess: Int
   fullname: String!
-  id: String!
+  id: Int!
+  lang: String
+  lastaccess: Int
+  mailformat: Float
+  preferences: [UserPreference!]!
+  profileimageurl: String
+  profileimageurlsmall: String
+  suspended: String
+  theme: String
+  timezone: String
   token: String!
   username: String!
 }
@@ -12,9 +29,32 @@ type AuthEntity {
 type Query {
   login(password: String!, username: String!): AuthEntity!
   user(id: Int!): User!
+  whoAmI: AuthEntity!
 }
 
 type User {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  auth: String
+  city: String
+  confirmed: String
+  country: String
+  department: String
+  email: String!
+  firstaccess: Int
+  fullname: String!
+  id: Int!
+  lang: String
+  lastaccess: Int
+  mailformat: Float
+  preferences: [UserPreference!]!
+  profileimageurl: String
+  profileimageurlsmall: String
+  suspended: String
+  theme: String
+  timezone: String
+  username: String!
+}
+
+type UserPreference {
+  name: String!
+  value: String!
 }
