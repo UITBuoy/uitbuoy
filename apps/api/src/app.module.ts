@@ -1,14 +1,16 @@
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
+import { APP_FILTER } from '@nestjs/core';
+import { GraphQLModule } from '@nestjs/graphql';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { join } from 'path';
+import { ApiModule } from './api/api.module';
+import { ApiService } from './api/api.service';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { join } from 'path';
-import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
-import { ApiService } from './api/api.service';
-import { ApiModule } from './api/api.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserModule } from './user/user.module';
+import { BaseExceptionFilter } from './common/filters/base-exception.filter';
 
 @Module({
     imports: [
@@ -17,6 +19,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
             autoSchemaFile: join(process.cwd(), '/schema.gql'),
             playground: true,
             sortSchema: true,
+            formatError: (error) => ({
+                message: error.message,
+                ...error.extensions,
+                path: error.path,
+            }),
         }),
         TypeOrmModule.forRoot({
             type: 'postgres',
@@ -33,6 +40,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         ApiModule,
     ],
     controllers: [AppController],
-    providers: [AppService, ApiService],
+    providers: [
+        AppService,
+        ApiService,
+        {
+            provide: APP_FILTER,
+            useClass: BaseExceptionFilter,
+        },
+    ],
 })
 export class AppModule {}

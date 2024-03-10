@@ -18,28 +18,27 @@ export class AuthService {
 
         if (response.status != 200) {
             throw new Error('User not found');
-        } else {
-            const userDataFromDB =
-                await this.userService.findByUsername(username);
+        }
 
-            if (!userDataFromDB) {
-                const userData = await this.apiService.getUserProfile({
-                    username,
-                    token: response.data.token,
-                });
+        const userDataFromDB = await this.userService.findByUsername(username);
 
-                await this.userService.create(userData);
-
-                return {
-                    token: response.data.token,
-                    ...userData,
-                };
-            }
-
+        if (userDataFromDB) {
             return {
                 token: response.data.token,
                 ...userDataFromDB,
             };
         }
+
+        const userData = await this.apiService.getUserProfile({
+            username,
+            token: response.data.token,
+        });
+
+        await this.userService.create(userData);
+
+        return {
+            token: response.data.token,
+            ...userData,
+        };
     }
 }
