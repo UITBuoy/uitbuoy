@@ -1,68 +1,90 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @ObjectType()
+@Entity()
 export class User {
-    @Field(() => Int)
+    @Field(() => Int, { nullable: true })
+    @Column()
     id: number;
 
-    @Field()
+    @Field(() => String)
+    @PrimaryColumn()
     username: string;
 
-    @Field()
+    @Field(() => String)
+    @Column()
     fullname: string;
 
-    @Field()
+    @Field(() => String)
+    @Column()
     email: string;
 
-    @Field({ nullable: true })
+    @Field(() => String, { nullable: true })
+    @Column()
     department: string;
 
     @Field(() => Int, { nullable: true })
+    @Column()
     firstaccess: number;
 
     @Field(() => Int, { nullable: true })
+    @Column()
     lastaccess: number;
 
-    @Field({ nullable: true })
+    @Field(() => String, { nullable: true })
+    @Column()
     auth: string;
 
-    @Field({ nullable: true })
+    @Field(() => String, { nullable: true })
+    @Column()
     suspended: string;
 
-    @Field({ nullable: true })
+    @Field(() => String, { nullable: true })
+    @Column()
     confirmed: string;
 
-    @Field({ nullable: true })
+    @Field(() => String, { nullable: true })
+    @Column()
     lang: string;
 
-    @Field({ nullable: true })
+    @Field(() => String, { nullable: true })
+    @Column()
     theme: string;
 
-    @Field({ nullable: true })
+    @Field(() => String, { nullable: true })
+    @Column()
     timezone: string;
 
-    @Field({ nullable: true })
+    @Field(() => String, { nullable: true })
+    @Column()
     mailformat: number;
 
-    @Field({ nullable: true })
+    @Field(() => String, { nullable: true })
+    @Column()
     city: string;
 
-    @Field({ nullable: true })
+    @Field(() => String, { nullable: true })
+    @Column()
     country: string;
 
-    @Field({ nullable: true })
+    @Field(() => String, { nullable: true })
+    @Column()
     profileimageurlsmall: string;
 
-    @Field({ nullable: true })
+    @Field(() => String, { nullable: true })
+    @Column()
     profileimageurl: string;
 
     @Field(() => [UserPreference])
     preferences: UserPreference[];
 
-    @Field()
+    @Field(() => String)
+    @Column()
     token: string;
 
     constructor(data: any) {
+        if (!data) return;
         this.id = data.id;
         this.username = data.username;
         this.fullname = data.fullname;
@@ -88,9 +110,9 @@ export class User {
 
 @ObjectType()
 export class UserPreference {
-    @Field()
+    @Field(() => String)
     name: string;
 
-    @Field()
+    @Field(() => String)
     value: string;
 }

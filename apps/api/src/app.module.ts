@@ -8,20 +8,31 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ApiService } from './api/api.service';
 import { ApiModule } from './api/api.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), '/schema.gql'),
-      playground: true,
-      sortSchema: true,
-    }),
-    UserModule,
-    AuthModule,
-    ApiModule,
-  ],
-  controllers: [AppController],
-  providers: [AppService, ApiService],
+    imports: [
+        GraphQLModule.forRoot<ApolloDriverConfig>({
+            driver: ApolloDriver,
+            autoSchemaFile: join(process.cwd(), '/schema.gql'),
+            playground: true,
+            sortSchema: true,
+        }),
+        TypeOrmModule.forRoot({
+            type: 'postgres',
+            host: 'localhost',
+            port: 5433,
+            username: 'postgres',
+            password: 'jnhbgvfc',
+            database: 'uitbuoy',
+            synchronize: false,
+            autoLoadEntities: true,
+        }),
+        UserModule,
+        AuthModule,
+        ApiModule,
+    ],
+    controllers: [AppController],
+    providers: [AppService, ApiService],
 })
 export class AppModule {}

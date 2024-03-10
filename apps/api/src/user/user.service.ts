@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { ApiService } from 'src/api/api.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
-    constructor(private readonly apiService: ApiService) {}
+    constructor(@InjectRepository(User) private repo: Repository<User>) {}
 
-    create() {
-        return 'This action adds a new user';
+    async create(user: User) {
+        return this.repo.save(user);
     }
 
     findAll() {
@@ -25,7 +27,7 @@ export class UserService {
         return `This action removes a #${id} user`;
     }
 
-    async findByUsername(username: string, token: string) {
-        return this.apiService.getUserProfile({ token, username });
+    async findByUsername(username: string) {
+        return this.repo.findOneBy({ username });
     }
 }

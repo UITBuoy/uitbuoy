@@ -12,10 +12,10 @@ type AuthEntity {
   email: String!
   firstaccess: Int
   fullname: String!
-  id: Int!
+  id: Int
   lang: String
   lastaccess: Int
-  mailformat: Float
+  mailformat: String
   preferences: [UserPreference!]!
   profileimageurl: String
   profileimageurlsmall: String
@@ -40,10 +40,10 @@ type User {
   email: String!
   firstaccess: Int
   fullname: String!
-  id: Int!
+  id: Int
   lang: String
   lastaccess: Int
-  mailformat: Float
+  mailformat: String
   preferences: [UserPreference!]!
   profileimageurl: String
   profileimageurlsmall: String

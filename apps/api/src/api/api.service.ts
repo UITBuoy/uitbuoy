@@ -21,7 +21,7 @@ export class ApiService {
         if (data.length == 0) {
             throw new Error('User not found');
         }
-        return data[0];
+        return { ...data[0], token };
     }
 
     async fetchMoodleData<T>({
