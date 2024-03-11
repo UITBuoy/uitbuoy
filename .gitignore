@@ -38,3 +38,4 @@ yarn-error.log*
 *.pem
 
 apps/api/data.json
+apps/api/_data.json
