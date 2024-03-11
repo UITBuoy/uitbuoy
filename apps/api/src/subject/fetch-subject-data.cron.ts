@@ -49,12 +49,11 @@ export class FetchSubjectData {
                 equivalentCode: handleMultiChildren(children, 8),
                 requiredCode: handleMultiChildren(children, 9),
                 previousCode: handleMultiChildren(children, 10),
-                theoriticalCredit: parseInt(childrenOption(children, 11)),
-                practialCredit: parseInt(childrenOption(children, 12)),
+                theoreticalCredit: parseInt(childrenOption(children, 11)),
+                practicalCredit: parseInt(childrenOption(children, 12)),
             });
         });
 
         writeFileSync('./data.json', JSON.stringify(subjects), { flag: 'w' });
-        console.log('Done');
     }
 }
