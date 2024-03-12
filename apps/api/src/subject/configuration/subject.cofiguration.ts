@@ -2,17 +2,15 @@ import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Subject } from '../entities/subject.entity';
-import { SubjectService } from '../subject.service';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import { writeFileSync } from 'node:fs';
 import API_URL from 'src/common/constants/url';
 
 @Injectable()
-export class FetchSubjectData implements OnApplicationBootstrap {
+export class SubjectConfiguration {
     constructor(@InjectRepository(Subject) private repo: Repository<Subject>) {}
 
-    async onApplicationBootstrap() {
+    async fetch() {
         async function getPayload(url) {
             return cheerio.load((await axios.get(url)).data);
         }
