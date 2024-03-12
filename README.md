@@ -42,6 +42,7 @@ git commit -m "<type>:<message> (<task code>)"
 `type`: describe the type of the task  
 - `feat`: add something related to a new feature
 - `doc`: add documentation about a portion of the source code
+- `deps`: add new dependencies to the project
 - `refactor`: refactor an existing module without breaking its functionality
 - `fix`: fix a bug  
 
