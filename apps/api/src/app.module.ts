@@ -11,6 +11,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { BaseExceptionFilter } from './common/filters/base-exception.filter';
+import { SubjectModule } from './subject/subject.module';
 
 @Module({
     imports: [
@@ -32,12 +33,13 @@ import { BaseExceptionFilter } from './common/filters/base-exception.filter';
             username: 'postgres',
             password: 'jnhbgvfc',
             database: 'uitbuoy',
-            synchronize: false,
+            synchronize: true,
             autoLoadEntities: true,
         }),
         UserModule,
         AuthModule,
         ApiModule,
+        SubjectModule,
     ],
     controllers: [AppController],
     providers: [

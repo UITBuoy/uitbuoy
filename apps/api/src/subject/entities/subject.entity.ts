@@ -9,7 +9,7 @@ export class Subject {
     code: string;
 
     @Field(() => String)
-    @Column()
+    @Column({ nullable: true })
     nameVN: string;
 
     @Field(() => String)
@@ -30,7 +30,7 @@ export class Subject {
 
     @Field(() => String, { nullable: true })
     @Column()
-    oldeCode: string;
+    oldCode: string;
 
     @Field(() => String, { nullable: true })
     @Column()
@@ -51,4 +51,8 @@ export class Subject {
     @Field(() => Int)
     @Column()
     practicalCredit: number;
+
+    @Field(() => String, { nullable: true }) // Graphql
+    @Column({ nullable: true })
+    summary: string;
 }
