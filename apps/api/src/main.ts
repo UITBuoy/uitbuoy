@@ -4,7 +4,6 @@ import { FetchSubjectData } from './subject/fetch-subject-data.cron';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
-    FetchSubjectData.fetch();
     await app.listen(3000);
 }
 bootstrap();
