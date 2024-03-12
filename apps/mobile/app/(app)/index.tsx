@@ -1,11 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import Button from '../components/Button/Button';
+import Button from '../../components/Button/Button';
 
 import { Text } from '@gluestack-ui/themed';
 
-export default function App() {
+export default function Page() {
     return (
         <>
             <StatusBar style="auto" />

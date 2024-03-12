@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text } from 'react-native';
 
-export default function Login() {
+export default function Page() {
     return <Text>Login</Text>;
 }
