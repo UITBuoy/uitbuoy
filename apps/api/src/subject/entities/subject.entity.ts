@@ -51,21 +51,4 @@ export class Subject {
     @Field(() => Int)
     @Column()
     practicalCredit: number;
-
-    constructor(data: any) {
-        if (!data) return;
-        this.code = data.code;
-        this.nameVN = data.nameVN;
-        this.nameEN = data.nameEN;
-        this.isActive = data.isActive;
-        this.department = data.department;
-        this.type = data.type;
-        this.oldeCode = data.oldCode;
-        this.equivalentCode = data.equivalentCode;
-        this.requiredCode = data.requiredCode;
-        this.previousCode = data.previousCode;
-        this.theoreticalCredit = data.theoreticalCredit;
-        this.practicalCredit = data.practicalCredit;
-    }
 }
-
