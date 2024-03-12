@@ -5,7 +5,6 @@ import { FetchSubjectSummaryData } from './subject/fetch-subject-sumary-data.cro
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
-    FetchSubjectSummaryData.fetch();
     await app.listen(3000);
 }
 bootstrap();
