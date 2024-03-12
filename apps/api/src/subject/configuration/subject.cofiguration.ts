@@ -1,17 +1,19 @@
 import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
+import { Cron } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Subject } from '../entities/subject.entity';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import API_URL from 'src/common/constants/url';
+import { Repository } from 'typeorm';
+import { Subject } from '../entities/subject.entity';
 
 @Injectable()
 export class SubjectConfiguration implements OnApplicationBootstrap {
     constructor(@InjectRepository(Subject) private repo: Repository<Subject>) {}
-    
+
+    @Cron('0 0 0 * * *')  // Remember to test later (13/3/24)
     async onApplicationBootstrap() {
-        async function getPayload(url) {
+        async function getPayload(url: string) {
             return cheerio.load((await axios.get(url)).data);
         }
         const $summary = await getPayload(API_URL.summarySubjects);
@@ -23,12 +25,27 @@ export class SubjectConfiguration implements OnApplicationBootstrap {
         const tableSummary = $summary('table tr').slice(1);
         const tableSubject = $subject('table.tablesorter tr').slice(1); // this html has 2 table elements
 
-        function childrenOptionWithMultiTag(child, colId) {
+        function childrenOptionWithMultiTag(child, colId: number) {
             return $summary(child[colId]).children('p').first().text();
         }
 
-        function childrenOption(child, colId) {
+        function childrenOption(child, colId: number) {
             return $subject(child[colId]).text();
+        }
+
+        function handleMultiChildren(child, index) {
+            return $subject(child[index])
+                .contents()
+                .filter((i, value) => value.type == 'text')
+                .toArray()
+                .map((value) => $subject(value).text());
+        }
+
+        function handleImgChildren(child, index) {
+            const $child = $subject(child[index]).children('img').first();
+            if ($child.attr('alt') == 'Hiện không còn mở') return false;
+            else if ($child.attr('alt') == 'Hiện đang mở') return true;
+            else return null;
         }
 
         function pushData(
@@ -40,7 +57,7 @@ export class SubjectConfiguration implements OnApplicationBootstrap {
                 function: (child, colId) => any;
             }[],
         ) {
-            table.each(function (rowId, element) {
+            table.each(function (rowId: number, element) {
                 const children = element.children;
 
                 const obj = {};
@@ -87,21 +104,6 @@ export class SubjectConfiguration implements OnApplicationBootstrap {
                     parseInt(childrenOption(child, index)),
             },
         ]);
-
-        function handleMultiChildren(child, index) {
-            return $subject(child[index])
-                .contents()
-                .filter((i, value) => value.type == 'text')
-                .toArray()
-                .map((value) => $subject(value).text());
-        }
-
-        function handleImgChildren(child, index) {
-            const $child = $subject(child[index]).children('img').first();
-            if ($child.attr('alt') == 'Hiện không còn mở') return false;
-            else if ($child.attr('alt') == 'Hiện đang mở') return true;
-            else return null;
-        }
 
         this.repo.save(subjects);
         this.repo.save(subjectsSummary);
