@@ -7,10 +7,10 @@ import * as cheerio from 'cheerio';
 import API_URL from 'src/common/constants/url';
 
 @Injectable()
-export class SubjectConfiguration {
+export class SubjectConfiguration implements OnApplicationBootstrap {
     constructor(@InjectRepository(Subject) private repo: Repository<Subject>) {}
-
-    async fetch() {
+    
+    async onApplicationBootstrap() {
         async function getPayload(url) {
             return cheerio.load((await axios.get(url)).data);
         }
