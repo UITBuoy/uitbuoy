@@ -1,9 +1,16 @@
+import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Subject } from '../entities/subject.entity';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { writeFileSync } from 'node:fs';
 
+@Injectable()
 export class FetchSubjectSummaryData {
-    static async fetch() {
+    constructor(@InjectRepository(Subject) private repo: Repository<Subject>) {}
+
+    async fetch() {
         const response = await axios.get(
             'https://student.uit.edu.vn/content/bang-tom-tat-mon-hoc',
         );
@@ -30,9 +37,10 @@ export class FetchSubjectSummaryData {
             });
         });
 
-        writeFileSync('./_data.json', JSON.stringify(subjectsSummary), {
-            flag: 'w',
-        });
-        console.log('done');
+        // writeFileSync('./_data.json', JSON.stringify(subjectsSummary), {
+        //     flag: 'w',
+        // });
+        this.repo.save(subjectsSummary[3]);
+        console.log('summary done');
     }
 }
