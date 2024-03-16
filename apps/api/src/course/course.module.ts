@@ -9,5 +9,6 @@ import { CourseConfiguration } from './configuration/course.cofiguration';
 @Module({
     imports: [ApiModule, TypeOrmModule.forFeature([Course])],
     providers: [CourseResolver, CourseService, CourseConfiguration],
+    exports: [CourseService],
 })
 export class CourseModule {}
