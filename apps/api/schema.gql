@@ -29,6 +29,7 @@ type AuthEntity {
 type Course {
   categoryid: Int
   categoryname: String
+  contents: [CourseContentEntity!]
   courseimage: String
   enddate: Int
   enrollmentmethods: String
@@ -36,7 +37,6 @@ type Course {
   hiddenbynumsections: Int
   id: Int
   idnumber: String
-  modules: [CourseModuleEntity!]
   name: String
   overviewfiles: String
   pdfexportfont: String
@@ -52,6 +52,19 @@ type Course {
   uservisible: Boolean
   viewurl: String
   visible: Boolean
+}
+
+type CourseContentEntity {
+  courseid: Int
+  hiddenbynumsections: Int
+  id: Int!
+  modules: [CourseModuleEntity!]
+  name: String!
+  section: Int
+  summary: String
+  summaryformat: Int
+  uservisible: Boolean
+  visible: Int
 }
 
 type CourseModuleEntity {
@@ -87,7 +100,7 @@ type CourseModuleEntity {
   newsitems: Int
   noviewlink: Boolean
   onclick: String
-  section: Int
+  sectionEntity: CourseContentEntity
   sectionnum: Int
   showgrades: Int
   showreports: Int

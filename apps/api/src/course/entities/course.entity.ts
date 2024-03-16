@@ -1,6 +1,7 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { CourseModuleEntity } from './course-module.entity';
+import { CourseContentEntity } from './course-content.entity';
 
 @ObjectType()
 @Entity()
@@ -101,8 +102,10 @@ export class Course {
     @Column({ nullable: true })
     uservisible: boolean;
 
-    @Field(() => [CourseModuleEntity], { nullable: true })
-    @OneToMany(() => CourseModuleEntity, (courseModule) => courseModule.course)
-    modules: CourseModuleEntity[];
-
+    @Field(() => [CourseContentEntity], { nullable: true })
+    @OneToMany(
+        () => CourseContentEntity,
+        (courseContent) => courseContent.courseid,
+    )
+    contents: CourseContentEntity[];
 }

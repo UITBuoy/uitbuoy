@@ -8,6 +8,7 @@ import {
     PrimaryColumn,
 } from 'typeorm';
 import { Course } from './course.entity';
+import { CourseContentEntity } from './course-content.entity';
 
 @ObjectType()
 @Entity()
@@ -80,14 +81,14 @@ export class CourseModuleEntity {
     @Column({ nullable: true })
     module: number;
 
-    @ManyToOne(() => Course)
-    @JoinColumn({ name: 'course' })
-    @Field(() => Int, { nullable: true })
-    course: Course;
-
     @Field(() => Int, { nullable: true })
     @Column({ nullable: true })
-    section: number;
+    course: number;
+
+    @Field(() => CourseContentEntity, { nullable: true })
+    @ManyToOne(() => CourseContentEntity)
+    @JoinColumn({ name: 'section' })
+    sectionEntity: CourseContentEntity;
 
     @Field(() => Int, { nullable: true })
     @Column({ nullable: true })

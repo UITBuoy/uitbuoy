@@ -4,6 +4,8 @@ import WS_FUNCTION from 'src/common/constants/function-name';
 import { UserNotFoundException } from 'src/user/errors/not-found.error';
 import { Course } from 'src/course/entities/course.entity';
 import { CourseNotFoundException } from 'src/course/errors/not-found.error';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class CourseApiService {
@@ -65,10 +67,12 @@ export class CourseApiService {
             throw new CourseNotFoundException();
         }
 
-        return [
+        const response = [
             ...pastData.courses,
             ...inprogressData.courses,
             ...futureData.courses,
         ];
+
+        return response;
     }
 }

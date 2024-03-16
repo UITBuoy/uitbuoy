@@ -11,7 +11,9 @@ export class CourseService {
         private readonly courseApiService: CourseApiService,
     ) {}
 
-    save(token: string) {
-        return this.courseApiService.getCourseListOfUser({ token });
+    async findAll(token: string) {
+        const response = await this.courseApiService.getCourseListOfUser({ token });
+        this.repo.save(response);
+        return response;
     }
 }

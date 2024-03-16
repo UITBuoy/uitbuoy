@@ -13,6 +13,6 @@ export class CourseResolver {
     @Query(() => [Course])
     @UseGuards(JwtAuthGuard)
     findAllCourseListOfUser(@CurrentUser() user: User) {
-        return this.courseService.save(user.token);
+        return this.courseService.findAll(user.token);
     }
 }
