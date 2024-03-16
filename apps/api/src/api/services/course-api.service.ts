@@ -97,4 +97,5 @@ export class CourseApiService {
 
         return contents
     }
+    
 }

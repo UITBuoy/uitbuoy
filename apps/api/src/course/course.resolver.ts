@@ -1,10 +1,11 @@
 import { UseGuards } from '@nestjs/common';
-import { Query, Resolver } from '@nestjs/graphql';
+import { Args, Query, Resolver } from '@nestjs/graphql';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { User } from 'src/user/entities/user.entity';
 import { CourseService } from './course.service';
 import { Course } from './entities/course.entity';
+import { CourseContentEntity } from './entities/course-content.entity';
 
 @Resolver(() => Course)
 export class CourseResolver {
@@ -16,9 +17,12 @@ export class CourseResolver {
         return this.courseService.findAll(user.token);
     }
 
-    @Query(() => [Course])
+    @Query(() => [CourseContentEntity])
     @UseGuards(JwtAuthGuard)
-    findAllCourseContents(@CurrentUser() user: User) {
-        return this.courseService.findCourseContents(user.token);
+    findAllCourseContents(
+        @CurrentUser() user: User,
+        @Args('course_id') course_id: number,
+    ) {
+        return this.courseService.findCourseContents(user.token, course_id);
     }
 }

@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Course } from './entities/course.entity';
 import { CourseApiService } from 'src/api/services/course-api.service';
 import { CourseContentEntity } from './entities/course-content.entity';
+import { CourseModuleEntity } from './entities/course-module.entity';
 
 @Injectable()
 export class CourseService {
@@ -11,6 +12,8 @@ export class CourseService {
         @InjectRepository(Course) private courseRepo: Repository<Course>,
         @InjectRepository(CourseContentEntity)
         private contentRepo: Repository<CourseContentEntity>,
+        @InjectRepository(CourseModuleEntity)
+        private moduleRepo: Repository<CourseModuleEntity>,
         private readonly courseApiService: CourseApiService,
     ) {}
 
@@ -27,6 +30,11 @@ export class CourseService {
             token,
             course_id,
         });
+
+        contents.forEach((content) => {
+            this.moduleRepo.save(content.modules);
+        });
+
         this.contentRepo.save(contents);
         return contents;
     }

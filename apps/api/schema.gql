@@ -112,6 +112,7 @@ type CourseModuleEntity {
 }
 
 type Query {
+  findAllCourseContents(course_id: Float!): [CourseContentEntity!]!
   findAllCourseListOfUser: [Course!]!
   login(password: String!, username: String!): AuthEntity!
   profile: User!
