@@ -1,9 +1,17 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    ManyToMany,
+    ManyToOne,
+    PrimaryColumn,
+} from 'typeorm';
+import { Course } from './course.entity';
 
 @ObjectType()
 @Entity()
-export class CourseModule {
+export class CourseModuleEntity {
     @Field(() => Int)
     @PrimaryColumn()
     id: number;
@@ -72,9 +80,10 @@ export class CourseModule {
     @Column({ nullable: true })
     module: number;
 
+    @ManyToOne(() => Course)
+    @JoinColumn({ name: 'course' })
     @Field(() => Int, { nullable: true })
-    @Column({ nullable: true })
-    course: number;
+    course: Course;
 
     @Field(() => Int, { nullable: true })
     @Column({ nullable: true })
@@ -124,13 +133,13 @@ export class CourseModule {
     @Column({ nullable: true })
     onclick: string;
 
-    @Field(() => [String], { nullable: true })
+    @Field(() => String, { nullable: true })
     @Column({ nullable: true })
-    activitybadge: string[];
+    activitybadge: string;
 
-    @Field(() => [String], { nullable: true })
+    @Field(() => String, { nullable: true })
     @Column({ nullable: true })
-    dates: string[];
+    dates: string;
 
     @Field(() => String, { nullable: true })
     @Column({ nullable: true })
@@ -152,19 +161,19 @@ export class CourseModule {
     @Column({ nullable: true })
     format: string;
 
-    @Field(() => [String], { nullable: true })
+    @Field(() => String, { nullable: true })
     @Column({ nullable: true })
-    contacts: string[];
+    contacts: string;
 
-    @Field(() => [String], { nullable: true })
+    @Field(() => String, { nullable: true })
     @Column({ nullable: true })
-    filters: string[];
+    filters: string;
 
-    @Field(() => [String], { nullable: true })
+    @Field(() => String, { nullable: true })
     @Column({ nullable: true })
-    courseformatoptions: string[];
+    courseformatoptions: string;
 
-    @Field(() => [String], { nullable: true })
+    @Field(() => String, { nullable: true })
     @Column({ nullable: true })
-    enrollmentmethods: string[];
+    enrollmentmethods: string;
 }
