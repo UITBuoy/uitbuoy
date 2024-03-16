@@ -8,24 +8,6 @@ import { MoodleException } from './errors/moodle.error';
 
 @Injectable()
 export class ApiService {
-    async getUserProfile({
-        token,
-        username,
-    }: {
-        token: string;
-        username: string;
-    }) {
-        const data = await this.fetchMoodleData<User[]>({
-            token,
-            functionName: WS_FUNCTION.GET_USER_PROFILE,
-            params: { field: 'username', 'values[0]': username },
-        });
-        if (data.length == 0) {
-            throw new UserNotFoundException(username);
-        }
-        return { ...data[0], token };
-    }
-
     async fetchMoodleData<T>({
         token,
         functionName,
