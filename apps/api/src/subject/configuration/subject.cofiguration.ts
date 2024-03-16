@@ -11,7 +11,8 @@ import { Subject } from '../entities/subject.entity';
 export class SubjectConfiguration implements OnApplicationBootstrap {
     constructor(@InjectRepository(Subject) private repo: Repository<Subject>) {}
 
-    @Cron('0 0 0 * * *')  // Remember to test later (13/3/24)
+    //once per 6 months 
+    @Cron('0 0 0 1 6 *') // Remember to test later (13/3/24) 
     async onApplicationBootstrap() {
         async function getPayload(url: string) {
             return cheerio.load((await axios.get(url)).data);

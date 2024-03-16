@@ -5,7 +5,7 @@ import { UserNotFoundException } from 'src/user/errors/not-found.error';
 import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
-export class UserAPIService {
+export class UserApiService {
     constructor(private readonly apiService: ApiService) {}
 
     async getUserProfile({

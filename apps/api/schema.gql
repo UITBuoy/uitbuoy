@@ -26,7 +26,94 @@ type AuthEntity {
   username: String!
 }
 
+type Course {
+  categoryid: Int
+  categoryname: String
+  contents: [CourseContentEntity!]
+  courseimage: String
+  enddate: Int
+  enrollmentmethods: String
+  fullname: String
+  hiddenbynumsections: Int
+  id: Int
+  idnumber: String
+  name: String
+  overviewfiles: String
+  pdfexportfont: String
+  section: Int
+  shortname: String
+  showactivitydates: Boolean
+  showcompletionconditions: String
+  sortorder: Int
+  startdate: Int
+  summary: String
+  summaryfiles: String
+  summaryformat: Int
+  uservisible: Boolean
+  viewurl: String
+  visible: Boolean
+}
+
+type CourseContentEntity {
+  courseid: Int
+  hiddenbynumsections: Int
+  id: Int!
+  modules: [CourseModuleEntity!]
+  name: String!
+  section: Int
+  summary: String
+  summaryformat: Int
+  uservisible: Boolean
+  visible: Int
+}
+
+type CourseModuleEntity {
+  activitybadge: String
+  afterlink: String
+  completion: Int
+  completionnotify: Int
+  contacts: String
+  contextid: Int
+  course: Int
+  courseformatoptions: String
+  customdata: String
+  dates: String
+  defaultgroupingid: Int
+  downloadcontent: Int
+  enablecompletion: Int
+  enrollmentmethods: String
+  filters: String
+  format: String
+  groupingid: Int
+  groupmode: Int
+  groupmodeforce: Int
+  id: Int!
+  indent: Int
+  instance: Int
+  lang: String
+  maxbytes: Int
+  modicon: String
+  modname: String!
+  modplural: String
+  module: Int
+  name: String!
+  newsitems: Int
+  noviewlink: Boolean
+  onclick: String
+  sectionEntity: CourseContentEntity
+  sectionnum: Int
+  showgrades: Int
+  showreports: Int
+  theme: String
+  url: String
+  uservisible: Boolean
+  visible: Int
+  visibleoncoursepage: Int
+}
+
 type Query {
+  findAllCourseContents(course_id: Float!): [CourseContentEntity!]!
+  findAllCourseListOfUser: [Course!]!
   login(password: String!, username: String!): AuthEntity!
   profile: User!
 }

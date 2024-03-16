@@ -12,6 +12,7 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { BaseExceptionFilter } from './common/filters/base-exception.filter';
 import { SubjectModule } from './subject/subject.module';
+import { CourseModule } from './course/course.module';
 
 @Module({
     imports: [
@@ -40,6 +41,7 @@ import { SubjectModule } from './subject/subject.module';
         AuthModule,
         ApiModule,
         SubjectModule,
+        CourseModule,
     ],
     controllers: [AppController],
     providers: [
