@@ -6,6 +6,7 @@ import { Course } from 'src/course/entities/course.entity';
 import { CourseNotFoundException } from 'src/course/errors/not-found.error';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CourseContentEntity } from 'src/course/entities/course-content.entity';
 
 @Injectable()
 export class CourseApiService {
@@ -74,5 +75,26 @@ export class CourseApiService {
         ];
 
         return response;
+    }
+
+    async getCourseContent({
+        token,
+        course_id,
+    }: {
+        token: string;
+        course_id: number;
+    }): Promise<CourseContentEntity[]> {
+        const contents = await this.apiService.fetchMoodleData<
+            CourseContentEntity[]
+        >({
+            token,
+            functionName: WS_FUNCTION.GET_COURSE_CONTENT_BY_ID,
+            params: { courseid: course_id },
+        });
+        if (contents.length == 0) {
+            throw new CourseNotFoundException();
+        }
+
+        return contents
     }
 }

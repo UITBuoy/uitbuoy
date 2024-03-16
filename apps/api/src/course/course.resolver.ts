@@ -15,4 +15,10 @@ export class CourseResolver {
     findAllCourseListOfUser(@CurrentUser() user: User) {
         return this.courseService.findAll(user.token);
     }
+
+    @Query(() => [Course])
+    @UseGuards(JwtAuthGuard)
+    findAllCourseContents(@CurrentUser() user: User) {
+        return this.courseService.findCourseContents(user.token);
+    }
 }
