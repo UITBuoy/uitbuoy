@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { ApiService } from 'src/api/api.service';
 import { MoodleException } from 'src/api/errors/moodle.error';
+import { UserApiService } from 'src/api/services/user-api.service';
 import API_URL from 'src/common/constants/url';
 import { UserService } from 'src/user/user.service';
 
@@ -9,6 +10,7 @@ import { UserService } from 'src/user/user.service';
 export class AuthService {
     constructor(
         private userService: UserService,
+        private userApiService: UserApiService,
         private apiService: ApiService,
     ) {}
 
@@ -34,7 +36,7 @@ export class AuthService {
             };
         }
 
-        const userData = await this.apiService.getUserProfile({
+        const userData = await this.userApiService.getUserProfile({
             username,
             token: response.data.token,
         });

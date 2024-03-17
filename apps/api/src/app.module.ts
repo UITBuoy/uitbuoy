@@ -11,6 +11,8 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { BaseExceptionFilter } from './common/filters/base-exception.filter';
+import { SubjectModule } from './subject/subject.module';
+import { CourseModule } from './course/course.module';
 
 @Module({
     imports: [
@@ -28,16 +30,18 @@ import { BaseExceptionFilter } from './common/filters/base-exception.filter';
         TypeOrmModule.forRoot({
             type: 'postgres',
             host: 'localhost',
-            port: 5433,
+            port: 5432,
             username: 'postgres',
             password: 'jnhbgvfc',
             database: 'uitbuoy',
-            synchronize: false,
+            synchronize: true,
             autoLoadEntities: true,
         }),
         UserModule,
         AuthModule,
         ApiModule,
+        SubjectModule,
+        CourseModule,
     ],
     controllers: [AppController],
     providers: [
