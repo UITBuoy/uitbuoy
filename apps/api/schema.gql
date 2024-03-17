@@ -112,10 +112,28 @@ type CourseModuleEntity {
 }
 
 type Query {
+  findAll(nameVN: String!): [Subject!]!
   findAllCourseContents(course_id: Float!): [CourseContentEntity!]!
   findAllCourseListOfUser: [Course!]!
+  findOne(code: String!): [Subject!]!
   login(password: String!, username: String!): AuthEntity!
   profile: User!
+}
+
+type Subject {
+  code: String!
+  department: String!
+  equivalentCode: String
+  isActive: Boolean!
+  nameEN: String!
+  nameVN: String!
+  oldCode: String
+  practicalCredit: Int!
+  previousCode: String
+  requiredCode: String
+  summary: String
+  theoreticalCredit: Int!
+  type: String!
 }
 
 type User {
