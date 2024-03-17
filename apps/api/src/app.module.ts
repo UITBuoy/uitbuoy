@@ -13,6 +13,8 @@ import { UserModule } from './user/user.module';
 import { BaseExceptionFilter } from './common/filters/base-exception.filter';
 import { SubjectModule } from './subject/subject.module';
 import { CourseModule } from './course/course.module';
+import { HealthModule } from './health/health.module';
+import { ShutdownService } from './common/services/shutdown.service';
 
 @Module({
     imports: [
@@ -42,11 +44,13 @@ import { CourseModule } from './course/course.module';
         ApiModule,
         SubjectModule,
         CourseModule,
+        HealthModule,
     ],
     controllers: [AppController],
     providers: [
         AppService,
         ApiService,
+        ShutdownService,
         {
             provide: APP_FILTER,
             useClass: BaseExceptionFilter,
