@@ -38,7 +38,7 @@ export class CourseContentEntity {
     @Column({ nullable: true })
     section: number;
 
-    @Field(() => Int, { nullable: true })
+    @Field(() => Course, { nullable: true })
     @ManyToOne(() => Course)
     @JoinColumn({ name: 'cousreid' })
     courseid: Course;
@@ -52,6 +52,9 @@ export class CourseContentEntity {
     hiddenbynumsections: number;
 
     @Field(() => [CourseModuleEntity], { nullable: true })
-    @OneToMany(() => CourseModuleEntity, (courseModule) => courseModule.sectionEntity)
+    @OneToMany(
+        () => CourseModuleEntity,
+        (courseModule) => courseModule.sectionEntity,
+    )
     modules: CourseModuleEntity[];
 }

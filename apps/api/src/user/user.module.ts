@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { UserService } from './user.service';
-import { UserResolver } from './user.resolver';
-import { ApiModule } from 'src/api/api.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ApiModule } from 'src/api/api.module';
 import { User } from './entities/user.entity';
+import { UserResolver } from './user.resolver';
+import { UserService } from './user.service';
 
 @Module({
     imports: [ApiModule, TypeOrmModule.forFeature([User])],
