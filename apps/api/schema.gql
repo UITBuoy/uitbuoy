@@ -5,6 +5,7 @@
 type AuthEntity {
   access_token: String!
   auth: String
+  calendars: [Calender!]
   city: String
   confirmed: String
   country: String
@@ -24,6 +25,12 @@ type AuthEntity {
   timezone: String
   token: String!
   username: String!
+}
+
+type Calender {
+  event: Event
+  id: String!
+  user: User
 }
 
 type Course {
@@ -55,7 +62,7 @@ type Course {
 }
 
 type CourseContentEntity {
-  courseid: Int
+  courseid: Course
   hiddenbynumsections: Int
   id: Int!
   modules: [CourseModuleEntity!]
@@ -111,6 +118,54 @@ type CourseModuleEntity {
   visibleoncoursepage: Int
 }
 
+type Event {
+  action: String
+  activityname: String
+  activitystr: String
+  calendars: [Calender!]
+  candelete: Boolean
+  canedit: Boolean
+  categoryid: String
+  component: String
+  deleteurl: String
+  description: String
+  editurl: String
+  eventcount: String
+  eventtype: String
+  formattedlocation: String
+  formattedtime: String
+  groupid: String
+  groupname: String
+  icon: String
+  id: Int!
+  instance: Int
+  isactionevent: Boolean
+  iscategoryevent: Boolean
+  iscourseevent: Boolean
+  location: String
+  modulename: String
+  name: String!
+  normalisedeventtype: String
+  normalisedeventtypetext: String
+  overdue: Boolean
+  purpose: String
+  repeatid: String
+  subscription: String
+  timeduration: Int
+  timemodified: Int
+  timesort: Int
+  timestart: Int
+  timeusermidnight: Int
+  url: String
+  userid: Int
+  viewurl: String
+  visible: Int
+}
+
+type Mutation {
+  findAllEventByCourseIds(courseids: [Int!]!): [Calender!]!
+}
+
 type Query {
   findAll(nameVN: String!): [Subject!]!
   findAllCourseContents(course_id: Float!): [CourseContentEntity!]!
@@ -138,6 +193,7 @@ type Subject {
 
 type User {
   auth: String
+  calendars: [Calender!]
   city: String
   confirmed: String
   country: String
