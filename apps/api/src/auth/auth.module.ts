@@ -7,12 +7,14 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthResolver } from './auth.resolver';
 import { ApiService } from 'src/api/api.service';
 import { ApiModule } from 'src/api/api.module';
+import { LoggerModule } from 'src/logger/logger.module';
 
 @Module({
     imports: [
         UserModule,
         ApiModule,
         PassportModule,
+        LoggerModule,
         JwtModule.register({
             secret: 'secret',
             signOptions: { expiresIn: '2h' },

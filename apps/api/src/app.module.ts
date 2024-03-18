@@ -17,6 +17,7 @@ import { HealthModule } from './health/health.module';
 import { ShutdownService } from './common/services/shutdown.service';
 import { CalenderModule } from './calender/calender.module';
 import { EventModule } from './envent/event.module';
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
     imports: [
@@ -49,6 +50,7 @@ import { EventModule } from './envent/event.module';
         HealthModule,
         CalenderModule,
         EventModule,
+        LoggerModule,
     ],
     controllers: [AppController],
     providers: [

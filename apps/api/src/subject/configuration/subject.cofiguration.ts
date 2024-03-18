@@ -8,12 +8,13 @@ import { Repository } from 'typeorm';
 import { Subject } from '../entities/subject.entity';
 
 @Injectable()
-export class SubjectConfiguration implements OnApplicationBootstrap {
+// export class SubjectConfiguration implements OnApplicationBootstrap {
+export class SubjectConfiguration {
     constructor(@InjectRepository(Subject) private repo: Repository<Subject>) {}
 
-    //once per 6 months 
-    @Cron('0 0 0 1 6 *') // Remember to test later (13/3/24) 
-    async onApplicationBootstrap() {
+    //once per 6 months
+    @Cron('0 0 0 1 6 *') // Remember to test later (13/3/24)
+    async cron() {
         async function getPayload(url: string) {
             return cheerio.load((await axios.get(url)).data);
         }
