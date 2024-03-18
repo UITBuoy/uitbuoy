@@ -45,6 +45,7 @@ export class LoggingInterceptor implements NestInterceptor {
 
             WinstonLogger.info(message, {
                 requestId,
+                version: '1.0.0',
                 type: LogType.REQUEST,
                 context: trace.handler,
                 trace,
@@ -88,6 +89,7 @@ export class LoggingInterceptor implements NestInterceptor {
 
             WinstonLogger.info(`Response from ${requestId} + ${time}ms`, {
                 requestId,
+                version: '1.0.0',
                 type: LogType.RESPONSE,
                 context: `${handler} - response`,
                 time,
