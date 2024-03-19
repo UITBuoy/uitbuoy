@@ -36,13 +36,16 @@ jobs:
     steps:
       - name: checkout source code
         uses: actions/checkout@v3
+      - name: Zip code
+        run: cd apps/api && zip dist.zip dist
       - name: default deploy
         uses: appleboy/lambda-action@v0.1.9
         with:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws_region: ${{ secrets.AWS_REGION }}
+          zip_file: apps/api/dist.zip
           function_name: uitbuoy
-          handler: handler
-          role: arn:aws:iam::519048229161:role/uitbuoy_admin
-          source: apps/api/dist/serverless.js
+          handler: serverless.handler
+          role: arn:aws:iam::519048229161:role/uitbuoy-role-9zoij7h4
+          runtime: nodejs20.x
