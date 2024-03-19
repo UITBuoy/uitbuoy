@@ -12,6 +12,8 @@ async function bootstrap() {
 
     app.useGlobalInterceptors(new LoggingInterceptor(logger));
     app.enableShutdownHooks();
+    app.useLogger(logger);
+    app.enableCors();
 
     const PORT = parseInt(configService.get<string>('APP_PORT'));
 
