@@ -40,8 +40,8 @@ import { EnvironmentType } from './config/type';
                 '.env',
                 '.env.local',
                 '.env.test.local',
-                '.env.development.local',
                 '.env.production.local',
+                '.env.development.local',
             ],
         }),
         TypeOrmModule.forRootAsync({
