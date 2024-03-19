@@ -65,6 +65,18 @@ import { MongooseModule } from '@nestjs/mongoose';
                     configService.get<EnvironmentType>('ENVIRONMENT') ==
                     'development',
                 autoLoadEntities: true,
+                ssl:
+                    configService.get<EnvironmentType>('ENVIRONMENT') ===
+                    'production',
+                extra:
+                    configService.get<EnvironmentType>('ENVIRONMENT') ===
+                    'production'
+                        ? {
+                              ssl: {
+                                  rejectUnauthorized: false,
+                              },
+                          }
+                        : undefined,
             }),
         }),
         WinstonModule.forRootAsync({
