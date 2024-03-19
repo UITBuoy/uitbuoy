@@ -18,6 +18,8 @@ import { ShutdownService } from './common/services/shutdown.service';
 import { CalenderModule } from './calender/calender.module';
 import { EventModule } from './envent/event.module';
 import { LoggerModule } from './logger/logger.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { EnvironmentType } from './config/type';
 
 @Module({
     imports: [
@@ -32,15 +34,31 @@ import { LoggerModule } from './logger/logger.module';
                 path: error.path,
             }),
         }),
-        TypeOrmModule.forRoot({
-            type: 'postgres',
-            host: 'localhost',
-            port: 5432,
-            username: 'postgres',
-            password: 'jnhbgvfc',
-            database: 'uitbuoy',
-            synchronize: true,
-            autoLoadEntities: true,
+        ConfigModule.forRoot({
+            isGlobal: true,
+            envFilePath: [
+                '.env',
+                '.env.local',
+                '.env.test.local',
+                '.env.development.local',
+                '.env.production.local',
+            ],
+        }),
+        TypeOrmModule.forRootAsync({
+            imports: [ConfigModule],
+            inject: [ConfigService],
+            useFactory: (configService: ConfigService) => ({
+                type: 'postgres' as 'postgres',
+                host: configService.get<string>('MAIN_DB_HOST'),
+                port: parseInt(configService.get<string>('MAIN_DB_PORT')),
+                username: configService.get<string>('MAIN_DB_USERNAME'),
+                password: configService.get<string>('MAIN_DB_PASSWORD'),
+                database: configService.get<string>('MAIN_DB_NAME'),
+                synchronize:
+                    configService.get<EnvironmentType>('ENVIRONMENT') ==
+                    'development',
+                autoLoadEntities: true,
+            }),
         }),
         UserModule,
         AuthModule,

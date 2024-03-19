@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
@@ -9,6 +10,8 @@ async function bootstrap() {
 
     app.enableShutdownHooks();
 
-    await app.listen(3000);
+    const configService = app.get(ConfigService);
+    const PORT = parseInt(configService.get<string>('APP_PORT'));
+    await app.listen(PORT);
 }
 bootstrap();
