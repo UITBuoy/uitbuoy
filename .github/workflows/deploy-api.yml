@@ -49,5 +49,5 @@ jobs:
           zip_file: bundle.zip
           function_name: uitbuoy
           handler: serverless.handler
-          role: arn:aws:iam::519048229161:role/uitbuoy-role-9zoij7h4
+          role: arn:aws:iam::519048229161:role/uitbuoy_admin
           runtime: nodejs20.x
