@@ -93,6 +93,9 @@ importers:
       mongoose:
         specifier: ^8.2.2
         version: 8.2.2
+      nest-winston:
+        specifier: ^1.9.4
+        version: 1.9.4(@nestjs/common@10.3.3)(winston@3.12.0)
       passport:
         specifier: ^0.7.0
         version: 0.7.0
@@ -12883,6 +12886,17 @@ packages:
 
   /neo-async@2.6.2:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
+
+  /nest-winston@1.9.4(@nestjs/common@10.3.3)(winston@3.12.0):
+    resolution: {integrity: sha512-ilEmHuuYSAI6aMNR120fLBl42EdY13QI9WRggHdEizt9M7qZlmXJwpbemVWKW/tqRmULjSx/otKNQ3GMQbfoUQ==}
+    peerDependencies:
+      '@nestjs/common': ^5.0.0 || ^6.6.0 || ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0
+      winston: ^3.0.0
+    dependencies:
+      '@nestjs/common': 10.3.3(class-validator@0.14.1)(reflect-metadata@0.1.14)(rxjs@7.8.1)
+      fast-safe-stringify: 2.1.1
+      winston: 3.12.0
+    dev: false
 
   /nested-error-stacks@2.0.1:
     resolution: {integrity: sha512-SrQrok4CATudVzBS7coSz26QRSmlK9TzzoFbeKfcPBUFPjcQM9Rqvr/DlJkOrwI/0KcgvMub1n1g5Jt9EgRn4A==}

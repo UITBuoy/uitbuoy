@@ -1,5 +1,4 @@
 import * as winston from 'winston';
-import 'winston-daily-rotate-file';
 import * as winstonMongoDB from 'winston-mongodb';
 
 const transports = [
