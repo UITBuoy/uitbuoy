@@ -1,17 +1,32 @@
-name: Build server from source
+name: Deploy server to AWS Lambda
 on:
   push:
     branches:
       - UITBOUY-32-deploy-api
-      - release/**
-  pull_request:
-    branches:
-      - UITBOUY-32-deploy-api
+    tags:
       - release/**
 
 jobs:
+  build:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        node-version: [20]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install --filter=api --frozen-lockfile
+      - name: Build code
+        run: pnpm run --filter=api build
   deploy_source:
-    needs: [build]
     name: deploy lambda from source
     runs-on: ubuntu-latest
     steps:
