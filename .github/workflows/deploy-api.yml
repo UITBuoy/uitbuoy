@@ -8,6 +8,7 @@ on:
 
 jobs:
   build:
+    environment: production
     runs-on: ubuntu-20.04
     strategy:
       matrix:
@@ -27,6 +28,7 @@ jobs:
       - name: Build code
         run: pnpm run --filter=api build
   deploy_source:
+    environment: production
     needs:
       - build
     name: deploy lambda from source
