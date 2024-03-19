@@ -20,6 +20,13 @@ import { EventModule } from './envent/event.module';
 import { LoggerModule } from './logger/logger.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EnvironmentType } from './config/type';
+import {
+    utilities as nestWinstonModuleUtilities,
+    WinstonModule,
+} from 'nest-winston';
+import * as winston from 'winston';
+import * as winstonMongoDB from 'winston-mongodb';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
     imports: [
@@ -58,6 +65,66 @@ import { EnvironmentType } from './config/type';
                     configService.get<EnvironmentType>('ENVIRONMENT') ==
                     'development',
                 autoLoadEntities: true,
+            }),
+        }),
+        WinstonModule.forRootAsync({
+            imports: [
+                ConfigModule,
+                MongooseModule.forRootAsync({
+                    imports: [ConfigModule],
+                    inject: [ConfigService],
+                    useFactory: (configService: ConfigService) => ({
+                        uri: configService.get<string>(
+                            'LOGGER_DB_CONNECTION_URI',
+                        ),
+                    }),
+                }),
+            ],
+            inject: [ConfigService],
+            useFactory: (configService: ConfigService) => ({
+                transports: [
+                    new winston.transports.Console({
+                        format: winston.format.combine(
+                            winston.format.timestamp(),
+                            winston.format.colorize(),
+                            winston.format.printf(
+                                ({
+                                    timestamp,
+                                    level,
+                                    message,
+                                    context,
+                                    trace,
+                                }) => {
+                                    return `[Winston] - ${new Intl.DateTimeFormat(
+                                        'en-GB',
+                                        {
+                                            dateStyle: 'short',
+                                            timeStyle: 'long',
+                                            timeZone: 'Asia/Ho_Chi_Minh',
+                                        },
+                                    ).format(
+                                        new Date(timestamp),
+                                    )} - [${context}] ${level}: ${message}`;
+                                },
+                            ),
+                        ),
+                    }),
+                    new winstonMongoDB.MongoDB({
+                        level: 'info',
+                        db: configService.get<string>(
+                            'LOGGER_DB_CONNECTION_URI',
+                        ),
+                        options: {
+                            useUnifiedTopology: true,
+                        },
+                        collection: 'logs',
+                        format: winston.format.combine(
+                            winston.format.timestamp(),
+                            winston.format.json(),
+                            winston.format.metadata(),
+                        ),
+                    }),
+                ],
             }),
         }),
         UserModule,

@@ -5,14 +5,16 @@ import {
     NestInterceptor,
 } from '@nestjs/common';
 import { GqlContextType, GqlExecutionContext } from '@nestjs/graphql';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { Observable, tap } from 'rxjs';
+import { LoggerService } from 'src/logger/logger.service';
 import { LogType } from 'src/logger/types/log-type.type';
-import { WinstonLogger } from 'src/logger/winston.config';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
+    constructor(private readonly loggerService: LoggerService) {}
+
     intercept(
         context: ExecutionContext,
         next: CallHandler,
@@ -43,7 +45,7 @@ export class LoggingInterceptor implements NestInterceptor {
                 args: gqlContext.getArgs(),
             };
 
-            WinstonLogger.info(message, {
+            this.loggerService.info(message, {
                 requestId,
                 version: '1.0.0',
                 type: LogType.REQUEST,
@@ -87,7 +89,7 @@ export class LoggingInterceptor implements NestInterceptor {
             const gqlContext = GqlExecutionContext.create(context);
             const time = new Date().getTime() - startDate.getTime();
 
-            WinstonLogger.info(`Response from ${requestId} + ${time}ms`, {
+            this.loggerService.info(`Response from ${requestId} + ${time}ms`, {
                 requestId,
                 version: '1.0.0',
                 type: LogType.RESPONSE,
