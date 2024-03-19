@@ -27,6 +27,8 @@ jobs:
       - name: Build code
         run: pnpm run --filter=api build
   deploy_source:
+    needs:
+      - build
     name: deploy lambda from source
     runs-on: ubuntu-latest
     steps:
@@ -38,5 +40,5 @@ jobs:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws_region: ${{ secrets.AWS_REGION }}
-          function_name: gorush
-          source: example/index.js
+          function_name: uitbuoy-api
+          source: apps/api/dist/serverless.js
