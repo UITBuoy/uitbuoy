@@ -37,7 +37,7 @@ jobs:
       - name: checkout source code
         uses: actions/checkout@v3
       - name: Zip code
-        run: cd apps/api && zip dist.zip dist
+        run: cd apps/api && zip -r dist.zip dist
       - name: default deploy
         uses: appleboy/lambda-action@v0.1.9
         with:
