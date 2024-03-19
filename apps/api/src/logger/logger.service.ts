@@ -14,7 +14,7 @@ export class LoggerService {
     }
 
     info(message: string, meta?: any, context?: string) {
-        this.logger.info(message, { ...meta, context });
+        this.logger.info(message, { context, ...meta });
     }
 
     error(message: string, context?: string, meta?: Record<string, any>) {
