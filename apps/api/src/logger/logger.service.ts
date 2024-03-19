@@ -1,22 +1,31 @@
-import { Injectable } from '@nestjs/common';
-import { WinstonLogger } from './winston.config';
+import { Inject, Injectable } from '@nestjs/common';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 import { LogType } from './types/log-type.type';
 
 @Injectable()
 export class LoggerService {
-    log(message: string, context?: string) {
-        WinstonLogger.info(message, { context });
+    constructor(
+        @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
+    ) {}
+
+    log(message: string, meta?: any, context?: string) {
+        this.logger.log(message, { context, ...meta });
+    }
+
+    info(message: string, meta?: any, context?: string) {
+        this.logger.info(message, { ...meta, context });
     }
 
     error(message: string, context?: string, meta?: Record<string, any>) {
-        WinstonLogger.error(message, { context, type: LogType.ERROR, ...meta });
+        this.logger.error(message, { context, type: LogType.ERROR, ...meta });
     }
 
-    warn(message: string, context?: string) {
-        WinstonLogger.warn(message, { context });
+    warn(message: string, meta?: any, context?: string) {
+        this.logger.warn(message, { context, ...meta });
     }
 
-    debug(message: string, context?: string) {
-        WinstonLogger.debug(message, { context });
+    debug(message: string, meta?: any, context?: string) {
+        this.logger.debug(message, { context, ...meta });
     }
 }
