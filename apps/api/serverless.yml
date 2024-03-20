@@ -1,4 +1,4 @@
-service: uitbuoy-api
+service: uitbuoy
 
 plugins:
   - serverless-offline
@@ -9,10 +9,12 @@ custom:
 
 provider:
   name: aws
+  region: ap-southeast-1
+  role: arn:aws:iam::519048229161:role/uitbuoy_admin
   runtime: nodejs20.x
 
 functions:
-  main:
+  uitbuoy:
     handler: dist/serverless.handler
     events:
       - http:
