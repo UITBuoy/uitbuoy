@@ -15,7 +15,7 @@ provider:
 
 functions:
   uitbuoy:
-    handler: dist/serverless.handler
+    handler: dist/main.handler
     events:
       - http:
           cors: true

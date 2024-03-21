@@ -1,3 +1,6 @@
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const path = require('path');
+
 module.exports = (options, webpack) => {
     const lazyImports = [
         '@nestjs/microservices/microservices-module',
@@ -6,7 +9,12 @@ module.exports = (options, webpack) => {
 
     return {
         ...options,
+        entry: './src/serverless.ts',
         externals: [],
+        resolve: {
+            extensions: ['.js', '.jsx', '.ts', '.tsx'],
+            plugins: [new TsconfigPathsPlugin({})],
+        },
         plugins: [
             ...options.plugins,
             new webpack.IgnorePlugin({
@@ -32,9 +40,11 @@ module.exports = (options, webpack) => {
                 {
                     test: /\.ts$/,
                     use: 'ts-loader',
-                    exclude: /node_modules/,
+                    exclude: path.resolve(__dirname, 'src/main.ts'),
+                    // exclude: /node_modules/,
                 },
             ],
         },
+        stats: { errorDetails: true },
     };
 };
