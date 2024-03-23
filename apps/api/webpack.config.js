@@ -1,5 +1,6 @@
 const path = require('path');
 const { IgnorePlugin } = require('webpack');
+const nodeExternals = require('webpack-node-externals');
 const {
     swcDefaultsFactory,
 } = require('@nestjs/cli/lib/compiler/defaults/swc-defaults');
@@ -15,11 +16,14 @@ module.exports = {
         path: path.resolve(__dirname, 'dist/'),
         libraryTarget: 'commonjs2',
     },
-    // externals: [],
+    externals: [nodeExternals()],
+    externalsPresets: {
+        node: true, // in order to ignore built-in modules like path, fs, etc.
+    },
     module: {
         rules: [
             {
-                exclude: /node_modules/,
+                // exclude: /node_modules/,
                 test: /\.ts$/,
                 use: {
                     loader: 'swc-loader',
