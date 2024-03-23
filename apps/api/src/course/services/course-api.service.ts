@@ -1,12 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { ApiService } from '../../api/api.service';
 import WS_FUNCTION from 'src/common/constants/function-name';
-import { UserNotFoundException } from 'src/user/errors/not-found.error';
+import { CourseContentEntity } from 'src/course/entities/course-content.entity';
 import { Course } from 'src/course/entities/course.entity';
 import { CourseNotFoundException } from 'src/course/errors/not-found.error';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { CourseContentEntity } from 'src/course/entities/course-content.entity';
+import { ApiService } from '../../api/api.service';
 
 @Injectable()
 export class CourseApiService {
@@ -18,63 +15,51 @@ export class CourseApiService {
                     shortname: course short name
                     idnumber: course id number
                     category: category id the course belongs to */
-    async getCourseListByField({
+    // async getCourseListByField({
+    //     token,
+    //     username,
+    // }: {
+    //     token: string;
+    //     username: string;
+    // }) {
+    //     const data = await this.apiService.fetchMoodleData<Course[]>({
+    //         token,
+    //         functionName: WS_FUNCTION.GET_COURSE_PROFILE,
+    //         params: { field: 'username', 'values[0]': username },
+    //     });
+    //     if (data.length == 0) {
+    //         throw new UserNotFoundException(username);
+    //     }
+    //     return { ...data[0], token };
+    // }
+
+    async findAllCoursesOfUser({
         token,
-        username,
     }: {
         token: string;
-        username: string;
-    }) {
-        const data = await this.apiService.fetchMoodleData<Course[]>({
-            token,
-            functionName: WS_FUNCTION.GET_COURSE_PROFILE,
-            params: { field: 'username', 'values[0]': username },
-        });
-        if (data.length == 0) {
-            throw new UserNotFoundException(username);
-        }
-        return { ...data[0], token };
-    }
+    }): Promise<Course[]> {
+        const classifications = ['past', 'inprogress', 'future'];
 
-    async getCourseListOfUser({ token }: { token: string }): Promise<Course[]> {
-        const pastData = await this.apiService.fetchMoodleData<{
-            courses: Course[];
-        }>({
-            token,
-            functionName: WS_FUNCTION.GET_COURSE_BY_TIMELINE,
-            params: { classification: 'past' },
-        });
-        const inprogressData = await this.apiService.fetchMoodleData<{
-            courses: Course[];
-        }>({
-            token,
-            functionName: WS_FUNCTION.GET_COURSE_BY_TIMELINE,
-            params: { classification: 'inprogress' },
-        });
-        const futureData = await this.apiService.fetchMoodleData<{
-            courses: Course[];
-        }>({
-            token,
-            functionName: WS_FUNCTION.GET_COURSE_BY_TIMELINE,
-            params: { classification: 'future' },
-        });
+        const courses = [];
 
-        if (
-            pastData.courses.length +
-                inprogressData.courses.length +
-                futureData.courses.length ==
-            0
-        ) {
+        await Promise.all(
+            classifications.map(async (classification) => {
+                const data = await this.apiService.fetchMoodleData<{
+                    courses: Course[];
+                }>({
+                    token,
+                    functionName: WS_FUNCTION.GET_COURSE_BY_TIMELINE,
+                    params: { classification },
+                });
+                courses.push(...data.courses);
+            }),
+        );
+
+        if (courses.length == 0) {
             throw new CourseNotFoundException();
         }
 
-        const response = [
-            ...pastData.courses,
-            ...inprogressData.courses,
-            ...futureData.courses,
-        ];
-
-        return response;
+        return courses;
     }
 
     async getCourseContent({

@@ -7,7 +7,6 @@ import { Repository } from 'typeorm';
 export class EventService {
     constructor(
         @InjectRepository(Event) private eventRepo: Repository<Event>,
-        private readonly calenderApiService: CalendarApiService,
     ) {}
 
     // async findCourseContents(token: string, course_id: number) {

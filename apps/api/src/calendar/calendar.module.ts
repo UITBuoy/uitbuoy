@@ -6,6 +6,7 @@ import { UserModule } from 'src/user/user.module';
 import { CalendarResolver } from './calendar.resolver';
 import { CalendarService } from './services/calendar.service';
 import { Calendar } from './entities/calendar.entity';
+import { CalendarApiService } from './services/calender-api.service';
 
 @Module({
     imports: [
@@ -13,7 +14,7 @@ import { Calendar } from './entities/calendar.entity';
         TypeOrmModule.forFeature([Calendar, Event]),
         UserModule,
     ],
-    providers: [CalendarService, CalendarResolver],
-    exports: [CalendarService],
+    providers: [CalendarService, CalendarApiService, CalendarResolver],
+    exports: [CalendarService, CalendarApiService],
 })
 export class CalendarModule {}

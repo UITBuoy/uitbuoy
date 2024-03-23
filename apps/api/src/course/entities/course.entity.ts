@@ -1,6 +1,14 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, OneToMany, PrimaryColumn, Relation } from 'typeorm';
+import {
+    Column,
+    Entity,
+    ManyToMany,
+    OneToMany,
+    PrimaryColumn,
+    Relation,
+} from 'typeorm';
 import type { CourseContentEntity } from './course-content.entity';
+import type { User } from '@/user/entities/user.entity';
 
 @ObjectType()
 @Entity()
@@ -103,4 +111,7 @@ export class Course {
 
     @OneToMany('CourseContentEntity', 'courseid')
     contents: Relation<CourseContentEntity>[];
+
+    @ManyToMany('User', 'courses')
+    users: Relation<User[]>;
 }

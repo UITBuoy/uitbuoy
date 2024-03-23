@@ -14,7 +14,6 @@ export class ApiService {
         functionName: string;
         params?: { [key: string]: string | number };
     }): Promise<T> {
-        console.log({ axios });
         const response = await axios.get(API_URL.base, {
             params: {
                 wsfunction: functionName,
