@@ -30,7 +30,7 @@ jobs:
       - name: Zip code
         uses: montudor/action-zip@v1
         with:
-          args: zip -qq -r ./bundle.zip ./apps/api/dist
+          args: zip -qq -r ./bundle.zip ./
       - name: Upload to lambda
         uses: appleboy/lambda-action@v0.1.9
         with:
