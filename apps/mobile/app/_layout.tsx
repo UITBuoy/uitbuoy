@@ -9,9 +9,9 @@ import { Slot } from 'expo-router';
 export default function Layout() {
     return (
         <GluestackUIProvider config={config}>
-            <SafeAreaView style={styles.container}>
+            <View style={styles.container}>
                 <Slot />
-            </SafeAreaView>
+            </View>
         </GluestackUIProvider>
     );
 }
@@ -19,6 +19,8 @@ export default function Layout() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        width: '100%',
+        padding: 0,
         flexDirection: 'column',
         backgroundColor: '#fff',
         alignItems: 'flex-start',

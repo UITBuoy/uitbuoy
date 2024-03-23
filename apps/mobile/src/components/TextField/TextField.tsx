@@ -14,9 +14,21 @@ import {
     FormControlErrorText,
 } from '@gluestack-ui/themed';
 
-export default function TextField() {
+type IProps = {
+    title: string;
+    type: 'text' | 'password';
+    placeholder?: string;
+    className?: string;
+};
+
+export default function TextField({
+    title,
+    type,
+    placeholder,
+    className,
+}: IProps) {
     return (
-        <Box h="$32" w="$72">
+        <Box className=" w-full h-fit mt-3 pt-3">
             <FormControl
                 size="md"
                 isDisabled={false}
@@ -24,17 +36,13 @@ export default function TextField() {
                 isReadOnly={false}
                 isRequired={false}
             >
-                <FormControlLabel mb="$1">
-                    <FormControlLabelText>Password</FormControlLabelText>
+                <FormControlLabel mt="$6">
+                    <FormControlLabelText>{title}</FormControlLabelText>
                 </FormControlLabel>
                 <Input>
-                    <InputField
-                        type="password"
-                        defaultValue="12345"
-                        placeholder="password"
-                    />
+                    <InputField type={type} placeholder={placeholder} />
                 </Input>
-                <FormControlHelper>
+                {/* <FormControlHelper>
                     <FormControlHelperText>
                         Must be at least 6 characters.
                     </FormControlHelperText>
@@ -44,7 +52,7 @@ export default function TextField() {
                     <FormControlErrorText>
                         At least 6 characters are required.
                     </FormControlErrorText>
-                </FormControlError>
+                </FormControlError> */}
             </FormControl>
         </Box>
     );
