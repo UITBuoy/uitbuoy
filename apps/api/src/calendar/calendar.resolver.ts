@@ -1,5 +1,5 @@
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { CalendarService } from './calendar.service';
+import { CalendarService } from './services/calendar.service';
 import { Calendar } from './entities/calendar.entity';
 import { UseGuards } from '@nestjs/common';
 import { User } from 'src/user/entities/user.entity';

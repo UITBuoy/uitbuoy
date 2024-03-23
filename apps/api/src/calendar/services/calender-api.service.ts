@@ -2,13 +2,13 @@ import { CalendarNotFoundException } from '@/calendar/errors/not-found.error';
 import { Injectable } from '@nestjs/common';
 import WS_FUNCTION from 'src/common/constants/function-name';
 import { Event } from 'src/envent/entities/event.entity';
-import { ApiService } from '../api.service';
+import { ApiService } from '../../api/api.service';
 
 @Injectable()
-export class CalenderApiService {
+export class CalendarApiService {
     constructor(private readonly apiService: ApiService) {}
 
-    async getEventCalender({
+    async getEventCalendar({
         token,
         courseids,
     }: {
