@@ -30,15 +30,24 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
     imports: [
-        GraphQLModule.forRoot<ApolloDriverConfig>({
+        GraphQLModule.forRootAsync<ApolloDriverConfig>({
+            imports: [ConfigModule],
+            inject: [ConfigService],
             driver: ApolloDriver,
-            autoSchemaFile: join(process.cwd(), '/schema.gql'),
-            playground: true,
-            sortSchema: true,
-            formatError: (error) => ({
-                message: error.message,
-                ...error.extensions,
-                path: error.path,
+            useFactory: async (configService: ConfigService) => ({
+                autoSchemaFile: join(
+                    configService.get<string>('ENVIRONMENT') === 'development'
+                        ? process.cwd()
+                        : '/tmp',
+                    '/schema.gql',
+                ),
+                playground: true,
+                sortSchema: true,
+                formatError: (error) => ({
+                    message: error.message,
+                    ...error.extensions,
+                    path: error.path,
+                }),
             }),
         }),
         ConfigModule.forRoot({
