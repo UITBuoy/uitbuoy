@@ -147,6 +147,9 @@ importers:
       uuid:
         specifier: ^9.0.1
         version: 9.0.1
+      webpack-node-externals:
+        specifier: ^3.0.0
+        version: 3.0.0
       winston:
         specifier: ^3.12.0
         version: 3.12.0
@@ -19217,7 +19220,6 @@ packages:
   /webpack-node-externals@3.0.0:
     resolution: {integrity: sha512-LnL6Z3GGDPht/AigwRh2dvL9PQPFQ8skEpVrWZXLWBYmqcaojHNN0onvHzie6rq7EWKrrBfPYqNEzTJgiwEQDQ==}
     engines: {node: '>=6'}
-    dev: true
 
   /webpack-sources@3.2.3:
     resolution: {integrity: sha512-/DyMEOrDgLKKIG0fmvtz+4dUX/3Ghozwgm6iPp8KRhvn+eQf9+Q7GWxVNMk3+uCPWfdXYC4ExGBckIXdFEfH1w==}
