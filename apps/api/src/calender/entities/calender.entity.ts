@@ -4,10 +4,10 @@ import {
     Entity,
     JoinColumn,
     ManyToOne,
-    OneToMany,
     PrimaryGeneratedColumn,
+    Relation,
 } from 'typeorm';
-import { Event } from '../../envent/entities/event.entity';
+import type { Event } from '../../envent/entities/event.entity';
 
 @ObjectType()
 @Entity()
@@ -21,8 +21,8 @@ export class Calender {
     @JoinColumn({ name: 'user_id' })
     user: User;
 
-    @Field(() => Event, { nullable: true })
-    @ManyToOne(() => Event)
+    // @Field(() => forwardRef(() => Event), { nullable: true })
+    @ManyToOne('Event')
     @JoinColumn({ name: 'event_id' })
-    event: Event;
+    event: Relation<Event>;
 }

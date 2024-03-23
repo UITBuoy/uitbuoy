@@ -3,13 +3,12 @@ import {
     Column,
     Entity,
     JoinColumn,
-    ManyToMany,
     ManyToOne,
     OneToMany,
     PrimaryColumn,
 } from 'typeorm';
+import type { CourseModuleEntity } from './course-module.entity';
 import { Course } from './course.entity';
-import { CourseModuleEntity } from './course-module.entity';
 
 @ObjectType()
 @Entity()
@@ -51,10 +50,6 @@ export class CourseContentEntity {
     @Column({ nullable: true })
     hiddenbynumsections: number;
 
-    @Field(() => [CourseModuleEntity], { nullable: true })
-    @OneToMany(
-        () => CourseModuleEntity,
-        (courseModule) => courseModule.sectionEntity,
-    )
+    @OneToMany('CourseModuleEntity', 'sectionEntity')
     modules: CourseModuleEntity[];
 }

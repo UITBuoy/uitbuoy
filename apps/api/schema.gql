@@ -5,7 +5,6 @@
 type AuthEntity {
   access_token: String!
   auth: String
-  calendars: [Calender!]
   city: String
   confirmed: String
   country: String
@@ -28,7 +27,6 @@ type AuthEntity {
 }
 
 type Calender {
-  event: Event
   id: String!
   user: User
 }
@@ -36,7 +34,6 @@ type Calender {
 type Course {
   categoryid: Int
   categoryname: String
-  contents: [CourseContentEntity!]
   courseimage: String
   enddate: Int
   enrollmentmethods: String
@@ -65,100 +62,11 @@ type CourseContentEntity {
   courseid: Course
   hiddenbynumsections: Int
   id: Int!
-  modules: [CourseModuleEntity!]
   name: String!
   section: Int
   summary: String
   summaryformat: Int
   uservisible: Boolean
-  visible: Int
-}
-
-type CourseModuleEntity {
-  activitybadge: String
-  afterlink: String
-  completion: Int
-  completionnotify: Int
-  contacts: String
-  contextid: Int
-  course: Int
-  courseformatoptions: String
-  customdata: String
-  dates: String
-  defaultgroupingid: Int
-  downloadcontent: Int
-  enablecompletion: Int
-  enrollmentmethods: String
-  filters: String
-  format: String
-  groupingid: Int
-  groupmode: Int
-  groupmodeforce: Int
-  id: Int!
-  indent: Int
-  instance: Int
-  lang: String
-  maxbytes: Int
-  modicon: String
-  modname: String!
-  modplural: String
-  module: Int
-  name: String!
-  newsitems: Int
-  noviewlink: Boolean
-  onclick: String
-  sectionEntity: CourseContentEntity
-  sectionnum: Int
-  showgrades: Int
-  showreports: Int
-  theme: String
-  url: String
-  uservisible: Boolean
-  visible: Int
-  visibleoncoursepage: Int
-}
-
-type Event {
-  action: String
-  activityname: String
-  activitystr: String
-  calendars: [Calender!]
-  candelete: Boolean
-  canedit: Boolean
-  categoryid: String
-  component: String
-  deleteurl: String
-  description: String
-  editurl: String
-  eventcount: String
-  eventtype: String
-  formattedlocation: String
-  formattedtime: String
-  groupid: String
-  groupname: String
-  icon: String
-  id: Int!
-  instance: Int
-  isactionevent: Boolean
-  iscategoryevent: Boolean
-  iscourseevent: Boolean
-  location: String
-  modulename: String
-  name: String!
-  normalisedeventtype: String
-  normalisedeventtypetext: String
-  overdue: Boolean
-  purpose: String
-  repeatid: String
-  subscription: String
-  timeduration: Int
-  timemodified: Int
-  timesort: Int
-  timestart: Int
-  timeusermidnight: Int
-  url: String
-  userid: Int
-  viewurl: String
   visible: Int
 }
 
@@ -193,7 +101,6 @@ type Subject {
 
 type User {
   auth: String
-  calendars: [Calender!]
   city: String
   confirmed: String
   country: String
