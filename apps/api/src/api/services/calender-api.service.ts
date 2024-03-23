@@ -1,9 +1,8 @@
+import { CalendarNotFoundException } from '@/calendar/errors/not-found.error';
 import { Injectable } from '@nestjs/common';
-import { Calender } from 'src/calender/entities/calender.entity';
-import { CalenderNotFoundException } from 'src/calender/errors/not-found.error';
 import WS_FUNCTION from 'src/common/constants/function-name';
-import { ApiService } from '../api.service';
 import { Event } from 'src/envent/entities/event.entity';
+import { ApiService } from '../api.service';
 
 @Injectable()
 export class CalenderApiService {
@@ -29,7 +28,7 @@ export class CalenderApiService {
             params: { ...courseObject },
         });
         if (response.groupedbycourse.length == 0) {
-            throw new CalenderNotFoundException();
+            throw new CalendarNotFoundException();
         }
 
         return response.groupedbycourse;

@@ -1,5 +1,5 @@
+import { Calendar } from '@/calendar/entities/calendar.entity';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Calender } from 'src/calender/entities/calender.entity';
 import { Column, Entity, OneToMany, PrimaryColumn, Relation } from 'typeorm';
 
 @ObjectType()
@@ -84,9 +84,8 @@ export class User {
     @Column()
     token: string;
 
-    // @Field(() => [Calender], { nullable: true })
-    @OneToMany('Calender', 'user')
-    calendars: Relation<Calender>[];
+    @OneToMany('Calendar', 'user')
+    calendars: Relation<Calendar>[];
 
     constructor(data: any) {
         if (!data) return;

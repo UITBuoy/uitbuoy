@@ -1,14 +1,6 @@
+import { Calendar } from '@/calendar/entities/calendar.entity';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Calender } from 'src/calender/entities/calender.entity';
-import {
-    Column,
-    Entity,
-    Int32,
-    JoinColumn,
-    ManyToOne,
-    OneToMany,
-    PrimaryColumn,
-} from 'typeorm';
+import { Column, Entity, Int32, OneToMany, PrimaryColumn } from 'typeorm';
 
 @ObjectType()
 @Entity()
@@ -173,7 +165,7 @@ export class Event {
     @Column({ nullable: true })
     groupname: string;
 
-    @Field(() => [Calender], { nullable: true })
-    @OneToMany(() => Calender, (calendar) => calendar.event)
-    calendars: Calender[];
+    @Field(() => [Calendar], { nullable: true })
+    @OneToMany(() => Calendar, (calendar) => calendar.event)
+    calendars: Calendar[];
 }

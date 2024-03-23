@@ -11,7 +11,7 @@ import type { Event } from '../../envent/entities/event.entity';
 
 @ObjectType()
 @Entity()
-export class Calender {
+export class Calendar {
     @Field(() => String)
     @PrimaryGeneratedColumn('uuid')
     id: string;
@@ -21,7 +21,6 @@ export class Calender {
     @JoinColumn({ name: 'user_id' })
     user: User;
 
-    // @Field(() => forwardRef(() => Event), { nullable: true })
     @ManyToOne('Event')
     @JoinColumn({ name: 'event_id' })
     event: Relation<Event>;

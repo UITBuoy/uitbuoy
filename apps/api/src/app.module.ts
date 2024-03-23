@@ -15,7 +15,7 @@ import { SubjectModule } from './subject/subject.module';
 import { CourseModule } from './course/course.module';
 import { HealthModule } from './health/health.module';
 import { ShutdownService } from './common/services/shutdown.service';
-import { CalenderModule } from './calender/calender.module';
+import { CalendarModule } from './calendar/calendar.module';
 import { EventModule } from './envent/event.module';
 import { LoggerModule } from './logger/logger.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -157,7 +157,7 @@ import { MongooseModule } from '@nestjs/mongoose';
         SubjectModule,
         CourseModule,
         HealthModule,
-        CalenderModule,
+        CalendarModule,
         EventModule,
         LoggerModule,
     ],

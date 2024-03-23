@@ -1,21 +1,21 @@
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { CalenderService } from './calender.service';
-import { Calender } from './entities/calender.entity';
+import { CalendarService } from './calendar.service';
+import { Calendar } from './entities/calendar.entity';
 import { UseGuards } from '@nestjs/common';
 import { User } from 'src/user/entities/user.entity';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
-@Resolver(() => Calender)
-export class CalenderResolver {
-    constructor(private readonly calenderService: CalenderService) {}
+@Resolver(() => Calendar)
+export class CalendarResolver {
+    constructor(private readonly calenderService: CalendarService) {}
 
-    @Mutation(() => [Calender])
+    @Mutation(() => [Calendar])
     @UseGuards(JwtAuthGuard)
     async findAllEventByCourseIds(
         @CurrentUser() user: User,
         @Args('courseids', { type: () => [Int] }) courseids: number[],
-    ): Promise<Calender[]> {
+    ): Promise<Calendar[]> {
         return this.calenderService.save(user, courseids);
     }
 }
