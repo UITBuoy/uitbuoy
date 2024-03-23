@@ -18,7 +18,5 @@ async function bootstrap() {
     const PORT = parseInt(configService.get<string>('APP_PORT'));
 
     await app.listen(PORT);
-
-    logger.info(`Run server on port ${PORT}`, {}, 'config');
 }
 bootstrap();
