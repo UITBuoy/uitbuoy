@@ -1,16 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CalenderApiService } from 'src/api/services/calender-api.service';
+import { CalendarApiService } from '@/calendar/services/calender-api.service';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class EventService {
     constructor(
         @InjectRepository(Event) private eventRepo: Repository<Event>,
-        private readonly calenderApiService: CalenderApiService,
+        private readonly calenderApiService: CalendarApiService,
     ) {}
-
-
 
     // async findCourseContents(token: string, course_id: number) {
     //     const contents = await this.courseApiService.getCourseContent({

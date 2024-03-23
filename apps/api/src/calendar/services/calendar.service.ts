@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Calendar } from './entities/calendar.entity';
-import { CalenderApiService } from 'src/api/services/calender-api.service';
+import { Calendar } from '../entities/calendar.entity';
+import { CalendarApiService } from '@/calendar/services/calender-api.service';
 import { Event } from 'src/envent/entities/event.entity';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
@@ -13,11 +13,11 @@ export class CalendarService {
         @InjectRepository(Calendar) private calenderRepo: Repository<Calendar>,
         @InjectRepository(Event) private eventRepo: Repository<Event>,
         private readonly userService: UserService,
-        private readonly calenderApiService: CalenderApiService,
+        private readonly calenderApiService: CalendarApiService,
     ) {}
 
     async save(user: User, courseids: number[]): Promise<Calendar[]> {
-        const response = await this.calenderApiService.getEventCalender({
+        const response = await this.calenderApiService.getEventCalendar({
             token: user.token,
             courseids,
         });
