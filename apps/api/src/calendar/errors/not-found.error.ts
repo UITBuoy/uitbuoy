@@ -1,9 +1,9 @@
 import { BaseException } from 'src/common/errors/base.error';
 
-export class CalenderNotFoundException extends BaseException {
+export class CalendarNotFoundException extends BaseException {
     constructor(
         message?: string,
     ) {
-        super(CalenderNotFoundException.name, message);
+        super(CalendarNotFoundException.name, message);
     }
 }
