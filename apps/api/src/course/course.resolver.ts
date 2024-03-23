@@ -3,7 +3,7 @@ import { Args, Query, Resolver } from '@nestjs/graphql';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { User } from 'src/user/entities/user.entity';
-import { CourseService } from './course.service';
+import { CourseService } from './services/course.service';
 import { Course } from './entities/course.entity';
 import { CourseContentEntity } from './entities/course-content.entity';
 

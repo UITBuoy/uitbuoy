@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { CourseService } from './course.service';
+import { CourseService } from './services/course.service';
 import { CourseResolver } from './course.resolver';
 import { ApiModule } from 'src/api/api.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
