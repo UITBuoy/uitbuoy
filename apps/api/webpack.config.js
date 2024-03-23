@@ -11,7 +11,7 @@ const CircularDependencyPlugin = require('circular-dependency-plugin');
 module.exports = {
     entry: './src/serverless',
     output: {
-        filename: 'serveirless.js',
+        filename: 'serverless.js',
         path: path.resolve(__dirname, 'dist/'),
         libraryTarget: 'commonjs2',
     },
@@ -26,10 +26,10 @@ module.exports = {
                     options: swcDefaultsFactory().swcOptions,
                 },
             },
-            { test: /\.js\.map$/, loader: 'ignore-loader', enforce: "pre" },
+            { test: /\.js\.map$/, loader: 'ignore-loader', enforce: 'pre' },
             {
                 test: /\.js$/,
-            }
+            },
         ],
     },
     node: {
@@ -83,13 +83,11 @@ module.exports = {
         extensions: ['.js', '.json', '.ts'],
         mainFields: ['main'],
         plugins: [new TsconfigPathsPlugin({ configFile: 'tsconfig.json' })],
-          symlinks: true //default value
-
+        symlinks: true, //default value
     },
     target: 'node',
     stats: {
-        excludeAssets: /\.map$/
+        excludeAssets: /\.map$/,
     },
     devtool: false,
-
 };
