@@ -1,6 +1,5 @@
 const path = require('path');
 const { IgnorePlugin } = require('webpack');
-const nodeExternals = require('webpack-node-externals');
 const {
     swcDefaultsFactory,
 } = require('@nestjs/cli/lib/compiler/defaults/swc-defaults');
@@ -16,10 +15,7 @@ module.exports = {
         path: path.resolve(__dirname, 'dist/'),
         libraryTarget: 'commonjs2',
     },
-    externals: [nodeExternals()],
-    externalsPresets: {
-        node: true, // in order to ignore built-in modules like path, fs, etc.
-    },
+    externals: [],
     module: {
         rules: [
             {
@@ -30,6 +26,10 @@ module.exports = {
                     options: swcDefaultsFactory().swcOptions,
                 },
             },
+            { test: /\.js\.map$/, loader: 'ignore-loader', enforce: "pre" },
+            {
+                test: /\.js$/,
+            }
         ],
     },
     node: {
@@ -69,11 +69,8 @@ module.exports = {
             },
         }),
         new CircularDependencyPlugin({
-            // exclude detection of files based on a RegExp
             exclude: /a\.js|node_modules/,
-            // include specific files based on a RegExp
             include: /\.ts/,
-            // add errors to webpack instead of warnings
             failOnError: true,
             // allow import cycles that include an asyncronous import,
             // e.g. via import(/* webpackMode: "weak" */ './file.js')
@@ -88,4 +85,9 @@ module.exports = {
         plugins: [new TsconfigPathsPlugin({ configFile: 'tsconfig.json' })],
     },
     target: 'node',
+    stats: {
+        excludeAssets: /\.map$/
+    },
+    devtool: false,
+
 };
