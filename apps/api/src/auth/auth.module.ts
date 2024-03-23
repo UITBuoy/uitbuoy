@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
+import { ApiModule } from 'src/api/api.module';
+import { ApiService } from 'src/api/api.service';
+import { LoggerModule } from 'src/logger/logger.module';
+import { UserModule } from 'src/user/user.module';
+import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategies/jwt.stategy';
-import { UserModule } from 'src/user/user.module';
-import { PassportModule } from '@nestjs/passport';
-import { JwtModule } from '@nestjs/jwt';
-import { AuthResolver } from './auth.resolver';
-import { ApiService } from 'src/api/api.service';
-import { ApiModule } from 'src/api/api.module';
-import { LoggerModule } from 'src/logger/logger.module';
 
 @Module({
     imports: [
