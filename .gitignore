@@ -40,3 +40,5 @@ yarn-error.log*
 
 apps/api/data.json
 apps/api/_data.json
+
+schema.gql
