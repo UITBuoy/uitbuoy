@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Course } from './entities/course.entity';
-import { CourseApiService } from 'src/api/services/course-api.service';
-import { CourseContentEntity } from './entities/course-content.entity';
-import { CourseModuleEntity } from './entities/course-module.entity';
+import { Course } from '../entities/course.entity';
+import { CourseApiService } from '@/course/services/course-api.service';
+import { CourseContentEntity } from '../entities/course-content.entity';
+import { CourseModuleEntity } from '../entities/course-module.entity';
 
 @Injectable()
 export class CourseService {

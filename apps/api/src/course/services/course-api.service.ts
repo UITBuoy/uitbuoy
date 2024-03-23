@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ApiService } from '../api.service';
+import { ApiService } from '../../api/api.service';
 import WS_FUNCTION from 'src/common/constants/function-name';
 import { UserNotFoundException } from 'src/user/errors/not-found.error';
 import { Course } from 'src/course/entities/course.entity';
@@ -95,7 +95,6 @@ export class CourseApiService {
             throw new CourseNotFoundException();
         }
 
-        return contents
+        return contents;
     }
-    
 }
