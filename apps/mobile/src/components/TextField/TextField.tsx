@@ -1,18 +1,20 @@
 import React from 'react';
+import { Text, TextInput, View } from 'react-native';
+import { Box } from '../ui/Box/Box';
 import {
-    Box,
     FormControl,
     FormControlLabel,
     FormControlLabelText,
-    Input,
-    InputField,
-    FormControlHelper,
-    FormControlHelperText,
-    FormControlError,
-    FormControlErrorIcon,
-    AlertCircleIcon,
-    FormControlErrorText,
-} from '@gluestack-ui/themed';
+} from '../ui/FormControl/FormControl';
+import { Input, InputField } from '../ui/Input/Input';
+// import {
+//     Box,
+//     FormControl,
+//     FormControlLabel,
+//     FormControlLabelText,
+//     Input,
+//     InputField,
+// } from '@gluestack-ui/themed';
 
 type IProps = {
     title: string;
@@ -28,32 +30,10 @@ export default function TextField({
     className,
 }: IProps) {
     return (
-        <Box className=" w-full h-fit mt-3 pt-3">
-            <FormControl
-                size="md"
-                isDisabled={false}
-                isInvalid={false}
-                isReadOnly={false}
-                isRequired={false}
-            >
-                <FormControlLabel mt="$6">
-                    <FormControlLabelText>{title}</FormControlLabelText>
-                </FormControlLabel>
-                <Input>
-                    <InputField type={type} placeholder={placeholder} />
-                </Input>
-                {/* <FormControlHelper>
-                    <FormControlHelperText>
-                        Must be at least 6 characters.
-                    </FormControlHelperText>
-                </FormControlHelper>
-                <FormControlError>
-                    <FormControlErrorIcon as={AlertCircleIcon} />
-                    <FormControlErrorText>
-                        At least 6 characters are required.
-                    </FormControlErrorText>
-                </FormControlError> */}
-            </FormControl>
-        </Box>
+        <View
+            className={` w-full border-[1px] rounded-full h-fit py-2 px-4 ${className}`}
+        >
+            <TextInput className="" placeholder={placeholder} />
+        </View>
     );
 }

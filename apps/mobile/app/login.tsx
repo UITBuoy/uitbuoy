@@ -1,7 +1,9 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, TextInput, View } from 'react-native';
 import TextField from '../src/components/TextField/TextField';
-import Button from '../src/components/Button/Button';
+import { Button, ButtonText } from '../src/components/ui/Button/Button';
+import { Input, InputField } from '../src/components/ui/Input/Input';
+// import Button from '../src/components/Button/Button';
 
 export default function Page() {
     return (
@@ -12,19 +14,22 @@ export default function Page() {
                 //     fill: 'linear-gradient(153deg, #EDF1F5 1.34%, #039CCA 96.22%)',
                 // }}
             ></View>
-            <View className=" pt-5 w-full h-fit px-5">
-                <TextField
-                    title="Username"
-                    type="text"
-                    placeholder="Nhập mã số sinh viên"
-                />
+            <View className=" mt-8 flex flex-col gap-5 w-full h-fit px-5">
+                <TextField title="Username" type="text" placeholder="MSSV" />
                 <TextField
                     title="Password"
                     type="password"
-                    placeholder="Nhập mật khẩu course"
+                    placeholder="Mật khẩu"
                 />
             </View>
-            <Button className="">Đăng nhập</Button>
+            <Button
+                className=" bg-sky-500 h-fit p-3 mt-10 mx-5"
+                size="md"
+                variant="solid"
+                action="primary"
+            >
+                <ButtonText className=" text-white">Đăng nhập</ButtonText>
+            </Button>
         </View>
     );
 }

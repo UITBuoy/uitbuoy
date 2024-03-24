@@ -11,6 +11,9 @@
   },
   "dependencies": {
     "@gluestack-style/react": "^1.0.49",
+    "@gluestack-ui/button": "^1.0.3",
+    "@gluestack-ui/form-control": "^0.1.16",
+    "@gluestack-ui/input": "^0.1.26",
     "@gluestack-ui/nativewind-utils": "^1.0.2",
     "@gluestack-ui/themed": "^1.1.9",
     "@react-native-async-storage/async-storage": "1.21.0",
