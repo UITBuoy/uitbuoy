@@ -1,5 +1,8 @@
 {
     "compilerOptions": {},
     "include": ["."],
-    "extends": "expo/tsconfig.base"
+    "extends": "expo/tsconfig.base",
+    "paths": {
+        "@/*": ["./src/*"] // Add relative path
+    }
 }
