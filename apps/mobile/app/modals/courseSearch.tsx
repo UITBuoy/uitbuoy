@@ -1,10 +1,15 @@
-import { useRef } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { useEffect, useRef } from 'react';
+import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import TextField from '../../src/components/TextField/TextField';
+import { router } from 'expo-router';
 
 export default function Modal() {
-    const searchRef = useRef(null);
+    const searchRef = useRef<TextInput>(null);
+
+    useEffect(() => {
+        searchRef.current?.focus();
+    }, []);
 
     return (
         <View className=" flex-1 bg-white">
@@ -19,7 +24,12 @@ export default function Modal() {
                             placeholder="Search for courses..."
                         />
                     </View>
-                    <TouchableOpacity className=" flex-grow-0 px-4 py-2">
+                    <TouchableOpacity
+                        onPress={() => {
+                            router.back();
+                        }}
+                        className=" flex-grow-0 px-4 py-2"
+                    >
                         <Text className=" text-neutral-40">Cancel</Text>
                     </TouchableOpacity>
                 </View>
