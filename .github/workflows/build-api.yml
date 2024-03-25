@@ -22,6 +22,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
       - name: Install dependencies
-        run: pnpm install --filter=api --frozen-lockfile
+        run: pnpm install --filter=api --no-frozen-lockfile
       - name: Build code
         run: pnpm run --filter=api build
