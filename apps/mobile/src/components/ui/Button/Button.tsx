@@ -236,6 +236,7 @@ const Button = React.forwardRef(
                     class: className,
                 })}
                 context={{ variant, size, action }}
+                {...props}
             >
                 {children}
             </UIButton>

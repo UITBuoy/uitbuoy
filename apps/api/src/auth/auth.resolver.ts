@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Query, Resolver } from '@nestjs/graphql';
+import { Args, Query, Resolver, Mutation } from '@nestjs/graphql';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/user/entities/user.entity';
 import { AuthService } from './auth.service';
@@ -16,7 +16,7 @@ export class AuthResolver {
         private readonly loggerService: LoggerService,
     ) {}
 
-    @Query(() => AuthEntity)
+    @Mutation(() => AuthEntity)
     async login(
         @Args('username', { type: () => String }) username: string,
         @Args('password', { type: () => String }) password: string,

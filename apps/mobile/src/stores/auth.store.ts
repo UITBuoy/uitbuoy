@@ -5,9 +5,9 @@ import { immer } from 'zustand/middleware/immer';
 
 export type IAuth = {
     isLogin: boolean;
-    access_token: string;
-    login: (username: string, password: string) => Promise<boolean>;
-    logout: () => Promise<boolean>;
+    authData?: AuthEntity;
+    authLogin: (authEntity: AuthEntity) => boolean;
+    authLogout: () => boolean;
 };
 
 export const useAuth = create<
@@ -17,11 +17,20 @@ export const useAuth = create<
     persist(
         immer<IAuth>((set, get) => ({
             isLogin: false,
-            access_token: '',
-            login: async (username, password) => {
-                return true;
+            authLogin: (authEntity) => {
+                if (authEntity.access_token) {
+                    set((state) => {
+                        state.isLogin = true;
+                        state.authData = authEntity;
+                    });
+                    return true;
+                }
+                return false;
             },
-            logout: async () => {
+            authLogout: () => {
+                set((state) => {
+                    state.isLogin = false;
+                });
                 return true;
             },
         })),
