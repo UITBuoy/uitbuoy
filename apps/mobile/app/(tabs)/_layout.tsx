@@ -3,6 +3,10 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Tabs } from 'expo-router';
 import { View } from 'react-native';
 import HomeIcon from '../../src/icons/home';
+import CourseIcon from '../../src/icons/course';
+import ScheduleIcon from '../../src/icons/schedule';
+import ProfileIcon from '../../src/icons/profile';
+import LearningPathIcon from '../../src/icons/learning-path';
 // import HomeIcon from '../../assets/icons/home.png';
 // import { Image } from 'expo-image';
 
@@ -39,7 +43,31 @@ export default function TabLayout() {
                 options={{
                     title: 'Courses',
                     tabBarIcon: ({ focused }) => (
-                        <TabIcon name="cog" focused={focused} />
+                        <TabIcon focused={focused}>
+                            <CourseIcon focused={focused} />
+                        </TabIcon>
+                    ),
+                }}
+            />
+            <Tabs.Screen
+                name="learning-path"
+                options={{
+                    title: 'Learning path',
+                    tabBarIcon: ({ focused }) => (
+                        <TabIcon focused={focused}>
+                            <LearningPathIcon focused={focused} />
+                        </TabIcon>
+                    ),
+                }}
+            />
+            <Tabs.Screen
+                name="schedule"
+                options={{
+                    title: 'Schedule',
+                    tabBarIcon: ({ focused }) => (
+                        <TabIcon focused={focused}>
+                            <ScheduleIcon focused={focused} />
+                        </TabIcon>
                     ),
                 }}
             />
@@ -48,7 +76,9 @@ export default function TabLayout() {
                 options={{
                     title: 'Profile',
                     tabBarIcon: ({ focused }) => (
-                        <TabIcon name="cog" focused={focused} />
+                        <TabIcon focused={focused}>
+                            <ProfileIcon focused={focused} />
+                        </TabIcon>
                     ),
                 }}
             />
