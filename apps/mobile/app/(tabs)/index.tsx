@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
 import { Text } from '@gluestack-ui/themed';
 import { useAuth } from '../../src/stores/auth.store';
@@ -18,7 +18,9 @@ export default function Page() {
     return (
         <View className=" flex-1 bg-white">
             <SafeAreaView>
-                <Text>This is home page</Text>
+                <ScrollView className="">
+                    <Text className="">This is home page</Text>
+                </ScrollView>
             </SafeAreaView>
             {/* <StatusBar style="auto" />
             <Text>This is home page</Text>
