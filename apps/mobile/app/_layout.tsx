@@ -34,11 +34,22 @@ export default function Layout() {
                     <Stack>
                         <Stack.Screen
                             name="(tabs)"
-                            options={{ headerShown: false }}
+                            options={{
+                                headerShown: false,
+                                animation: 'slide_from_right',
+                            }}
                         />
                         <Stack.Screen
                             name="login"
                             options={{ headerShown: false }}
+                        />
+                        <Stack.Screen
+                            name="modals/courseSearch"
+                            options={{
+                                headerShown: false,
+                                presentation: 'modal',
+                                animation: 'fade_from_bottom',
+                            }}
                         />
                     </Stack>
                 </ThemeProvider>

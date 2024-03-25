@@ -1,38 +1,39 @@
 import React from 'react';
 import { TextInput, View } from 'react-native';
-// import {
-//     Box,
-//     FormControl,
-//     FormControlLabel,
-//     FormControlLabelText,
-//     Input,
-//     InputField,
-// } from '@gluestack-ui/themed';
 
-type IProps = {
+type IProps = React.ComponentProps<typeof TextInput> & {
     title: string;
     type: 'text' | 'password';
     placeholder?: string;
     className?: string;
+    fieldClassName?: string;
     value?: string;
     onChangeText?: (value: string) => any;
 };
 
 const TextField = React.forwardRef(
     (
-        { title, type, value, onChangeText, placeholder, className }: IProps,
+        {
+            title,
+            type,
+            value,
+            onChangeText,
+            placeholder,
+            className,
+            fieldClassName,
+            ...props
+        }: IProps,
         ref: React.MutableRefObject<TextInput>,
     ) => {
         return (
-            <View
-                className={` w-full border-[1px] rounded-full h-fit py-2 px-4 ${className}`}
-            >
+            <View className={` w-full h-fit ${className}`}>
                 <TextInput
                     value={value}
                     onChangeText={onChangeText}
                     ref={ref}
-                    className=""
+                    className={fieldClassName}
                     placeholder={placeholder}
+                    {...props}
                 />
             </View>
         );

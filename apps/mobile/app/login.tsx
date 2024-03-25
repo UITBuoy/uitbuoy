@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { TextInput, View } from 'react-native';
 import TextField from '../src/components/TextField/TextField';
 import { Button, ButtonText } from '../src/components/ui/Button/Button';
@@ -6,7 +6,7 @@ import { Image } from 'expo-image';
 
 import LOGO from '../assets/app-logo.png';
 import { useLogin } from '../src/hooks/auth/useLogin';
-import { router } from 'expo-router';
+import { router, useRootNavigationState } from 'expo-router';
 import { useAuth } from '../src/stores/auth.store';
 
 export default function Page() {
@@ -14,12 +14,15 @@ export default function Page() {
     const [password, setPassword] = useState<string>();
 
     const { login } = useLogin();
-
     const { isLogin } = useAuth();
 
-    if (isLogin) {
-        router.replace('/');
-    }
+    const rootNavigationState = useRootNavigationState();
+
+    useEffect(() => {
+        if (isLogin && rootNavigationState.key) {
+            router.replace('/');
+        }
+    }, []);
 
     return (
         <View className=" flex flex-col w-full h-full">
@@ -37,6 +40,7 @@ export default function Page() {
             </View>
             <View className=" mt-5 flex flex-col gap-5 w-full h-fit px-5">
                 <TextField
+                    className=" border-[1px] rounded-full py-2 px-4"
                     value={username}
                     onChangeText={(value) => setUsername(value)}
                     title="Username"
@@ -44,6 +48,7 @@ export default function Page() {
                     placeholder="MSSV"
                 />
                 <TextField
+                    className=" border-[1px] rounded-full py-2 px-4"
                     value={password}
                     onChangeText={(value) => setPassword(value)}
                     title="Password"
