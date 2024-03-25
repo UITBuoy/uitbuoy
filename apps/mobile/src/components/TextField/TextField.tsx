@@ -1,12 +1,5 @@
 import React from 'react';
-import { Text, TextInput, View } from 'react-native';
-import { Box } from '../ui/Box/Box';
-import {
-    FormControl,
-    FormControlLabel,
-    FormControlLabelText,
-} from '../ui/FormControl/FormControl';
-import { Input, InputField } from '../ui/Input/Input';
+import { TextInput, View } from 'react-native';
 // import {
 //     Box,
 //     FormControl,
@@ -21,19 +14,31 @@ type IProps = {
     type: 'text' | 'password';
     placeholder?: string;
     className?: string;
+    value?: string;
+    onChangeText?: (value: string) => any;
 };
 
-export default function TextField({
-    title,
-    type,
-    placeholder,
-    className,
-}: IProps) {
-    return (
-        <View
-            className={` w-full border-[1px] rounded-full h-fit py-2 px-4 ${className}`}
-        >
-            <TextInput className="" placeholder={placeholder} />
-        </View>
-    );
-}
+const TextField = React.forwardRef(
+    (
+        { title, type, value, onChangeText, placeholder, className }: IProps,
+        ref: React.MutableRefObject<TextInput>,
+    ) => {
+        return (
+            <View
+                className={` w-full border-[1px] rounded-full h-fit py-2 px-4 ${className}`}
+            >
+                <TextInput
+                    value={value}
+                    onChangeText={onChangeText}
+                    ref={ref}
+                    className=""
+                    placeholder={placeholder}
+                />
+            </View>
+        );
+    },
+);
+
+TextField.displayName = 'TextField';
+
+export default TextField;

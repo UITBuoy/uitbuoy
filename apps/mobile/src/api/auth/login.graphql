@@ -1,4 +1,4 @@
-query Login($password: String, $username: String) {
+mutation LoginAPI($password: String!, $username: String!) {
     login(password: $password, username: $username) {
         access_token
         auth
