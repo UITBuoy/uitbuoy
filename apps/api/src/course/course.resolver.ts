@@ -8,6 +8,7 @@ import { Course } from './entities/course.entity';
 import { CourseContentEntity } from './entities/course-content.entity';
 import { QueryArgs } from '@/common/args/query.arg';
 import { CourseApiService } from './services/course-api.service';
+import moment from 'moment';
 
 @Resolver(() => Course)
 export class CourseResolver {
@@ -18,18 +19,40 @@ export class CourseResolver {
 
     @Query(() => [Course])
     @UseGuards(JwtAuthGuard)
-    async findAllCoursesOfUser(
+    async userCourses(
         @CurrentUser() user: User,
         @Args() queryArgs: QueryArgs,
+        @Args('isRecent', {
+            type: () => Boolean,
+            nullable: true,
+            defaultValue: false,
+        })
+        isRecent: boolean,
     ) {
+        let result = [];
+
         if (queryArgs.isNew) {
             const courses = (
                 await this.courseApiService.findAllCoursesOfUser(user)
             ).map((course) => ({ ...course, users: [user] }));
             await this.courseService.save(courses);
-            return courses;
+            result = courses;
         } else {
-            return this.courseService.findAllCoursesOfUser(user);
+            const courses = await this.courseService.findAllCoursesOfUser(user);
+            if (courses.length == 0) {
+                result = await this.courseApiService.findAllCoursesOfUser(user);
+            }
+        }
+
+        if (isRecent) {
+            return result.filter(
+                ({ startdate }) =>
+                    moment().diff(
+                        moment(new Date(startdate * 1000)),
+                        'months',
+                        true,
+                    ) < 5,
+            );
         }
     }
 

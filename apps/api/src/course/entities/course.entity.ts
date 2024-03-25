@@ -109,6 +109,10 @@ export class Course {
     @Column({ nullable: true })
     uservisible: boolean;
 
+    @Field({ nullable: true })
+    @Column({ nullable: true })
+    coursecategory: string;
+
     @OneToMany('CourseContentEntity', 'courseid')
     contents: Relation<CourseContentEntity>[];
 
