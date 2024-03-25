@@ -1,13 +1,25 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { useColorScheme } from 'react-native';
 
-import { Slot } from 'expo-router';
+import { Stack } from 'expo-router';
 import { GluestackUIProvider } from '../src/components/gluestack-ui-provider/';
 
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import '../global.css';
 
+import {
+    DarkTheme,
+    DefaultTheme,
+    ThemeProvider,
+} from '@react-navigation/native';
+
+export const unstable_settings = {
+    initialRouteName: '(tabs)',
+};
+
 export default function Layout() {
+    const colorScheme = useColorScheme();
+
     const client = new ApolloClient({
         uri: 'http://192.168.1.6:3001/graphql',
         cache: new InMemoryCache(),
@@ -16,22 +28,21 @@ export default function Layout() {
     return (
         <GluestackUIProvider>
             <ApolloProvider client={client}>
-                <View style={styles.container}>
-                    <Slot />
-                </View>
+                <ThemeProvider
+                    value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+                >
+                    <Stack>
+                        <Stack.Screen
+                            name="(tabs)"
+                            options={{ headerShown: false }}
+                        />
+                        <Stack.Screen
+                            name="login"
+                            options={{ headerShown: false }}
+                        />
+                    </Stack>
+                </ThemeProvider>
             </ApolloProvider>
         </GluestackUIProvider>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        width: '100%',
-        padding: 0,
-        flexDirection: 'column',
-        backgroundColor: '#fff',
-        alignItems: 'flex-start',
-        justifyContent: 'flex-start',
-    },
-});
