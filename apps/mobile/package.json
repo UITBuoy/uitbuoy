@@ -7,7 +7,8 @@
     "dev": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "codegen": "graphql-codegen --watch --config codegen.ts"
   },
   "dependencies": {
     "@gluestack-style/react": "^1.0.49",
@@ -38,6 +39,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@graphql-codegen/cli": "^5.0.2",
+    "@parcel/watcher": "^2.4.1",
     "@types/react": "^18.2.64",
     "tailwindcss": "^3.3.2"
   },
