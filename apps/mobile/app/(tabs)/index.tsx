@@ -6,6 +6,7 @@ import { Text } from '@gluestack-ui/themed';
 import { useAuth } from '../../src/stores/auth.store';
 import { router } from 'expo-router';
 import { Button } from '../../src/components/ui/Button/Button';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Page() {
     const { isLogin, authLogout } = useAuth();
@@ -15,8 +16,11 @@ export default function Page() {
     }
 
     return (
-        <View>
-            <StatusBar style="auto" />
+        <View className=" flex-1 bg-white">
+            <SafeAreaView>
+                <Text>This is home page</Text>
+            </SafeAreaView>
+            {/* <StatusBar style="auto" />
             <Text>This is home page</Text>
             <Button
                 onPress={() => {
@@ -24,7 +28,7 @@ export default function Page() {
                 }}
             >
                 <Text>Signout</Text>
-            </Button>
+            </Button> */}
         </View>
     );
 }
