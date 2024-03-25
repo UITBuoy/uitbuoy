@@ -6,8 +6,8 @@ import { immer } from 'zustand/middleware/immer';
 export type IAuth = {
     isLogin: boolean;
     access_token: string;
-    // login: (username: string, password: string) => Promise<boolean>;
-    // logout: () => Promise<boolean>;
+    login: (username: string, password: string) => Promise<boolean>;
+    logout: () => Promise<boolean>;
 };
 
 export const useAuth = create<
@@ -18,12 +18,12 @@ export const useAuth = create<
         immer<IAuth>((set, get) => ({
             isLogin: false,
             access_token: '',
-            // login: async (username, password) => {
-            //     return true;
-            // },
-            // logout: async () => {
-            //     return true;
-            // },
+            login: async (username, password) => {
+                return true;
+            },
+            logout: async () => {
+                return true;
+            },
         })),
         {
             name: 'auth',

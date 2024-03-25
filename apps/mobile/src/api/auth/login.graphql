@@ -1,0 +1,24 @@
+query Login($password: String, $username: String) {
+    login(password: $password, username: $username) {
+        access_token
+        auth
+        city
+        confirmed
+        country
+        department
+        email
+        firstaccess
+        fullname
+        id
+        lang
+        lastaccess
+        mailformat
+        profileimageurl
+        profileimageurlsmall
+        suspended
+        theme
+        timezone
+        token
+        username
+    }
+}
