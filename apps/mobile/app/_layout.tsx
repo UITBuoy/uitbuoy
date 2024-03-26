@@ -34,7 +34,7 @@ export default function Layout() {
     } = useAuth();
 
     const link = createHttpLink({
-        uri: `http://${Constants.expoConfig.hostUri.split(`:`).shift().concat(`:8080`)}`,
+        uri: `http://${Constants.expoConfig.hostUri.split(`:`).shift().concat(`:3001`)}/graphql`,
         credentials: 'same-origin',
     });
 
@@ -48,7 +48,6 @@ export default function Layout() {
     });
 
     const client = new ApolloClient({
-        // uri: 'http://192.168.1.6:3001/graphql',
         link: authLink.concat(link),
         cache: new InMemoryCache(),
     });
