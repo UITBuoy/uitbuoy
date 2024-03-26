@@ -52,7 +52,9 @@ export type Course = {
   __typename?: 'Course';
   categoryid?: Maybe<Scalars['Int']['output']>;
   categoryname?: Maybe<Scalars['String']['output']>;
+  coursecategory?: Maybe<Scalars['String']['output']>;
   courseimage?: Maybe<Scalars['String']['output']>;
+  display_name?: Maybe<Scalars['String']['output']>;
   enddate?: Maybe<Scalars['Int']['output']>;
   enrollmentmethods?: Maybe<Scalars['String']['output']>;
   fullname?: Maybe<Scalars['String']['output']>;
@@ -110,9 +112,9 @@ export type Query = {
   __typename?: 'Query';
   findAll: Array<Subject>;
   findAllCourseContents: Array<CourseContentEntity>;
-  findAllCoursesOfUser: Array<Course>;
   findOne: Array<Subject>;
   profile: User;
+  userCourses: Array<Course>;
 };
 
 
@@ -126,13 +128,14 @@ export type QueryFindAllCourseContentsArgs = {
 };
 
 
-export type QueryFindAllCoursesOfUserArgs = {
-  isNew?: Scalars['Boolean']['input'];
+export type QueryFindOneArgs = {
+  code: Scalars['String']['input'];
 };
 
 
-export type QueryFindOneArgs = {
-  code: Scalars['String']['input'];
+export type QueryUserCoursesArgs = {
+  isNew?: Scalars['Boolean']['input'];
+  isRecent?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type Subject = {
@@ -190,6 +193,14 @@ export type LoginApiMutationVariables = Exact<{
 
 export type LoginApiMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthEntity', access_token: string, auth?: string | null, city?: string | null, confirmed?: string | null, country?: string | null, department?: string | null, email: string, firstaccess?: number | null, fullname: string, id?: number | null, lang?: string | null, lastaccess?: number | null, mailformat?: string | null, profileimageurl?: string | null, profileimageurlsmall?: string | null, suspended?: string | null, theme?: string | null, timezone?: string | null, token: string, username: string } };
 
+export type UserCoursesQueryVariables = Exact<{
+  isNew?: InputMaybe<Scalars['Boolean']['input']>;
+  isRecent?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+
+export type UserCoursesQuery = { __typename?: 'Query', userCourses: Array<{ __typename?: 'Course', categoryid?: number | null, categoryname?: string | null, display_name?: string | null, coursecategory?: string | null, courseimage?: string | null, enddate?: number | null, enrollmentmethods?: string | null, fullname?: string | null, hiddenbynumsections?: number | null, id?: number | null, idnumber?: string | null, name?: string | null, overviewfiles?: string | null, pdfexportfont?: string | null, section?: number | null, shortname?: string | null, showactivitydates?: boolean | null, showcompletionconditions?: string | null, sortorder?: number | null, startdate?: number | null, summary?: string | null, summaryfiles?: string | null, summaryformat?: number | null, uservisible?: boolean | null, viewurl?: string | null, visible?: boolean | null }> };
+
 
 export const LoginApiDocument = gql`
     mutation LoginAPI($password: String!, $username: String!) {
@@ -244,3 +255,72 @@ export function useLoginApiMutation(baseOptions?: Apollo.MutationHookOptions<Log
 export type LoginApiMutationHookResult = ReturnType<typeof useLoginApiMutation>;
 export type LoginApiMutationResult = Apollo.MutationResult<LoginApiMutation>;
 export type LoginApiMutationOptions = Apollo.BaseMutationOptions<LoginApiMutation, LoginApiMutationVariables>;
+export const UserCoursesDocument = gql`
+    query UserCourses($isNew: Boolean, $isRecent: Boolean) {
+  userCourses(isNew: $isNew, isRecent: $isRecent) {
+    categoryid
+    categoryname
+    display_name
+    coursecategory
+    courseimage
+    enddate
+    enrollmentmethods
+    fullname
+    hiddenbynumsections
+    id
+    idnumber
+    name
+    overviewfiles
+    pdfexportfont
+    section
+    shortname
+    showactivitydates
+    showcompletionconditions
+    sortorder
+    startdate
+    summary
+    summaryfiles
+    summaryformat
+    uservisible
+    viewurl
+    visible
+  }
+}
+    `;
+
+/**
+ * __useUserCoursesQuery__
+ *
+ * To run a query within a React component, call `useUserCoursesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserCoursesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserCoursesQuery({
+ *   variables: {
+ *      isNew: // value for 'isNew'
+ *      isRecent: // value for 'isRecent'
+ *   },
+ * });
+ */
+export function useUserCoursesQuery(baseOptions?: Apollo.QueryHookOptions<UserCoursesQuery, UserCoursesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserCoursesQuery, UserCoursesQueryVariables>(UserCoursesDocument, options);
+      }
+export function useUserCoursesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserCoursesQuery, UserCoursesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserCoursesQuery, UserCoursesQueryVariables>(UserCoursesDocument, options);
+        }
+export function useUserCoursesSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<UserCoursesQuery, UserCoursesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<UserCoursesQuery, UserCoursesQueryVariables>(UserCoursesDocument, options);
+        }
+export type UserCoursesQueryHookResult = ReturnType<typeof useUserCoursesQuery>;
+export type UserCoursesLazyQueryHookResult = ReturnType<typeof useUserCoursesLazyQuery>;
+export type UserCoursesSuspenseQueryHookResult = ReturnType<typeof useUserCoursesSuspenseQuery>;
+export type UserCoursesQueryResult = Apollo.QueryResult<UserCoursesQuery, UserCoursesQueryVariables>;
+export function refetchUserCoursesQuery(variables?: UserCoursesQueryVariables) {
+      return { query: UserCoursesDocument, variables: variables }
+    }

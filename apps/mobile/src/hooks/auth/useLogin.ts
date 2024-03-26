@@ -12,6 +12,7 @@ export function useLogin() {
                 const authEntityResponse = await loginFunction({
                     variables: { username, password },
                 });
+                console.log({ authEntityResponse: authEntityResponse });
                 return authLogin(authEntityResponse.data.login);
             } catch (error) {
                 console.log({ error });

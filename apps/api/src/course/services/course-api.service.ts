@@ -59,7 +59,13 @@ export class CourseApiService {
             throw new CourseNotFoundException();
         }
 
-        return courses;
+        return courses.map(
+            (course: Course) =>
+                ({
+                    ...course,
+                    display_name: course.fullname.split(' - ').at(0),
+                }) as Course,
+        );
     }
 
     async getCourseContent({

@@ -27,3 +27,32 @@ declare type AuthEntity = {
     token?: string;
     username: string;
 };
+
+declare type CourseEntity = {
+    categoryid?: any;
+    categoryname?: string;
+    coursecategory?: string;
+    courseimage?: string;
+    enddate?: number;
+    enrollmentmethods?: any;
+    fullname?: string;
+    display_name?: string;
+    hiddenbynumsections?: any;
+    id?: number;
+    idnumber?: string;
+    name?: string;
+    overviewfiles?: any;
+    pdfexportfont?: string;
+    section?: any;
+    shortname?: string;
+    showactivitydates?: boolean;
+    showcompletionconditions?: any;
+    sortorder?: any;
+    startdate?: number;
+    summary?: string;
+    summaryfiles?: any;
+    summaryformat?: number;
+    uservisible?: boolean;
+    viewurl?: string;
+    visible?: boolean;
+};
