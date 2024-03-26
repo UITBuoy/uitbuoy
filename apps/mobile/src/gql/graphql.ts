@@ -134,8 +134,9 @@ export type QueryFindOneArgs = {
 
 
 export type QueryUserCoursesArgs = {
-  isNew?: Scalars['Boolean']['input'];
+  isNew?: InputMaybe<Scalars['Boolean']['input']>;
   isRecent?: InputMaybe<Scalars['Boolean']['input']>;
+  keyword?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Subject = {
