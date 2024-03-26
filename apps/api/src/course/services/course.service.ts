@@ -18,7 +18,7 @@ export class CourseService {
         private readonly courseApiService: CourseApiService,
     ) {}
 
-    async findAllCoursesOfUser(user: User): Promise<Course[]> {
+    async findAllCoursesOfUser(user: User, keyword: string): Promise<Course[]> {
         const response = await this.courseRepo
             .createQueryBuilder('course')
             .innerJoin(
@@ -26,6 +26,9 @@ export class CourseService {
                 'courseUser',
                 'courseUser.id = :userId',
                 { userId: user.id },
+            )
+            .where(
+                `to_tsquery('${keyword.split(' ').join(' & ')}') @@ to_tsvector(unaccent(course.fullname))`,
             )
             .getMany();
         return response;
