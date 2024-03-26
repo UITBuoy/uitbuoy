@@ -54,6 +54,7 @@ export class CourseResolver {
                     ) < 5,
             );
         }
+        return result;
     }
 
     @Query(() => [CourseContentEntity])

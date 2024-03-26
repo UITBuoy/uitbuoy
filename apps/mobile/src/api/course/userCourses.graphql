@@ -1,0 +1,30 @@
+query UserCourses($isNew: Boolean, $isRecent: Boolean) {
+    userCourses(isNew: $isNew, isRecent: $isRecent) {
+        categoryid
+        categoryname
+        display_name
+        coursecategory
+        courseimage
+        enddate
+        enrollmentmethods
+        fullname
+        hiddenbynumsections
+        id
+        idnumber
+        name
+        overviewfiles
+        pdfexportfont
+        section
+        shortname
+        showactivitydates
+        showcompletionconditions
+        sortorder
+        startdate
+        summary
+        summaryfiles
+        summaryformat
+        uservisible
+        viewurl
+        visible
+    }
+}
