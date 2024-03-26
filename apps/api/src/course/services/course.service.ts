@@ -28,7 +28,9 @@ export class CourseService {
                 { userId: user.id },
             )
             .where(
-                `to_tsquery('${keyword.split(' ').join(' & ')}') @@ to_tsvector(unaccent(course.fullname))`,
+                keyword
+                    ? `to_tsquery('${keyword.split(' ').join(' & ')}') @@ to_tsvector(unaccent(course.fullname))`
+                    : 'true',
             )
             .getMany();
         return response;
