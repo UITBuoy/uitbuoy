@@ -27,6 +27,7 @@ import {
 import * as winston from 'winston';
 import * as winstonMongoDB from 'winston-mongodb';
 import { MongooseModule } from '@nestjs/mongoose';
+import { LecturerModule } from './lecturer/lecturer.module';
 
 @Module({
     imports: [
@@ -158,6 +159,7 @@ import { MongooseModule } from '@nestjs/mongoose';
         CalendarModule,
         EventModule,
         LoggerModule,
+        LecturerModule,
     ],
     controllers: [AppController],
     providers: [
