@@ -62,7 +62,7 @@ export default function Page() {
                 variant="solid"
                 action="primary"
                 onPress={async () => {
-                    if (login(username, password)) router.replace('/');
+                    if (await login(username, password)) router.replace('/');
                 }}
             >
                 <ButtonText className=" text-white">Đăng nhập</ButtonText>
