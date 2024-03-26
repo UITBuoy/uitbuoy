@@ -19,33 +19,21 @@ export class CourseResolver {
 
     @Query(() => [Course])
     @UseGuards(JwtAuthGuard)
-    async userCourses(
-        @CurrentUser() user: User,
-        @Args() queryArgs: QueryArgs,
-        @Args('isRecent', {
-            type: () => Boolean,
-            nullable: true,
-            defaultValue: false,
-        })
-        isRecent: boolean,
-    ) {
-        let result = [];
-
+    async userCourses(@CurrentUser() user: User, @Args() queryArgs: QueryArgs) {
         if (queryArgs.isNew) {
-            const courses = (
+            const apiCourses = (
                 await this.courseApiService.findAllCoursesOfUser(user)
             ).map((course) => ({ ...course, users: [user] }));
-            await this.courseService.save(courses);
-            result = courses;
-        } else {
-            const courses = await this.courseService.findAllCoursesOfUser(user);
-            if (courses.length == 0) {
-                result = await this.courseApiService.findAllCoursesOfUser(user);
-            }
+            await this.courseService.save(apiCourses);
         }
 
-        if (isRecent) {
-            return result.filter(
+        const courses = await this.courseService.findAllCoursesOfUser(
+            user,
+            queryArgs.keyword,
+        );
+
+        if (queryArgs.isRecent) {
+            return courses.filter(
                 ({ startdate }) =>
                     moment().diff(
                         moment(new Date(startdate * 1000)),
@@ -54,7 +42,7 @@ export class CourseResolver {
                     ) < 5,
             );
         }
-        return result;
+        return courses;
     }
 
     @Query(() => [CourseContentEntity])
