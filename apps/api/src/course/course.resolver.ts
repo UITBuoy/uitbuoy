@@ -29,7 +29,7 @@ export class CourseResolver {
 
         const courses = await this.courseService.findAllCoursesOfUser(
             user,
-            queryArgs.keyword,
+            queryArgs.keyword.trim(),
         );
 
         if (queryArgs.isRecent) {

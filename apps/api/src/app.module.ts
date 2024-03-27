@@ -1,33 +1,30 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
+import { MongooseModule } from '@nestjs/mongoose';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { WinstonModule } from 'nest-winston';
 import { join } from 'path';
+import * as winston from 'winston';
+import * as winstonMongoDB from 'winston-mongodb';
 import { ApiModule } from './api/api.module';
 import { ApiService } from './api/api.service';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { UserModule } from './user/user.module';
-import { BaseExceptionFilter } from './common/filters/base-exception.filter';
-import { SubjectModule } from './subject/subject.module';
-import { CourseModule } from './course/course.module';
-import { HealthModule } from './health/health.module';
-import { ShutdownService } from './common/services/shutdown.service';
 import { CalendarModule } from './calendar/calendar.module';
-import { EventModule } from './envent/event.module';
-import { LoggerModule } from './logger/logger.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { BaseExceptionFilter } from './common/filters/base-exception.filter';
+import { ShutdownService } from './common/services/shutdown.service';
 import { EnvironmentType } from './config/type';
-import {
-    utilities as nestWinstonModuleUtilities,
-    WinstonModule,
-} from 'nest-winston';
-import * as winston from 'winston';
-import * as winstonMongoDB from 'winston-mongodb';
-import { MongooseModule } from '@nestjs/mongoose';
+import { CourseModule } from './course/course.module';
+import { EventModule } from './envent/event.module';
+import { HealthModule } from './health/health.module';
 import { LecturerModule } from './lecturer/lecturer.module';
+import { LoggerModule } from './logger/logger.module';
+import { SubjectModule } from './subject/subject.module';
+import { UserModule } from './user/user.module';
 
 @Module({
     imports: [

@@ -1,0 +1,10 @@
+query SearchCourses($isNew: Boolean, $keyword: String) {
+    userCourses(isNew: $isNew, isRecent: false, keyword: $keyword) {
+        coursecategory
+        display_name
+        enddate
+        id
+        shortname
+        startdate
+    }
+}
