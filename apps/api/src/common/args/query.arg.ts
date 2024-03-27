@@ -3,11 +3,11 @@ import { ArgsType, Field } from '@nestjs/graphql';
 @ArgsType()
 export class QueryArgs {
     @Field(() => Boolean, { nullable: true, defaultValue: false })
-    isNew: boolean;
+    isNew?: boolean;
 
     @Field(() => Boolean, { nullable: true, defaultValue: false })
-    isRecent: boolean;
+    isRecent?: boolean;
 
     @Field({ nullable: true })
-    keyword: string;
+    keyword?: string;
 }
