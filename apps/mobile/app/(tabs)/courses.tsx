@@ -26,7 +26,7 @@ export default function Page() {
                             <Spinner size="large" />
                         ) : (
                             recentCourses?.userCourses.map((course) => (
-                                <CourseItem {...course} />
+                                <CourseItem key={course.id} {...course} />
                             ))
                         )}
                     </View>

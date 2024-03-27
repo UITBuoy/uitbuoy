@@ -194,9 +194,18 @@ export type LoginApiMutationVariables = Exact<{
 
 export type LoginApiMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthEntity', access_token: string, auth?: string | null, city?: string | null, confirmed?: string | null, country?: string | null, department?: string | null, email: string, firstaccess?: number | null, fullname: string, id?: number | null, lang?: string | null, lastaccess?: number | null, mailformat?: string | null, profileimageurl?: string | null, profileimageurlsmall?: string | null, suspended?: string | null, theme?: string | null, timezone?: string | null, token: string, username: string } };
 
+export type SearchCoursesQueryVariables = Exact<{
+  isNew?: InputMaybe<Scalars['Boolean']['input']>;
+  keyword?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type SearchCoursesQuery = { __typename?: 'Query', userCourses: Array<{ __typename?: 'Course', coursecategory?: string | null, display_name?: string | null, enddate?: number | null, id?: number | null, shortname?: string | null, startdate?: number | null }> };
+
 export type UserCoursesQueryVariables = Exact<{
   isNew?: InputMaybe<Scalars['Boolean']['input']>;
   isRecent?: InputMaybe<Scalars['Boolean']['input']>;
+  keyword?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -256,9 +265,58 @@ export function useLoginApiMutation(baseOptions?: Apollo.MutationHookOptions<Log
 export type LoginApiMutationHookResult = ReturnType<typeof useLoginApiMutation>;
 export type LoginApiMutationResult = Apollo.MutationResult<LoginApiMutation>;
 export type LoginApiMutationOptions = Apollo.BaseMutationOptions<LoginApiMutation, LoginApiMutationVariables>;
+export const SearchCoursesDocument = gql`
+    query SearchCourses($isNew: Boolean, $keyword: String) {
+  userCourses(isNew: $isNew, isRecent: false, keyword: $keyword) {
+    coursecategory
+    display_name
+    enddate
+    id
+    shortname
+    startdate
+  }
+}
+    `;
+
+/**
+ * __useSearchCoursesQuery__
+ *
+ * To run a query within a React component, call `useSearchCoursesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchCoursesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchCoursesQuery({
+ *   variables: {
+ *      isNew: // value for 'isNew'
+ *      keyword: // value for 'keyword'
+ *   },
+ * });
+ */
+export function useSearchCoursesQuery(baseOptions?: Apollo.QueryHookOptions<SearchCoursesQuery, SearchCoursesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchCoursesQuery, SearchCoursesQueryVariables>(SearchCoursesDocument, options);
+      }
+export function useSearchCoursesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchCoursesQuery, SearchCoursesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchCoursesQuery, SearchCoursesQueryVariables>(SearchCoursesDocument, options);
+        }
+export function useSearchCoursesSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<SearchCoursesQuery, SearchCoursesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<SearchCoursesQuery, SearchCoursesQueryVariables>(SearchCoursesDocument, options);
+        }
+export type SearchCoursesQueryHookResult = ReturnType<typeof useSearchCoursesQuery>;
+export type SearchCoursesLazyQueryHookResult = ReturnType<typeof useSearchCoursesLazyQuery>;
+export type SearchCoursesSuspenseQueryHookResult = ReturnType<typeof useSearchCoursesSuspenseQuery>;
+export type SearchCoursesQueryResult = Apollo.QueryResult<SearchCoursesQuery, SearchCoursesQueryVariables>;
+export function refetchSearchCoursesQuery(variables?: SearchCoursesQueryVariables) {
+      return { query: SearchCoursesDocument, variables: variables }
+    }
 export const UserCoursesDocument = gql`
-    query UserCourses($isNew: Boolean, $isRecent: Boolean) {
-  userCourses(isNew: $isNew, isRecent: $isRecent) {
+    query UserCourses($isNew: Boolean, $isRecent: Boolean, $keyword: String) {
+  userCourses(isNew: $isNew, isRecent: $isRecent, keyword: $keyword) {
     categoryid
     categoryname
     display_name
@@ -303,6 +361,7 @@ export const UserCoursesDocument = gql`
  *   variables: {
  *      isNew: // value for 'isNew'
  *      isRecent: // value for 'isRecent'
+ *      keyword: // value for 'keyword'
  *   },
  * });
  */

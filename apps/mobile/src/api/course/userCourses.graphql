@@ -1,5 +1,5 @@
-query UserCourses($isNew: Boolean, $isRecent: Boolean) {
-    userCourses(isNew: $isNew, isRecent: $isRecent) {
+query UserCourses($isNew: Boolean, $isRecent: Boolean, $keyword: String) {
+    userCourses(isNew: $isNew, isRecent: $isRecent, keyword: $keyword) {
         categoryid
         categoryname
         display_name
