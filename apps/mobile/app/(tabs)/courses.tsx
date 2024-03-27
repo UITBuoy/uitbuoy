@@ -17,10 +17,10 @@ export default function Page() {
 
     return (
         <View className=" flex-1 bg-white">
-            <SafeAreaView>
+            <SafeAreaView style={{ flex: 1 }}>
                 <PageHeader />
                 <CourseSearch />
-                <ScrollView className=" mt-6">
+                <ScrollView className=" flex-1 mt-6">
                     <View className=" flex flex-col gap-4 pb-[120px]">
                         {loading ? (
                             <Spinner size="large" />
