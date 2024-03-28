@@ -8,6 +8,8 @@ import { UserModule } from 'src/user/user.module';
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategies/jwt.stategy';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtRefreshStrategy } from './strategies/jwt-refresh.stategy';
 
 @Module({
     imports: [
@@ -15,12 +17,22 @@ import { JwtStrategy } from './strategies/jwt.stategy';
         ApiModule,
         PassportModule,
         LoggerModule,
-        JwtModule.register({
-            secret: 'secret',
-            signOptions: { expiresIn: '2h' },
+        JwtModule.registerAsync({
+            imports: [ConfigModule],
+            inject: [ConfigService],
+            useFactory: (configService: ConfigService) => ({
+                secret: configService.get('ACCESS_TOKEN_SECRET'),
+            }),
         }),
+        ConfigModule,
     ],
-    providers: [AuthService, ApiService, JwtStrategy, AuthResolver],
+    providers: [
+        AuthService,
+        ApiService,
+        JwtStrategy,
+        JwtRefreshStrategy,
+        AuthResolver,
+    ],
     exports: [AuthService],
 })
 export class AuthModule {}

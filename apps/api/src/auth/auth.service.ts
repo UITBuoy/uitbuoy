@@ -1,17 +1,21 @@
+import { User } from '@/user/entities/user.entity';
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import axios from 'axios';
-import { ApiService } from 'src/api/api.service';
 import { MoodleException } from 'src/api/errors/moodle.error';
 import { UserApiService } from 'src/api/services/user-api.service';
 import API_URL from 'src/common/constants/url';
 import { UserService } from 'src/user/user.service';
+import { AuthEntity } from './entities/auth.entity';
 
 @Injectable()
 export class AuthService {
     constructor(
-        private userService: UserService,
-        private userApiService: UserApiService,
-        private apiService: ApiService,
+        private readonly userService: UserService,
+        private readonly userApiService: UserApiService,
+        private readonly configService: ConfigService,
+        private readonly jwtService: JwtService,
     ) {}
 
     async validateUser(username: string, password: string) {
@@ -47,5 +51,42 @@ export class AuthService {
             token: response.data.token,
             ...userData,
         };
+    }
+
+    generateToken(authEntity: AuthEntity) {
+        const access_token = this.jwtService.sign(
+            {
+                ...authEntity,
+                sub: authEntity.username,
+            },
+            {
+                secret: this.configService.get('ACCESS_TOKEN_SECRET'),
+                expiresIn: '1h',
+            },
+        );
+        const refresh_token = this.jwtService.sign(
+            {
+                ...authEntity,
+                sub: authEntity.username,
+            },
+            {
+                secret: this.configService.get('REFRESH_TOKEN_SECRET'),
+                expiresIn: '14d',
+            },
+        );
+
+        return { access_token, refresh_token };
+    }
+
+    refreshToken(user: User) {
+        const access_token = this.jwtService.sign(
+            {
+                ...user,
+                sub: user.username,
+            },
+            { secret: this.configService.get('ACCESS_TOKEN_SECRET') },
+        );
+
+        return { access_token };
     }
 }
