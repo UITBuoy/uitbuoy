@@ -23,8 +23,7 @@
     "serverless": "^3.38.0"
   },
   "resolutions": {
-    "graphql": "^16.8.1",
-    "**/graphql": "^16.8.1"
+    "graphql": "^16.8.1"
   },
   "pnpm": {
     "overrides": {
