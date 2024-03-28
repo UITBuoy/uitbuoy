@@ -13,7 +13,7 @@ async function bootstrap() {
     app.useGlobalInterceptors(new LoggingInterceptor(logger));
     app.enableShutdownHooks();
     app.useLogger(logger);
-    app.enableCors();
+    app.enableCors({ origin: true, credentials: true });
 
     const PORT = parseInt(configService.get<string>('APP_PORT'));
 

@@ -39,14 +39,25 @@ import { UserModule } from './user/user.module';
                         : '/tmp',
                     '/schema.gql',
                 ),
-                playground: true,
+                playground: {
+                    settings: {
+                        'request.credentials': 'include',
+                    },
+                },
+                // cors: {
+                //     origin: '*',
+                //     credentials: true,
+                // },
+                context: ({ req, res }) => ({
+                    req,
+                    res,
+                }),
                 sortSchema: true,
                 formatError: (error) => ({
                     message: error.message,
                     ...error.extensions,
                     path: error.path,
                 }),
-                context: ({ req }: { req: Request }) => ({ req }),
             }),
         }),
         ConfigModule.forRoot({
