@@ -26,6 +26,6 @@ import { EventModule } from '@/event/event.module';
         CourseService,
         CourseConfiguration,
     ],
-    exports: [CourseService],
+    exports: [CourseService, CourseApiService],
 })
 export class CourseModule {}

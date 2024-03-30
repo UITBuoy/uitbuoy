@@ -12,8 +12,20 @@ export class ApiService {
     }: {
         token: string;
         functionName: string;
-        params?: { [key: string]: string | number };
+        params?: { [key: string]: any };
     }): Promise<T> {
+        const moodleParams = {};
+        Object.entries(params).forEach(([key, value]) => {
+            if (value instanceof Array) {
+                value.forEach(
+                    (v, index) => (moodleParams[`${key}[${index}]`] = v),
+                );
+            } else {
+                moodleParams[key] = value;
+            }
+        });
+        console.log(moodleParams);
+
         const response = await axios.get(API_URL.base, {
             params: {
                 wsfunction: functionName,
