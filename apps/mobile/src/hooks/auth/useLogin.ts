@@ -12,7 +12,7 @@ export function useLogin() {
                 const authEntityResponse = await loginFunction({
                     variables: { username, password },
                 });
-                console.log({ authEntityResponse: authEntityResponse });
+                //@ts-ignore
                 return authLogin(authEntityResponse.data.login);
             } catch (error) {
                 console.log({ error });
