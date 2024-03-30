@@ -68,7 +68,7 @@ export function useApolloLink() {
                     );
                     const now = new Date().getTime() / 1000;
 
-                    if (decodedAccessToken.exp >= now) {
+                    if (decodedAccessToken.exp <= now) {
                         return false;
                     }
 
@@ -81,28 +81,20 @@ export function useApolloLink() {
                 const token = await refreshClient.mutate({
                     mutation: REFRESH_TOKEN,
                 });
-                console.log({ token });
-                return token.data.access_token;
+                return {
+                    ok: true,
+                    status: 200,
+                    statusText: 'OK',
+                    text: async () => token.data.refreshToken,
+                } as unknown as Response;
             },
             handleFetch: (accessToken) => {
-                console.log({ accessToken });
                 refreshAccessToken(accessToken);
             },
-            // handleResponse: (operation, accessTokenField) => (response) => {
-            //     // here you can parse response, handle errors, prepare returned token to
-            //     // further operations
-            //     // returned object should be like this:
-            //     // {
-            //     //    access_token: 'token string here'
-            //     // }
-            //     return { [accessTokenField]: response };
-            // },
             handleError: (err) => {
-                console.log({ err });
                 if (
-                    !navigator.onLine ||
-                    (err instanceof TypeError &&
-                        err.message === 'Network request failed')
+                    err instanceof TypeError &&
+                    err.message === 'Network request failed'
                 ) {
                     alert('Network error');
                 } else {
