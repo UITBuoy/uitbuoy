@@ -24,7 +24,6 @@ export class ApiService {
                 moodleParams[key] = value;
             }
         });
-        console.log(moodleParams);
 
         const response = await axios.get(API_URL.base, {
             params: {
