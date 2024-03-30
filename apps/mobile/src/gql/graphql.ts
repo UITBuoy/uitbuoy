@@ -15,10 +15,12 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  Date: { input: any; output: any; }
 };
 
 export type AuthEntity = {
   __typename?: 'AuthEntity';
+  accessTokenExpiredDate?: Maybe<Scalars['Date']['output']>;
   access_token: Scalars['String']['output'];
   auth?: Maybe<Scalars['String']['output']>;
   city?: Maybe<Scalars['String']['output']>;
@@ -35,6 +37,7 @@ export type AuthEntity = {
   preferences: Array<UserPreference>;
   profileimageurl?: Maybe<Scalars['String']['output']>;
   profileimageurlsmall?: Maybe<Scalars['String']['output']>;
+  refreshTokenExpiredDate?: Maybe<Scalars['Date']['output']>;
   refresh_token?: Maybe<Scalars['String']['output']>;
   suspended?: Maybe<Scalars['String']['output']>;
   theme?: Maybe<Scalars['String']['output']>;
@@ -194,7 +197,7 @@ export type LoginApiMutationVariables = Exact<{
 }>;
 
 
-export type LoginApiMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthEntity', access_token: string, auth?: string | null, city?: string | null, confirmed?: string | null, country?: string | null, department?: string | null, email: string, firstaccess?: number | null, fullname: string, id?: number | null, lang?: string | null, lastaccess?: number | null, mailformat?: string | null, profileimageurl?: string | null, profileimageurlsmall?: string | null, suspended?: string | null, theme?: string | null, timezone?: string | null, token: string, username: string } };
+export type LoginApiMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthEntity', access_token: string, refresh_token?: string | null, auth?: string | null, city?: string | null, confirmed?: string | null, country?: string | null, department?: string | null, email: string, firstaccess?: number | null, fullname: string, id?: number | null, lang?: string | null, lastaccess?: number | null, mailformat?: string | null, profileimageurl?: string | null, profileimageurlsmall?: string | null, suspended?: string | null, theme?: string | null, timezone?: string | null, token: string, username: string } };
 
 export type SearchCoursesQueryVariables = Exact<{
   isNew?: InputMaybe<Scalars['Boolean']['input']>;
@@ -218,6 +221,7 @@ export const LoginApiDocument = gql`
     mutation LoginAPI($password: String!, $username: String!) {
   login(password: $password, username: $username) {
     access_token
+    refresh_token
     auth
     city
     confirmed

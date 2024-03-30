@@ -4,8 +4,6 @@ import { useColorScheme } from 'react-native';
 import { Stack } from 'expo-router';
 import { GluestackUIProvider } from '../src/components/gluestack-ui-provider/';
 
-import Constants from 'expo-constants';
-
 import {
     ApolloClient,
     ApolloProvider,
@@ -21,6 +19,10 @@ import {
 } from '@react-navigation/native';
 import { setContext } from '@apollo/client/link/context';
 import { useAuth } from '../src/stores/auth.store';
+import { AuthEntity } from '../src/gql/graphql';
+
+import { jwtDecode } from 'jwt-decode';
+import { useApolloLink } from '../src/utils/auth';
 
 export const unstable_settings = {
     initialRouteName: '(tabs)',
@@ -30,25 +32,35 @@ export default function Layout() {
     const colorScheme = useColorScheme();
 
     const {
-        authData: { access_token },
+        authData: { access_token, refresh_token },
     } = useAuth();
 
-    const link = createHttpLink({
-        uri: `http://${Constants.expoConfig.hostUri.split(`:`).shift().concat(`:3001`)}/graphql`,
-        credentials: 'same-origin',
-    });
+    let client;
 
-    const authLink = setContext((_, { headers }) => {
-        return {
-            headers: {
-                ...headers,
-                authorization: access_token ? `Bearer ${access_token}` : '',
-            },
-        };
-    });
+    // const authLink = setContext((_, { headers }) => {
+    //     const decodedAccessToken = jwtDecode(access_token);
+    //     const decodedRefreshToken = jwtDecode(refresh_token);
 
-    const client = new ApolloClient({
-        link: authLink.concat(link),
+    //     const now = new Date().getTime() / 1000;
+
+    //     let token = access_token;
+
+    //     if (decodedAccessToken.exp >= now) {
+    //         token = refresh_token;
+    //     }
+
+    //     return {
+    //         headers: {
+    //             ...headers,
+    //             authorization: token ? `Bearer ${token}` : '',
+    //         },
+    //     };
+    // });
+
+    const link = useApolloLink();
+
+    client = new ApolloClient({
+        link,
         cache: new InMemoryCache(),
     });
 
