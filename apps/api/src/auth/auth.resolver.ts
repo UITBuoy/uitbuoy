@@ -31,8 +31,12 @@ export class AuthResolver {
             await this.authService.validateUser(username, password),
         );
 
-        const { access_token, refresh_token } =
-            this.authService.generateToken(data);
+        const {
+            access_token,
+            refresh_token,
+            accessTokenExpiredDate,
+            refreshTokenExpiredDate,
+        } = this.authService.generateToken(data);
 
         res.cookie(COOKIE_NAME.ACCESS_TOKEN, access_token, {
             secure: false, // Change latter
@@ -45,6 +49,8 @@ export class AuthResolver {
         return {
             access_token,
             refresh_token,
+            accessTokenExpiredDate,
+            refreshTokenExpiredDate,
             ...data,
         };
     }
@@ -52,8 +58,9 @@ export class AuthResolver {
     @Mutation(() => AuthEntity)
     @UseGuards(JwtRefreshAuthGuard)
     async refreshToken(@CurrentUser() user: User) {
-        const { access_token } = this.authService.refreshToken(user);
-        return { access_token, ...user };
+        const { access_token, accessTokenExpiredDate } =
+            this.authService.refreshToken(user);
+        return { access_token, accessTokenExpiredDate, ...user };
     }
 
     @Query(() => User)

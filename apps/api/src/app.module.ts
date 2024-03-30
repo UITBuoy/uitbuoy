@@ -25,6 +25,7 @@ import { LecturerModule } from './lecturer/lecturer.module';
 import { LoggerModule } from './logger/logger.module';
 import { SubjectModule } from './subject/subject.module';
 import { UserModule } from './user/user.module';
+import { DateScalar } from './common/scalars/date.scalar';
 
 @Module({
     imports: [
@@ -174,6 +175,7 @@ import { UserModule } from './user/user.module';
         AppService,
         ApiService,
         ShutdownService,
+        DateScalar,
         {
             provide: APP_FILTER,
             useClass: BaseExceptionFilter,

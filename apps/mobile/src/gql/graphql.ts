@@ -35,6 +35,7 @@ export type AuthEntity = {
   preferences: Array<UserPreference>;
   profileimageurl?: Maybe<Scalars['String']['output']>;
   profileimageurlsmall?: Maybe<Scalars['String']['output']>;
+  refresh_token?: Maybe<Scalars['String']['output']>;
   suspended?: Maybe<Scalars['String']['output']>;
   theme?: Maybe<Scalars['String']['output']>;
   timezone?: Maybe<Scalars['String']['output']>;
@@ -95,6 +96,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   findAllEventByCourseIds: Array<Calendar>;
   login: AuthEntity;
+  refreshToken: AuthEntity;
 };
 
 

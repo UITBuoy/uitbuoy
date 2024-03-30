@@ -9,6 +9,12 @@ export class AuthEntity extends User {
     @Field({ nullable: true })
     refresh_token?: string;
 
+    @Field(() => Date, { nullable: true })
+    accessTokenExpiredDate?: Date;
+
+    @Field(() => Date, { nullable: true })
+    refreshTokenExpiredDate?: Date;
+
     constructor(data: any) {
         super(data);
         this.token = data.token;
