@@ -9,6 +9,7 @@ export type IAuth = {
     authData?: AuthEntity;
     authLogin: (authEntity: AuthEntity) => boolean;
     authLogout: () => boolean;
+    refreshAccessToken: (access_token: string) => any;
 };
 
 export const useAuth = create<
@@ -33,6 +34,11 @@ export const useAuth = create<
                     state.isLogin = false;
                 });
                 return true;
+            },
+            refreshAccessToken: (access_token: string) => {
+                set((state) => {
+                    state.authData.access_token = access_token;
+                });
             },
         })),
         {

@@ -1,6 +1,7 @@
 mutation LoginAPI($password: String!, $username: String!) {
     login(password: $password, username: $username) {
         access_token
+        refresh_token
         auth
         city
         confirmed
