@@ -8,6 +8,7 @@ import { UserApiService } from 'src/api/services/user-api.service';
 import API_URL from 'src/common/constants/url';
 import { UserService } from 'src/user/user.service';
 import { AuthEntity } from './entities/auth.entity';
+import moment from 'moment';
 
 @Injectable()
 export class AuthService {
@@ -64,6 +65,8 @@ export class AuthService {
                 expiresIn: '1h',
             },
         );
+        const accessTokenExpiredDate = moment().add(1, 'hour').toDate();
+
         const refresh_token = this.jwtService.sign(
             {
                 ...authEntity,
@@ -74,8 +77,14 @@ export class AuthService {
                 expiresIn: '14d',
             },
         );
+        const refreshTokenExpiredDate = moment().add(14, 'days').toDate();
 
-        return { access_token, refresh_token };
+        return {
+            access_token,
+            refresh_token,
+            accessTokenExpiredDate,
+            refreshTokenExpiredDate,
+        };
     }
 
     refreshToken(user: User) {
@@ -86,7 +95,8 @@ export class AuthService {
             },
             { secret: this.configService.get('ACCESS_TOKEN_SECRET') },
         );
+        const accessTokenExpiredDate = moment().add(1, 'hour').toDate();
 
-        return { access_token };
+        return { access_token, accessTokenExpiredDate };
     }
 }
