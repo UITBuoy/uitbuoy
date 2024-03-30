@@ -1,4 +1,3 @@
-import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, useRootNavigationState } from 'expo-router';
 import LottieView from 'lottie-react-native';
@@ -6,9 +5,9 @@ import React, { useEffect } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MANAGE_COURSE_ANIMATION from '../../assets/animations/new-features/manage-courses.json';
-import EMPTY_REMAINING_ACTIVITIES from '../../assets/empty-remaining-activities.png';
 import CourseSearch from '../../src/components/CourseSearch/CourseSearch';
 import PageHeader from '../../src/components/PageHeader/PageHeader';
+import RemainingActivities from '../../src/components/RemainingActivities/RemainingActivities';
 import SyncCalendar from '../../src/components/ui/SyncCalendar/SyncCalendar';
 import { useAuth } from '../../src/stores/auth.store';
 
@@ -78,29 +77,6 @@ function NewFeatures() {
                     />
                 </LinearGradient>
             </TouchableOpacity>
-        </View>
-    );
-}
-
-function RemainingActivities() {
-    return (
-        <View className=" mt-0">
-            <Text className=" mx-4 text-base font-semibold">
-                Remaining activities
-            </Text>
-            <View>
-                <Image
-                    style={{
-                        flex: 1,
-                        width: '100%',
-                        height: 230,
-                        marginTop: 20,
-                    }}
-                    contentFit="contain"
-                    transition={1000}
-                    source={EMPTY_REMAINING_ACTIVITIES}
-                />
-            </View>
         </View>
     );
 }

@@ -22,6 +22,7 @@
     "apollo-link-token-refresh": "^0.6.1",
     "axios": "^1.6.7",
     "jwt-decode": "^4.0.0",
+    "moment": "^2.30.1",
     "serverless": "^3.38.0"
   },
   "resolutions": {

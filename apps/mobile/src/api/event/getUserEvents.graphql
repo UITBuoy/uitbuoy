@@ -1,0 +1,41 @@
+query UserEvents {
+    userEvents {
+        activityname
+        purpose
+        overdue
+        timeduration
+        timeusermidnight
+        timestart
+        timesort
+        timemodified
+        name
+        course {
+            categoryid
+            categoryname
+            coursecategory
+            courseimage
+            display_name
+            enddate
+            enrollmentmethods
+            fullname
+            hiddenbynumsections
+            id
+            idnumber
+            name
+            overviewfiles
+            pdfexportfont
+            section
+            shortname
+            showactivitydates
+            showcompletionconditions
+            sortorder
+            startdate
+            summary
+            summaryfiles
+            summaryformat
+            uservisible
+            viewurl
+            visible
+        }
+    }
+}

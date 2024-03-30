@@ -61,6 +61,7 @@ export type Course = {
   display_name?: Maybe<Scalars['String']['output']>;
   enddate?: Maybe<Scalars['Int']['output']>;
   enrollmentmethods?: Maybe<Scalars['String']['output']>;
+  events: Array<EventEntity>;
   fullname?: Maybe<Scalars['String']['output']>;
   hiddenbynumsections?: Maybe<Scalars['Int']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
@@ -82,6 +83,11 @@ export type Course = {
   visible?: Maybe<Scalars['Boolean']['output']>;
 };
 
+
+export type CourseEventsArgs = {
+  isComing?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
 export type CourseContentEntity = {
   __typename?: 'CourseContentEntity';
   courseid?: Maybe<Course>;
@@ -92,6 +98,51 @@ export type CourseContentEntity = {
   summary?: Maybe<Scalars['String']['output']>;
   summaryformat?: Maybe<Scalars['Int']['output']>;
   uservisible?: Maybe<Scalars['Boolean']['output']>;
+  visible?: Maybe<Scalars['Int']['output']>;
+};
+
+export type EventEntity = {
+  __typename?: 'EventEntity';
+  action?: Maybe<Scalars['String']['output']>;
+  activityname?: Maybe<Scalars['String']['output']>;
+  activitystr?: Maybe<Scalars['String']['output']>;
+  candelete?: Maybe<Scalars['Boolean']['output']>;
+  canedit?: Maybe<Scalars['Boolean']['output']>;
+  categoryid?: Maybe<Scalars['String']['output']>;
+  component?: Maybe<Scalars['String']['output']>;
+  course: Course;
+  deleteurl?: Maybe<Scalars['String']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  editurl?: Maybe<Scalars['String']['output']>;
+  eventcount?: Maybe<Scalars['String']['output']>;
+  eventtype?: Maybe<Scalars['String']['output']>;
+  formattedlocation?: Maybe<Scalars['String']['output']>;
+  formattedtime?: Maybe<Scalars['String']['output']>;
+  groupid?: Maybe<Scalars['String']['output']>;
+  groupname?: Maybe<Scalars['String']['output']>;
+  icon?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  instance?: Maybe<Scalars['Int']['output']>;
+  isactionevent?: Maybe<Scalars['Boolean']['output']>;
+  iscategoryevent?: Maybe<Scalars['Boolean']['output']>;
+  iscourseevent?: Maybe<Scalars['Boolean']['output']>;
+  location?: Maybe<Scalars['String']['output']>;
+  modulename?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
+  normalisedeventtype?: Maybe<Scalars['String']['output']>;
+  normalisedeventtypetext?: Maybe<Scalars['String']['output']>;
+  overdue?: Maybe<Scalars['Boolean']['output']>;
+  purpose?: Maybe<Scalars['String']['output']>;
+  repeatid?: Maybe<Scalars['String']['output']>;
+  subscription?: Maybe<Scalars['String']['output']>;
+  timeduration?: Maybe<Scalars['Int']['output']>;
+  timemodified?: Maybe<Scalars['Int']['output']>;
+  timesort?: Maybe<Scalars['Int']['output']>;
+  timestart?: Maybe<Scalars['Int']['output']>;
+  timeusermidnight?: Maybe<Scalars['Int']['output']>;
+  url?: Maybe<Scalars['String']['output']>;
+  userid?: Maybe<Scalars['Int']['output']>;
+  viewurl?: Maybe<Scalars['String']['output']>;
   visible?: Maybe<Scalars['Int']['output']>;
 };
 
@@ -120,6 +171,7 @@ export type Query = {
   findOne: Array<Subject>;
   profile: User;
   userCourses: Array<Course>;
+  userEvents: Array<EventEntity>;
 };
 
 
@@ -142,6 +194,11 @@ export type QueryUserCoursesArgs = {
   isNew?: InputMaybe<Scalars['Boolean']['input']>;
   isRecent?: InputMaybe<Scalars['Boolean']['input']>;
   keyword?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryUserEventsArgs = {
+  isComing?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type Subject = {
@@ -215,6 +272,11 @@ export type UserCoursesQueryVariables = Exact<{
 
 
 export type UserCoursesQuery = { __typename?: 'Query', userCourses: Array<{ __typename?: 'Course', categoryid?: number | null, categoryname?: string | null, display_name?: string | null, coursecategory?: string | null, courseimage?: string | null, enddate?: number | null, enrollmentmethods?: string | null, fullname?: string | null, hiddenbynumsections?: number | null, id?: number | null, idnumber?: string | null, name?: string | null, overviewfiles?: string | null, pdfexportfont?: string | null, section?: number | null, shortname?: string | null, showactivitydates?: boolean | null, showcompletionconditions?: string | null, sortorder?: number | null, startdate?: number | null, summary?: string | null, summaryfiles?: string | null, summaryformat?: number | null, uservisible?: boolean | null, viewurl?: string | null, visible?: boolean | null }> };
+
+export type UserEventsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UserEventsQuery = { __typename?: 'Query', userEvents: Array<{ __typename?: 'EventEntity', activityname?: string | null, purpose?: string | null, overdue?: boolean | null, timeduration?: number | null, timeusermidnight?: number | null, timestart?: number | null, timesort?: number | null, timemodified?: number | null, name: string, course: { __typename?: 'Course', categoryid?: number | null, categoryname?: string | null, coursecategory?: string | null, courseimage?: string | null, display_name?: string | null, enddate?: number | null, enrollmentmethods?: string | null, fullname?: string | null, hiddenbynumsections?: number | null, id?: number | null, idnumber?: string | null, name?: string | null, overviewfiles?: string | null, pdfexportfont?: string | null, section?: number | null, shortname?: string | null, showactivitydates?: boolean | null, showcompletionconditions?: string | null, sortorder?: number | null, startdate?: number | null, summary?: string | null, summaryfiles?: string | null, summaryformat?: number | null, uservisible?: boolean | null, viewurl?: string | null, visible?: boolean | null } }> };
 
 
 export const LoginApiDocument = gql`
@@ -389,4 +451,82 @@ export type UserCoursesSuspenseQueryHookResult = ReturnType<typeof useUserCourse
 export type UserCoursesQueryResult = Apollo.QueryResult<UserCoursesQuery, UserCoursesQueryVariables>;
 export function refetchUserCoursesQuery(variables?: UserCoursesQueryVariables) {
       return { query: UserCoursesDocument, variables: variables }
+    }
+export const UserEventsDocument = gql`
+    query UserEvents {
+  userEvents {
+    activityname
+    purpose
+    overdue
+    timeduration
+    timeusermidnight
+    timestart
+    timesort
+    timemodified
+    name
+    course {
+      categoryid
+      categoryname
+      coursecategory
+      courseimage
+      display_name
+      enddate
+      enrollmentmethods
+      fullname
+      hiddenbynumsections
+      id
+      idnumber
+      name
+      overviewfiles
+      pdfexportfont
+      section
+      shortname
+      showactivitydates
+      showcompletionconditions
+      sortorder
+      startdate
+      summary
+      summaryfiles
+      summaryformat
+      uservisible
+      viewurl
+      visible
+    }
+  }
+}
+    `;
+
+/**
+ * __useUserEventsQuery__
+ *
+ * To run a query within a React component, call `useUserEventsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserEventsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useUserEventsQuery(baseOptions?: Apollo.QueryHookOptions<UserEventsQuery, UserEventsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserEventsQuery, UserEventsQueryVariables>(UserEventsDocument, options);
+      }
+export function useUserEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserEventsQuery, UserEventsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserEventsQuery, UserEventsQueryVariables>(UserEventsDocument, options);
+        }
+export function useUserEventsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<UserEventsQuery, UserEventsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<UserEventsQuery, UserEventsQueryVariables>(UserEventsDocument, options);
+        }
+export type UserEventsQueryHookResult = ReturnType<typeof useUserEventsQuery>;
+export type UserEventsLazyQueryHookResult = ReturnType<typeof useUserEventsLazyQuery>;
+export type UserEventsSuspenseQueryHookResult = ReturnType<typeof useUserEventsSuspenseQuery>;
+export type UserEventsQueryResult = Apollo.QueryResult<UserEventsQuery, UserEventsQueryVariables>;
+export function refetchUserEventsQuery(variables?: UserEventsQueryVariables) {
+      return { query: UserEventsDocument, variables: variables }
     }
