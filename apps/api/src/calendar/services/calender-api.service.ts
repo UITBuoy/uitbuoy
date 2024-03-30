@@ -1,7 +1,7 @@
 import { CalendarNotFoundException } from '@/calendar/errors/not-found.error';
 import { Injectable } from '@nestjs/common';
 import WS_FUNCTION from 'src/common/constants/function-name';
-import { Event } from 'src/event/entities/event.entity';
+import { EventEntity } from 'src/event/entities/event.entity';
 import { ApiService } from '../../api/api.service';
 
 @Injectable()
@@ -21,7 +21,7 @@ export class CalendarApiService {
         });
 
         const response = await this.apiService.fetchMoodleData<{
-            groupedbycourse: { events: Event[] }[];
+            groupedbycourse: { events: EventEntity[] }[];
         }>({
             token,
             functionName: WS_FUNCTION.GET_EVENT_BY_COURSE_IDS,

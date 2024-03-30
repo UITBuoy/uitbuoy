@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Calendar } from '../entities/calendar.entity';
 import { CalendarApiService } from '@/calendar/services/calender-api.service';
-import { Event } from 'src/event/entities/event.entity';
+import { EventEntity } from 'src/event/entities/event.entity';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
 
@@ -11,7 +11,8 @@ import { UserService } from 'src/user/user.service';
 export class CalendarService {
     constructor(
         @InjectRepository(Calendar) private calenderRepo: Repository<Calendar>,
-        @InjectRepository(Event) private eventRepo: Repository<Event>,
+        @InjectRepository(EventEntity)
+        private eventRepo: Repository<EventEntity>,
         private readonly userService: UserService,
         private readonly calenderApiService: CalendarApiService,
     ) {}
@@ -30,7 +31,7 @@ export class CalendarService {
 
                 const calendars = eventEntity.map((event) => {
                     const calendar = new Calendar();
-                    calendar.event = event;
+                    // calendar.event = event;
                     calendar.user = userEntity;
                     return this.calenderRepo.save(calendar);
                 });
