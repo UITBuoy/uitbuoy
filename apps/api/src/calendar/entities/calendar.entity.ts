@@ -7,7 +7,7 @@ import {
     PrimaryGeneratedColumn,
     Relation,
 } from 'typeorm';
-import type { Event } from '../../envent/entities/event.entity';
+import type { Event } from '../../event/entities/event.entity';
 
 @ObjectType()
 @Entity()
