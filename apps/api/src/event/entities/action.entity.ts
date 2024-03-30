@@ -1,13 +1,12 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { UUID } from 'typeorm/driver/mongodb/bson.typings';
 
 @ObjectType()
 @Entity()
 export class Action {
-    @Field(() => UUID)
+    @Field(() => String)
     @PrimaryGeneratedColumn('uuid')
-    id: UUID;
+    id: string;
 
     @Field(() => String)
     @Column()

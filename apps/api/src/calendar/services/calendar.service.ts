@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Calendar } from '../entities/calendar.entity';
 import { CalendarApiService } from '@/calendar/services/calender-api.service';
-import { Event } from 'src/envent/entities/event.entity';
+import { Event } from 'src/event/entities/event.entity';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
 

@@ -1,7 +1,7 @@
 import { CalendarNotFoundException } from '@/calendar/errors/not-found.error';
 import { Injectable } from '@nestjs/common';
 import WS_FUNCTION from 'src/common/constants/function-name';
-import { Event } from 'src/envent/entities/event.entity';
+import { Event } from 'src/event/entities/event.entity';
 import { ApiService } from '../../api/api.service';
 
 @Injectable()

@@ -19,7 +19,7 @@ import { BaseExceptionFilter } from './common/filters/base-exception.filter';
 import { ShutdownService } from './common/services/shutdown.service';
 import { EnvironmentType } from './config/type';
 import { CourseModule } from './course/course.module';
-import { EventModule } from './envent/event.module';
+import { EventModule } from './event/event.module';
 import { HealthModule } from './health/health.module';
 import { LecturerModule } from './lecturer/lecturer.module';
 import { LoggerModule } from './logger/logger.module';
