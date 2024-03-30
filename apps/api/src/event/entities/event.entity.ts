@@ -4,7 +4,7 @@ import { Column, Entity, Int32, OneToMany, PrimaryColumn } from 'typeorm';
 
 @ObjectType()
 @Entity()
-export class Event {
+export class EventEntity {
     @Field(() => Int)
     @PrimaryColumn()
     id: number;
@@ -165,7 +165,7 @@ export class Event {
     @Column({ nullable: true })
     groupname: string;
 
-    @Field(() => [Calendar], { nullable: true })
-    @OneToMany(() => Calendar, (calendar) => calendar.event)
-    calendars: Calendar[];
+    // @Field(() => [Calendar], { nullable: true })
+    // @OneToMany(() => Calendar, (calendar) => calendar.event)
+    // calendars: Calendar[];
 }

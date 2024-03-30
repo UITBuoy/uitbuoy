@@ -7,7 +7,7 @@ import {
     PrimaryGeneratedColumn,
     Relation,
 } from 'typeorm';
-import type { Event } from '../../event/entities/event.entity';
+import type { EventEntity } from '../../event/entities/event.entity';
 
 @ObjectType()
 @Entity()
@@ -21,7 +21,7 @@ export class Calendar {
     @JoinColumn({ name: 'user_id' })
     user: User;
 
-    @ManyToOne('Event')
-    @JoinColumn({ name: 'event_id' })
-    event: Relation<Event>;
+    // @ManyToOne('Event')
+    // @JoinColumn({ name: 'event_id' })
+    // event: Relation<EventEntity>;
 }
