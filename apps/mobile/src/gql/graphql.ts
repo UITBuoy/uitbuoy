@@ -271,7 +271,7 @@ export type GeneralDetailCourseQueryVariables = Exact<{
 }>;
 
 
-export type GeneralDetailCourseQuery = { __typename?: 'Query', course: { __typename?: 'Course', coursecategory?: string | null, courseimage?: string | null, display_name?: string | null, enddate?: number | null, fullname?: string | null, id?: number | null, idnumber?: string | null, name?: string | null, section?: number | null, shortname?: string | null, startdate?: number | null, contacts: Array<{ __typename?: 'CourseContact', fullname: string, id: string }> } };
+export type GeneralDetailCourseQuery = { __typename?: 'Query', course: { __typename?: 'Course', coursecategory?: string | null, courseimage?: string | null, display_name?: string | null, enddate?: number | null, fullname?: string | null, id?: number | null, idnumber?: string | null, name?: string | null, section?: number | null, shortname?: string | null, startdate?: number | null, contacts: Array<{ __typename?: 'CourseContact', fullname: string, id: string }>, events: Array<{ __typename?: 'EventEntity', activityname?: string | null, description?: string | null, name: string, overdue?: boolean | null, purpose?: string | null, timestart?: number | null }> } };
 
 export type SearchCoursesQueryVariables = Exact<{
   isNew?: InputMaybe<Scalars['Boolean']['input']>;
@@ -367,6 +367,14 @@ export const GeneralDetailCourseDocument = gql`
     contacts {
       fullname
       id
+    }
+    events {
+      activityname
+      description
+      name
+      overdue
+      purpose
+      timestart
     }
   }
 }
