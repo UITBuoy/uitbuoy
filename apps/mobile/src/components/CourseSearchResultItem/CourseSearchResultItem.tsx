@@ -11,7 +11,10 @@ export default function CourseSearchResultItem({
     return (
         <TouchableNativeFeedback
             onPress={() => {
-                router.push(`/courses/${id}`);
+                router.push({
+                    pathname: `/modals/courseDetail`,
+                    params: { display_name, shortname, id },
+                });
             }}
         >
             <View className=" px-5 py-2 flex flex-row gap-4">
