@@ -15,5 +15,13 @@ query GeneralDetailCourse($id: Int!) {
             fullname
             id
         }
+        events {
+            activityname
+            description
+            name
+            overdue
+            purpose
+            timestart
+        }
     }
 }

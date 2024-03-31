@@ -5,14 +5,18 @@ import { Animated, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ResourcePage from './resource';
 import NoticePage from './notice';
-import { useLocalSearchParams, useNavigation } from 'expo-router';
+import {
+    useGlobalSearchParams,
+    useLocalSearchParams,
+    useNavigation,
+} from 'expo-router';
 import { useEffect } from 'react';
 
 const Tab = createMaterialTopTabNavigator();
 
 export default function Layout() {
     const navigation = useNavigation();
-    const params = useLocalSearchParams();
+    const params = useGlobalSearchParams();
 
     useEffect(() => {
         navigation.setOptions({ title: params.display_name });
