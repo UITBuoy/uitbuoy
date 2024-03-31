@@ -17,13 +17,11 @@ query UserEvents {
             courseimage
             display_name
             enddate
-            enrollmentmethods
             fullname
             hiddenbynumsections
             id
             idnumber
             name
-            overviewfiles
             pdfexportfont
             section
             shortname
@@ -31,9 +29,6 @@ query UserEvents {
             showcompletionconditions
             sortorder
             startdate
-            summary
-            summaryfiles
-            summaryformat
             uservisible
             viewurl
             visible

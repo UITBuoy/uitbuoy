@@ -56,18 +56,17 @@ export type Course = {
   __typename?: 'Course';
   categoryid?: Maybe<Scalars['Int']['output']>;
   categoryname?: Maybe<Scalars['String']['output']>;
+  contacts: Array<CourseContact>;
   coursecategory?: Maybe<Scalars['String']['output']>;
   courseimage?: Maybe<Scalars['String']['output']>;
   display_name?: Maybe<Scalars['String']['output']>;
   enddate?: Maybe<Scalars['Int']['output']>;
-  enrollmentmethods?: Maybe<Scalars['String']['output']>;
   events: Array<EventEntity>;
   fullname?: Maybe<Scalars['String']['output']>;
   hiddenbynumsections?: Maybe<Scalars['Int']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
   idnumber?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
-  overviewfiles?: Maybe<Scalars['String']['output']>;
   pdfexportfont?: Maybe<Scalars['String']['output']>;
   section?: Maybe<Scalars['Int']['output']>;
   shortname?: Maybe<Scalars['String']['output']>;
@@ -76,7 +75,6 @@ export type Course = {
   sortorder?: Maybe<Scalars['Int']['output']>;
   startdate?: Maybe<Scalars['Int']['output']>;
   summary?: Maybe<Scalars['String']['output']>;
-  summaryfiles?: Maybe<Scalars['String']['output']>;
   summaryformat?: Maybe<Scalars['Int']['output']>;
   uservisible?: Maybe<Scalars['Boolean']['output']>;
   viewurl?: Maybe<Scalars['String']['output']>;
@@ -86,6 +84,12 @@ export type Course = {
 
 export type CourseEventsArgs = {
   isComing?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type CourseContact = {
+  __typename?: 'CourseContact';
+  fullname: Scalars['String']['output'];
+  id: Scalars['String']['output'];
 };
 
 export type CourseContentEntity = {
@@ -166,12 +170,18 @@ export type MutationLoginArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  course: Course;
   findAll: Array<Subject>;
   findAllCourseContents: Array<CourseContentEntity>;
   findOne: Array<Subject>;
   profile: User;
   userCourses: Array<Course>;
   userEvents: Array<EventEntity>;
+};
+
+
+export type QueryCourseArgs = {
+  course_id: Scalars['Int']['input'];
 };
 
 
@@ -271,12 +281,12 @@ export type UserCoursesQueryVariables = Exact<{
 }>;
 
 
-export type UserCoursesQuery = { __typename?: 'Query', userCourses: Array<{ __typename?: 'Course', categoryid?: number | null, categoryname?: string | null, display_name?: string | null, coursecategory?: string | null, courseimage?: string | null, enddate?: number | null, enrollmentmethods?: string | null, fullname?: string | null, hiddenbynumsections?: number | null, id?: number | null, idnumber?: string | null, name?: string | null, overviewfiles?: string | null, pdfexportfont?: string | null, section?: number | null, shortname?: string | null, showactivitydates?: boolean | null, showcompletionconditions?: string | null, sortorder?: number | null, startdate?: number | null, summary?: string | null, summaryfiles?: string | null, summaryformat?: number | null, uservisible?: boolean | null, viewurl?: string | null, visible?: boolean | null }> };
+export type UserCoursesQuery = { __typename?: 'Query', userCourses: Array<{ __typename?: 'Course', categoryid?: number | null, categoryname?: string | null, display_name?: string | null, coursecategory?: string | null, courseimage?: string | null, enddate?: number | null, fullname?: string | null, id?: number | null, idnumber?: string | null, name?: string | null, shortname?: string | null, startdate?: number | null }> };
 
 export type UserEventsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserEventsQuery = { __typename?: 'Query', userEvents: Array<{ __typename?: 'EventEntity', activityname?: string | null, purpose?: string | null, overdue?: boolean | null, timeduration?: number | null, timeusermidnight?: number | null, timestart?: number | null, timesort?: number | null, timemodified?: number | null, name: string, id: number, course: { __typename?: 'Course', categoryid?: number | null, categoryname?: string | null, coursecategory?: string | null, courseimage?: string | null, display_name?: string | null, enddate?: number | null, enrollmentmethods?: string | null, fullname?: string | null, hiddenbynumsections?: number | null, id?: number | null, idnumber?: string | null, name?: string | null, overviewfiles?: string | null, pdfexportfont?: string | null, section?: number | null, shortname?: string | null, showactivitydates?: boolean | null, showcompletionconditions?: string | null, sortorder?: number | null, startdate?: number | null, summary?: string | null, summaryfiles?: string | null, summaryformat?: number | null, uservisible?: boolean | null, viewurl?: string | null, visible?: boolean | null } }> };
+export type UserEventsQuery = { __typename?: 'Query', userEvents: Array<{ __typename?: 'EventEntity', activityname?: string | null, purpose?: string | null, overdue?: boolean | null, timeduration?: number | null, timeusermidnight?: number | null, timestart?: number | null, timesort?: number | null, timemodified?: number | null, name: string, id: number, course: { __typename?: 'Course', categoryid?: number | null, categoryname?: string | null, coursecategory?: string | null, courseimage?: string | null, display_name?: string | null, enddate?: number | null, fullname?: string | null, hiddenbynumsections?: number | null, id?: number | null, idnumber?: string | null, name?: string | null, pdfexportfont?: string | null, section?: number | null, shortname?: string | null, showactivitydates?: boolean | null, showcompletionconditions?: string | null, sortorder?: number | null, startdate?: number | null, uservisible?: boolean | null, viewurl?: string | null, visible?: boolean | null } }> };
 
 
 export const LoginApiDocument = gql`
@@ -391,26 +401,12 @@ export const UserCoursesDocument = gql`
     coursecategory
     courseimage
     enddate
-    enrollmentmethods
     fullname
-    hiddenbynumsections
     id
     idnumber
     name
-    overviewfiles
-    pdfexportfont
-    section
     shortname
-    showactivitydates
-    showcompletionconditions
-    sortorder
     startdate
-    summary
-    summaryfiles
-    summaryformat
-    uservisible
-    viewurl
-    visible
   }
 }
     `;
@@ -472,13 +468,11 @@ export const UserEventsDocument = gql`
       courseimage
       display_name
       enddate
-      enrollmentmethods
       fullname
       hiddenbynumsections
       id
       idnumber
       name
-      overviewfiles
       pdfexportfont
       section
       shortname
@@ -486,9 +480,6 @@ export const UserEventsDocument = gql`
       showcompletionconditions
       sortorder
       startdate
-      summary
-      summaryfiles
-      summaryformat
       uservisible
       viewurl
       visible

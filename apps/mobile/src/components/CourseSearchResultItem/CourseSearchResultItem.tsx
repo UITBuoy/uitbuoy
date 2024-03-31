@@ -6,9 +6,14 @@ import { router } from 'expo-router';
 export default function CourseSearchResultItem({
     display_name,
     shortname,
-}: Course) {
+    id,
+}: Pick<Course, 'display_name' | 'shortname' | 'id'>) {
     return (
-        <TouchableNativeFeedback onPress={() => {}}>
+        <TouchableNativeFeedback
+            onPress={() => {
+                router.push(`/courses/${id}`);
+            }}
+        >
             <View className=" px-5 py-2 flex flex-row gap-4">
                 <SearchIcon className=" mt-2" scale={1.4} />
                 <View className="">
