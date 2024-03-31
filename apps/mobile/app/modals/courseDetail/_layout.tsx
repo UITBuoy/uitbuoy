@@ -26,7 +26,12 @@ export default function Layout() {
                     tabBarLabelStyle: { fontSize: 14 },
                 }}
             >
-                <Tab.Screen name="General" component={GeneralPage} />
+                <Tab.Screen
+                    name="General"
+                    children={() => (
+                        <GeneralPage id={parseInt(params.id.toString(), 10)} />
+                    )}
+                />
                 <Tab.Screen name="Activities" component={ActitivitiesPage} />
                 <Tab.Screen name="Notice" component={NoticePage} />
                 <Tab.Screen name="Resource" component={ResourcePage} />
@@ -83,6 +88,7 @@ function MyTabBar({ state, descriptors, navigation, position }) {
 
                 return (
                     <TouchableOpacity
+                        key={label}
                         accessibilityRole="button"
                         accessibilityState={isFocused ? { selected: true } : {}}
                         accessibilityLabel={options.tabBarAccessibilityLabel}

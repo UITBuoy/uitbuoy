@@ -266,6 +266,13 @@ export type LoginApiMutationVariables = Exact<{
 
 export type LoginApiMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthEntity', access_token: string, refresh_token?: string | null, auth?: string | null, city?: string | null, confirmed?: string | null, country?: string | null, department?: string | null, email: string, firstaccess?: number | null, fullname: string, id?: number | null, lang?: string | null, lastaccess?: number | null, mailformat?: string | null, profileimageurl?: string | null, profileimageurlsmall?: string | null, suspended?: string | null, theme?: string | null, timezone?: string | null, token: string, username: string } };
 
+export type GeneralDetailCourseQueryVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type GeneralDetailCourseQuery = { __typename?: 'Query', course: { __typename?: 'Course', coursecategory?: string | null, courseimage?: string | null, display_name?: string | null, enddate?: number | null, fullname?: string | null, id?: number | null, idnumber?: string | null, name?: string | null, section?: number | null, shortname?: string | null, startdate?: number | null, contacts: Array<{ __typename?: 'CourseContact', fullname: string, id: string }> } };
+
 export type SearchCoursesQueryVariables = Exact<{
   isNew?: InputMaybe<Scalars['Boolean']['input']>;
   keyword?: InputMaybe<Scalars['String']['input']>;
@@ -343,6 +350,63 @@ export function useLoginApiMutation(baseOptions?: Apollo.MutationHookOptions<Log
 export type LoginApiMutationHookResult = ReturnType<typeof useLoginApiMutation>;
 export type LoginApiMutationResult = Apollo.MutationResult<LoginApiMutation>;
 export type LoginApiMutationOptions = Apollo.BaseMutationOptions<LoginApiMutation, LoginApiMutationVariables>;
+export const GeneralDetailCourseDocument = gql`
+    query GeneralDetailCourse($id: Int!) {
+  course(course_id: $id) {
+    coursecategory
+    courseimage
+    display_name
+    enddate
+    fullname
+    id
+    idnumber
+    name
+    section
+    shortname
+    startdate
+    contacts {
+      fullname
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useGeneralDetailCourseQuery__
+ *
+ * To run a query within a React component, call `useGeneralDetailCourseQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGeneralDetailCourseQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGeneralDetailCourseQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGeneralDetailCourseQuery(baseOptions: Apollo.QueryHookOptions<GeneralDetailCourseQuery, GeneralDetailCourseQueryVariables> & ({ variables: GeneralDetailCourseQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GeneralDetailCourseQuery, GeneralDetailCourseQueryVariables>(GeneralDetailCourseDocument, options);
+      }
+export function useGeneralDetailCourseLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GeneralDetailCourseQuery, GeneralDetailCourseQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GeneralDetailCourseQuery, GeneralDetailCourseQueryVariables>(GeneralDetailCourseDocument, options);
+        }
+export function useGeneralDetailCourseSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GeneralDetailCourseQuery, GeneralDetailCourseQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GeneralDetailCourseQuery, GeneralDetailCourseQueryVariables>(GeneralDetailCourseDocument, options);
+        }
+export type GeneralDetailCourseQueryHookResult = ReturnType<typeof useGeneralDetailCourseQuery>;
+export type GeneralDetailCourseLazyQueryHookResult = ReturnType<typeof useGeneralDetailCourseLazyQuery>;
+export type GeneralDetailCourseSuspenseQueryHookResult = ReturnType<typeof useGeneralDetailCourseSuspenseQuery>;
+export type GeneralDetailCourseQueryResult = Apollo.QueryResult<GeneralDetailCourseQuery, GeneralDetailCourseQueryVariables>;
+export function refetchGeneralDetailCourseQuery(variables: GeneralDetailCourseQueryVariables) {
+      return { query: GeneralDetailCourseDocument, variables: variables }
+    }
 export const SearchCoursesDocument = gql`
     query SearchCourses($isNew: Boolean, $keyword: String) {
   userCourses(isNew: $isNew, isRecent: false, keyword: $keyword) {
