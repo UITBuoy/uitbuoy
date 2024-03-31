@@ -5,29 +5,39 @@ import { Animated, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ResourcePage from './resource';
 import NoticePage from './notice';
+import { useLocalSearchParams, useNavigation } from 'expo-router';
+import { useEffect } from 'react';
 
 const Tab = createMaterialTopTabNavigator();
 
 export default function Layout() {
+    const navigation = useNavigation();
+    const params = useLocalSearchParams();
+
+    useEffect(() => {
+        navigation.setOptions({ title: params.display_name });
+    }, [params]);
+
     return (
-        // <View className=" flex-1">
-        // <SafeAreaView style={{ flex: 1 }}>
-        <Tab.Navigator
-            tabBar={(props) => <MyTabBar {...props} />}
-            screenOptions={{}}
-        >
-            <Tab.Screen name="General" component={GeneralPage} />
-            <Tab.Screen name="Activities" component={ActitivitiesPage} />
-            <Tab.Screen name="Notices" component={NoticePage} />
-            <Tab.Screen name="Resources" component={ResourcePage} />
-        </Tab.Navigator>
-        // </View>
+        <View className=" flex-1">
+            <Tab.Navigator
+                tabBar={(props) => <MyTabBar {...props} />}
+                screenOptions={{
+                    tabBarLabelStyle: { fontSize: 14 },
+                }}
+            >
+                <Tab.Screen name="General" component={GeneralPage} />
+                <Tab.Screen name="Activities" component={ActitivitiesPage} />
+                <Tab.Screen name="Notice" component={NoticePage} />
+                <Tab.Screen name="Resource" component={ResourcePage} />
+            </Tab.Navigator>
+        </View>
     );
 }
 
 function MyTabBar({ state, descriptors, navigation, position }) {
     return (
-        <View style={{ flexDirection: 'row' }}>
+        <View className=" flex flex-row bg-[#039CCA] pt-6 pb-3 px-4 rounded-b-2xl">
             {state.routes.map((route, index) => {
                 const { options } = descriptors[route.key];
                 const label =
@@ -61,7 +71,14 @@ function MyTabBar({ state, descriptors, navigation, position }) {
                 const inputRange = state.routes.map((_, i) => i);
                 const opacity = position.interpolate({
                     inputRange,
-                    outputRange: inputRange.map((i) => (i === index ? 1 : 0)),
+                    outputRange: inputRange.map((i) => (i === index ? 1 : 0.7)),
+                });
+
+                const backgroundColor = position.interpolate({
+                    inputRange,
+                    outputRange: inputRange.map((i) =>
+                        i === index ? '#ffffff44' : '#ffffff00',
+                    ),
                 });
 
                 return (
@@ -72,9 +89,22 @@ function MyTabBar({ state, descriptors, navigation, position }) {
                         testID={options.tabBarTestID}
                         onPress={onPress}
                         onLongPress={onLongPress}
-                        style={{ flex: 1, marginTop: 50 }}
+                        style={{
+                            backgroundColor,
+                            flex: 1,
+                            paddingVertical: 8,
+                            paddingHorizontal: 12,
+                            borderRadius: 14,
+                        }}
                     >
-                        <Animated.Text style={{ opacity }}>
+                        <Animated.Text
+                            style={{
+                                textAlign: 'center',
+                                opacity,
+                                color: 'white',
+                                fontWeight: '500',
+                            }}
+                        >
                             {label}
                         </Animated.Text>
                     </TouchableOpacity>

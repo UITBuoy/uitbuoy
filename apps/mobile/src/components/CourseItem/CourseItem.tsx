@@ -22,7 +22,10 @@ export default function CourseItem({
     return (
         <TouchableNativeFeedback
             onPress={() => {
-                router.push(`/courses/${id}`);
+                router.push({
+                    pathname: `/modals/courseDetail`,
+                    params: { display_name, shortname, id },
+                });
             }}
         >
             <View className=" mx-4 border-[0.5px] rounded-2xl p-4 flex flex-row gap-4">

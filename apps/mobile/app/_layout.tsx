@@ -1,5 +1,5 @@
 import React from 'react';
-import { useColorScheme } from 'react-native';
+import { Text, useColorScheme } from 'react-native';
 
 import { Stack } from 'expo-router';
 import { GluestackUIProvider } from '../src/components/gluestack-ui-provider/';
@@ -88,6 +88,18 @@ export default function Layout() {
                                 headerShown: false,
                                 presentation: 'modal',
                                 animation: 'fade_from_bottom',
+                            }}
+                        />
+                        <Stack.Screen
+                            name="modals/courseDetail"
+                            options={{
+                                title: 'Detail course',
+                                presentation: 'modal',
+                                animation: 'fade_from_bottom',
+                                headerShadowVisible: false,
+                                headerStyle: { backgroundColor: '#039CCA' },
+                                headerTintColor: 'white',
+                                headerTitleStyle: { fontSize: 16 },
                             }}
                         />
                     </Stack>
