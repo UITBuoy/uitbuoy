@@ -15,7 +15,7 @@ export default function RemainingActivities() {
             <View className=" py-5">
                 {data?.userEvents.map(
                     ({ id, activityname, timestart, course }) => (
-                        <TouchableNativeFeedback>
+                        <TouchableNativeFeedback key={id}>
                             <View className=" px-4 py-4 ">
                                 <View className="flex-1 flex flex-row justify-between items-center gap-4">
                                     <View className=" w-4/5 flex flex-col gap-1">

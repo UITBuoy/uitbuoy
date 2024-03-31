@@ -14,6 +14,7 @@ export default function Page() {
     } = useUserCoursesQuery({
         variables: { isNew: true, isRecent: true },
     });
+    console.log(recentCourses);
 
     return (
         <View className=" flex-1 bg-white">

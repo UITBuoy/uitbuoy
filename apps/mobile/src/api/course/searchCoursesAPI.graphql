@@ -6,5 +6,6 @@ query SearchCourses($isNew: Boolean, $keyword: String) {
         id
         shortname
         startdate
+        contacts
     }
 }
