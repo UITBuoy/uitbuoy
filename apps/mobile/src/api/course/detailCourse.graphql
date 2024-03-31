@@ -1,0 +1,19 @@
+query GeneralDetailCourse($id: Int!) {
+    course(course_id: $id) {
+        coursecategory
+        courseimage
+        display_name
+        enddate
+        fullname
+        id
+        idnumber
+        name
+        section
+        shortname
+        startdate
+        contacts {
+            fullname
+            id
+        }
+    }
+}
