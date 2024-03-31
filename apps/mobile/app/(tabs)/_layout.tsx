@@ -17,7 +17,7 @@ export default function TabLayout() {
                 tabBarShowLabel: false,
                 tabBarStyle: {
                     height: 80,
-                    backgroundColor: '#ffffff99',
+                    backgroundColor: '#ffffffbb',
                     borderTopWidth: 0,
                     position: 'absolute',
                     width: 'auto',
@@ -37,7 +37,7 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
-                name="courses"
+                name="courses/index"
                 options={{
                     title: 'Courses',
                     tabBarIcon: ({ focused }) => (

@@ -17,6 +17,8 @@ const WS_FUNCTION = {
 
     //get list of event of user by list of course id
     GET_EVENT_BY_COURSE_IDS: 'core_calendar_get_action_events_by_courses',
+
+    GET_COURSE_BY_FIELD: 'core_course_get_courses_by_field',
 };
 
 export default WS_FUNCTION;

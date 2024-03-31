@@ -9,29 +9,23 @@ import { ApiService } from '../../api/api.service';
 export class CourseApiService {
     constructor(private readonly apiService: ApiService) {}
 
-    /*The field to search can be left empty for all courses or:
-                    id: course id
-                    ids: comma separated course ids
-                    shortname: course short name
-                    idnumber: course id number
-                    category: category id the course belongs to */
-    // async getCourseListByField({
-    //     token,
-    //     username,
-    // }: {
-    //     token: string;
-    //     username: string;
-    // }) {
-    //     const data = await this.apiService.fetchMoodleData<Course[]>({
-    //         token,
-    //         functionName: WS_FUNCTION.GET_COURSE_PROFILE,
-    //         params: { field: 'username', 'values[0]': username },
-    //     });
-    //     if (data.length == 0) {
-    //         throw new UserNotFoundException(username);
-    //     }
-    //     return { ...data[0], token };
-    // }
+    async getCourseDetailInformation({
+        token,
+        id,
+    }: {
+        token: string;
+        id: number;
+    }): Promise<Course> {
+        const data = await this.apiService.fetchMoodleData<{
+            courses: Course[];
+        }>({
+            token,
+            functionName: WS_FUNCTION.GET_COURSE_BY_FIELD,
+            params: { field: 'id', value: id },
+        });
+
+        return data.courses[0];
+    }
 
     async findAllCoursesOfUser({
         token,

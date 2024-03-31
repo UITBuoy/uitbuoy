@@ -45,17 +45,17 @@ export class Course {
     @Column({ nullable: true })
     summaryformat: number;
 
-    @Field(() => String, { nullable: true })
-    @Column({ nullable: true })
-    summaryfiles: string;
+    // @Field(() => String, { nullable: true })
+    // @Column({ nullable: true })
+    // summaryfiles: string;
 
-    @Field(() => String, { nullable: true })
-    @Column({ nullable: true })
-    overviewfiles: string;
+    // @Field(() => String, { nullable: true })
+    // @Column({ nullable: true })
+    // overviewfiles: string;
 
-    @Field(() => String, { nullable: true })
-    @Column({ nullable: true })
-    enrollmentmethods: string;
+    // @Field(() => String, { nullable: true })
+    // @Column({ nullable: true })
+    // enrollmentmethods: string;
 
     @Field(() => Int, { nullable: true })
     @Column({ nullable: true })
@@ -117,9 +117,21 @@ export class Course {
     @Column({ nullable: true })
     coursecategory: string;
 
+    @Field(() => [CourseContact])
+    contacts: CourseContact[];
+
     @OneToMany('CourseContentEntity', 'courseid')
     contents: Relation<CourseContentEntity>[];
 
     @ManyToMany('User', 'courses')
     users: Relation<User[]>;
+}
+
+@ObjectType()
+export class CourseContact {
+    @Field()
+    id: string;
+
+    @Field()
+    fullname: string;
 }
