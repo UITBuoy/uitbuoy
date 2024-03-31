@@ -7,8 +7,6 @@ import CourseIcon from '../../src/icons/course';
 import ScheduleIcon from '../../src/icons/schedule';
 import ProfileIcon from '../../src/icons/profile';
 import LearningPathIcon from '../../src/icons/learning-path';
-// import HomeIcon from '../../assets/icons/home.png';
-// import { Image } from 'expo-image';
 
 export default function TabLayout() {
     return (

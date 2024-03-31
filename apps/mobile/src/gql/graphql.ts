@@ -276,7 +276,7 @@ export type UserCoursesQuery = { __typename?: 'Query', userCourses: Array<{ __ty
 export type UserEventsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserEventsQuery = { __typename?: 'Query', userEvents: Array<{ __typename?: 'EventEntity', activityname?: string | null, purpose?: string | null, overdue?: boolean | null, timeduration?: number | null, timeusermidnight?: number | null, timestart?: number | null, timesort?: number | null, timemodified?: number | null, name: string, course: { __typename?: 'Course', categoryid?: number | null, categoryname?: string | null, coursecategory?: string | null, courseimage?: string | null, display_name?: string | null, enddate?: number | null, enrollmentmethods?: string | null, fullname?: string | null, hiddenbynumsections?: number | null, id?: number | null, idnumber?: string | null, name?: string | null, overviewfiles?: string | null, pdfexportfont?: string | null, section?: number | null, shortname?: string | null, showactivitydates?: boolean | null, showcompletionconditions?: string | null, sortorder?: number | null, startdate?: number | null, summary?: string | null, summaryfiles?: string | null, summaryformat?: number | null, uservisible?: boolean | null, viewurl?: string | null, visible?: boolean | null } }> };
+export type UserEventsQuery = { __typename?: 'Query', userEvents: Array<{ __typename?: 'EventEntity', activityname?: string | null, purpose?: string | null, overdue?: boolean | null, timeduration?: number | null, timeusermidnight?: number | null, timestart?: number | null, timesort?: number | null, timemodified?: number | null, name: string, id: number, course: { __typename?: 'Course', categoryid?: number | null, categoryname?: string | null, coursecategory?: string | null, courseimage?: string | null, display_name?: string | null, enddate?: number | null, enrollmentmethods?: string | null, fullname?: string | null, hiddenbynumsections?: number | null, id?: number | null, idnumber?: string | null, name?: string | null, overviewfiles?: string | null, pdfexportfont?: string | null, section?: number | null, shortname?: string | null, showactivitydates?: boolean | null, showcompletionconditions?: string | null, sortorder?: number | null, startdate?: number | null, summary?: string | null, summaryfiles?: string | null, summaryformat?: number | null, uservisible?: boolean | null, viewurl?: string | null, visible?: boolean | null } }> };
 
 
 export const LoginApiDocument = gql`
@@ -464,6 +464,7 @@ export const UserEventsDocument = gql`
     timesort
     timemodified
     name
+    id
     course {
       categoryid
       categoryname

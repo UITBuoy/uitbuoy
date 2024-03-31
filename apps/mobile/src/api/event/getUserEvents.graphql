@@ -9,6 +9,7 @@ query UserEvents {
         timesort
         timemodified
         name
+        id
         course {
             categoryid
             categoryname
