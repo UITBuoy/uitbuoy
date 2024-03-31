@@ -55,6 +55,19 @@ export class CourseResolver {
         return courses;
     }
 
+    @Query(() => Course)
+    @UseGuards(JwtAuthGuard)
+    async course(
+        @CurrentUser() user: User,
+        @Args('course_id', { type: () => Int }) course_id: number,
+    ) {
+        const course = await this.courseApiService.getCourseDetailInformation({
+            ...user,
+            id: course_id,
+        });
+        return course;
+    }
+
     @Query(() => [CourseContentEntity])
     @UseGuards(JwtAuthGuard)
     findAllCourseContents(
@@ -78,7 +91,7 @@ export class CourseResolver {
         return this.eventApiService.getEventListOfCourse({
             ...user,
             courseid: course.id,
-            isComing
+            isComing,
         });
     }
 }
