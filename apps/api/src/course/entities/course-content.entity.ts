@@ -4,52 +4,59 @@ import {
     Entity,
     JoinColumn,
     ManyToOne,
-    OneToMany,
     PrimaryColumn,
+    Relation,
 } from 'typeorm';
 import type { CourseModuleEntity } from './course-module.entity';
-import { Course } from './course.entity';
 
 @ObjectType()
 @Entity()
 export class CourseContentEntity {
     @Field(() => Int)
-    @PrimaryColumn()
+    @PrimaryColumn({ generated: true })
     id: number;
 
-    @Field(() => String)
-    @Column()
-    name: string; //name of course of content
-
-    @Field(() => String, { nullable: true })
+    @Field({ nullable: true })
     @Column({ nullable: true })
-    summary: string;
+    type: string;
 
-    @Field(() => Int, { nullable: true })
-    @Column()
-    visible: number;
-
-    @Field(() => Int, { nullable: true })
+    @Field({ nullable: true })
     @Column({ nullable: true })
-    summaryformat: number;
+    filename: string;
 
-    @Field(() => Int, { nullable: true })
+    @Field({ nullable: true })
     @Column({ nullable: true })
-    section: number;
+    filepath: string;
 
-    @Field(() => Course, { nullable: true })
-    @ManyToOne(() => Course)
-    @JoinColumn({ name: 'cousreid' })
-    courseid: Course;
-
-    @Field(() => Boolean, { nullable: true })
+    @Field({ nullable: true })
     @Column({ nullable: true })
-    uservisible: boolean;
+    filesize: string;
 
-    @Field(() => Int, { nullable: true })
+    @Field({ nullable: true })
     @Column({ nullable: true })
-    hiddenbynumsections: number;
+    fileurl: string;
 
-    @OneToMany('CourseModuleEntity', 'sectionEntity')
-    modules: CourseModuleEntity[];
+    @Field({ nullable: true })
+    @Column({ nullable: true })
+    timecreated: string;
+
+    @Field({ nullable: true })
+    @Column({ nullable: true })
+    timemodified: string;
+
+    @Field({ nullable: true })
+    @Column({ nullable: true })
+    sortorder: string;
+
+    @Field({ nullable: true })
+    @Column({ nullable: true })
+    userid: string;
+
+    @Field({ nullable: true })
+    @Column({ nullable: true })
+    author: string;
+
+    @ManyToOne('CourseModuleEntity', 'contents')
+    @JoinColumn({ name: 'module_id' })
+    module: Relation<CourseModuleEntity>;
 }

@@ -12,7 +12,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { User } from 'src/user/entities/user.entity';
 import { CourseService } from './services/course.service';
 import { Course } from './entities/course.entity';
-import { CourseContentEntity } from './entities/course-content.entity';
+import { CourseSectionEntity } from './entities/course-section.entity';
 import { QueryArgs } from '@/common/args/query.arg';
 import { CourseApiService } from './services/course-api.service';
 import moment from 'moment';
@@ -84,7 +84,7 @@ export class CourseResolver {
         return course;
     }
 
-    @Query(() => [CourseContentEntity])
+    @Query(() => [CourseSectionEntity])
     @UseGuards(JwtAuthGuard)
     findAllCourseContents(
         @CurrentUser() user: User,
