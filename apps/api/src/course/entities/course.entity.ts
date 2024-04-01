@@ -1,5 +1,6 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import {
+    AfterLoad,
     Column,
     Entity,
     ManyToMany,
@@ -22,7 +23,6 @@ export class Course {
     fullname: string;
 
     @Field(() => String, { nullable: true })
-    @Column({ nullable: true })
     display_name: string;
 
     @Field(() => String, { nullable: true })
@@ -125,6 +125,11 @@ export class Course {
 
     @ManyToMany('User', 'courses')
     users: Relation<User[]>;
+
+    @AfterLoad()
+    loadFullName?() {
+        this.display_name = this.fullname.split(' - ').at(0);
+    }
 }
 
 @ObjectType()

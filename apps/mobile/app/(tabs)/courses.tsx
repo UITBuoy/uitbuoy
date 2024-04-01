@@ -1,9 +1,9 @@
 import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import PageHeader from '../../../src/components/PageHeader/PageHeader';
-import CourseSearch from '../../../src/components/CourseSearch/CourseSearch';
-import { useUserCoursesQuery } from '../../../src/gql/graphql';
-import CourseItem from '../../../src/components/CourseItem/CourseItem';
+import PageHeader from '../../src/components/PageHeader/PageHeader';
+import CourseSearch from '../../src/components/CourseSearch/CourseSearch';
+import { useUserCoursesQuery } from '../../src/gql/graphql';
+import CourseItem from '../../src/components/CourseItem/CourseItem';
 import { Spinner } from '@gluestack-ui/themed';
 
 export default function Page() {

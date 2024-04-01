@@ -60,11 +60,20 @@ export class CourseResolver {
     async course(
         @CurrentUser() user: User,
         @Args('course_id', { type: () => Int }) course_id: number,
-    ) {
-        const course = await this.courseApiService.getCourseDetailInformation({
-            ...user,
-            id: course_id,
-        });
+        @Args() queryArgs: QueryArgs,
+    ): Promise<Course> {
+        if (queryArgs.isNew) {
+            const apiCourse =
+                await this.courseApiService.getCourseDetailInformation({
+                    ...user,
+                    id: course_id,
+                });
+            apiCourse.users = [user];
+            await this.courseService.save(apiCourse);
+            return apiCourse;
+        }
+
+        const course = await this.courseService.findCourseById(course_id);
         return course;
     }
 
