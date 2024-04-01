@@ -5,7 +5,7 @@ import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApiModule } from 'src/api/api.module';
 import { CourseConfiguration } from './configuration/course.cofiguration';
-import { CourseResolver } from './course.resolver';
+import { CourseResolver } from './resolvers/course.resolver';
 import { CourseSectionEntity } from './entities/course-section.entity';
 import { CourseModuleEntity } from './entities/course-module.entity';
 import { Course } from './entities/course.entity';

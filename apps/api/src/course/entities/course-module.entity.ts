@@ -162,7 +162,7 @@ export class CourseModuleEntity {
     @JoinColumn({ name: 'section_id' })
     section: Relation<CourseSectionEntity>;
 
-    @OneToMany('CourseContentEntity', 'module')
+    @OneToMany('CourseContentEntity', 'module', { cascade: true })
     contents: Relation<CourseContentEntity[]>;
 
     // @Field(() => String, { nullable: true })
