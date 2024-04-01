@@ -5,7 +5,6 @@ import {
     JoinColumn,
     ManyToOne,
     OneToMany,
-    PrimaryColumn,
     Relation,
 } from 'typeorm';
 import type { CourseModuleEntity } from './course-module.entity';
@@ -15,7 +14,6 @@ import type { Course } from './course.entity';
 @Entity()
 export class CourseSectionEntity {
     @Field(() => Int)
-    @PrimaryColumn({ generated: true })
     id: number;
 
     @Field(() => String)
