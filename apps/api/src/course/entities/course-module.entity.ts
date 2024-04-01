@@ -22,6 +22,10 @@ export class CourseModuleEntity {
     @Column()
     name: string; //name of course of module
 
+    @Field(() => String, { nullable: true })
+    @Column({ nullable: true })
+    description: string; //name of course of module
+
     @Field(() => String)
     @Column()
     modname: string; //name module in english
