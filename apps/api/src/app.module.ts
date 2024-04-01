@@ -26,6 +26,7 @@ import { LoggerModule } from './logger/logger.module';
 import { SubjectModule } from './subject/subject.module';
 import { UserModule } from './user/user.module';
 import { DateScalar } from './common/scalars/date.scalar';
+import { CommonModule } from './common/common.module';
 
 @Module({
     imports: [
@@ -169,6 +170,7 @@ import { DateScalar } from './common/scalars/date.scalar';
         EventModule,
         LoggerModule,
         LecturerModule,
+        CommonModule,
     ],
     controllers: [AppController],
     providers: [
