@@ -1,12 +1,21 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
-import { CourseContentEntity } from './course-content.entity';
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    OneToMany,
+    PrimaryColumn,
+    Relation,
+} from 'typeorm';
+import type { CourseContentEntity } from './course-content.entity';
+import type { CourseSectionEntity } from './course-section.entity';
 
 @ObjectType()
 @Entity()
 export class CourseModuleEntity {
     @Field(() => Int)
-    @PrimaryColumn()
+    @PrimaryColumn({ generated: true })
     id: number;
 
     @Field(() => String)
@@ -77,11 +86,6 @@ export class CourseModuleEntity {
     @Column({ nullable: true })
     course: number;
 
-    @Field(() => CourseContentEntity, { nullable: true })
-    @ManyToOne(() => CourseContentEntity)
-    @JoinColumn({ name: 'section' })
-    sectionEntity: CourseContentEntity;
-
     @Field(() => Int, { nullable: true })
     @Column({ nullable: true })
     sectionnum: number;
@@ -126,13 +130,13 @@ export class CourseModuleEntity {
     @Column({ nullable: true })
     onclick: string;
 
-    @Field(() => String, { nullable: true })
-    @Column({ nullable: true })
-    activitybadge: string;
+    // @Field(() => String, { nullable: true })
+    // @Column({ nullable: true })
+    // activitybadge: string;
 
-    @Field(() => String, { nullable: true })
-    @Column({ nullable: true })
-    dates: string;
+    @Field(() => [String], { nullable: true })
+    @Column('simple-array', { nullable: true })
+    dates: string[];
 
     @Field(() => String, { nullable: true })
     @Column({ nullable: true })
@@ -154,19 +158,22 @@ export class CourseModuleEntity {
     @Column({ nullable: true })
     format: string;
 
-    @Field(() => String, { nullable: true })
-    @Column({ nullable: true })
-    contacts: string;
+    @ManyToOne('CourseSectionEntity', 'modules')
+    @JoinColumn({ name: 'section_id' })
+    section: Relation<CourseSectionEntity>;
 
-    @Field(() => String, { nullable: true })
-    @Column({ nullable: true })
-    filters: string;
+    @OneToMany('CourseContentEntity', 'module')
+    contents: Relation<CourseContentEntity[]>;
 
-    @Field(() => String, { nullable: true })
-    @Column({ nullable: true })
-    courseformatoptions: string;
+    // @Field(() => String, { nullable: true })
+    // @Column({ nullable: true })
+    // contacts: string;
 
-    @Field(() => String, { nullable: true })
-    @Column({ nullable: true })
-    enrollmentmethods: string;
+    // @Field(() => String, { nullable: true })
+    // @Column({ nullable: true })
+    // filters: string;
+
+    // @Field(() => String, { nullable: true })
+    // @Column({ nullable: true })
+    // courseformatoptions: string;
 }

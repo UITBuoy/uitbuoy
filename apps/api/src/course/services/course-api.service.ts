@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import WS_FUNCTION from 'src/common/constants/function-name';
-import { CourseContentEntity } from 'src/course/entities/course-content.entity';
+import { CourseSectionEntity } from '@/course/entities/course-section.entity';
 import { Course } from 'src/course/entities/course.entity';
 import { CourseNotFoundException } from 'src/course/errors/not-found.error';
 import { ApiService } from '../../api/api.service';
@@ -62,9 +62,9 @@ export class CourseApiService {
     }: {
         token: string;
         course_id: number;
-    }): Promise<CourseContentEntity[]> {
+    }): Promise<CourseSectionEntity[]> {
         const contents = await this.apiService.fetchMoodleData<
-            CourseContentEntity[]
+            CourseSectionEntity[]
         >({
             token,
             functionName: WS_FUNCTION.GET_COURSE_CONTENT_BY_ID,

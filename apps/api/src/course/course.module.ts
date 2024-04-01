@@ -6,11 +6,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApiModule } from 'src/api/api.module';
 import { CourseConfiguration } from './configuration/course.cofiguration';
 import { CourseResolver } from './course.resolver';
-import { CourseContentEntity } from './entities/course-content.entity';
+import { CourseSectionEntity } from './entities/course-section.entity';
 import { CourseModuleEntity } from './entities/course-module.entity';
 import { Course } from './entities/course.entity';
 import { CourseApiService } from './services/course-api.service';
 import { CourseService } from './services/course.service';
+import { CourseContentEntity } from './entities/course-content.entity';
 
 @Module({
     imports: [
@@ -19,6 +20,7 @@ import { CourseService } from './services/course.service';
         LecturerModule,
         forwardRef(() => EventModule),
         TypeOrmModule.forFeature([Course]),
+        TypeOrmModule.forFeature([CourseSectionEntity]),
         TypeOrmModule.forFeature([CourseModuleEntity]),
         TypeOrmModule.forFeature([CourseContentEntity]),
     ],
