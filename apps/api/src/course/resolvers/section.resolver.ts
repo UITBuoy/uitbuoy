@@ -1,16 +1,13 @@
-import { EventApiService } from '@/event/services/event-api.service';
-import { LecturerService } from '@/lecturer/services/lecturer.service';
-import { Resolver } from '@nestjs/graphql';
+import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { CourseSectionEntity } from '../entities/course-section.entity';
-import { CourseApiService } from '../services/course-api.service';
-import { CourseService } from '../services/course.service';
+import { CourseModuleEntity } from '../entities/course-module.entity';
 
 @Resolver(() => CourseSectionEntity)
 export class SectionResolver {
-    constructor(
-        private readonly courseService: CourseService,
-        private readonly courseApiService: CourseApiService,
-        private readonly eventApiService: EventApiService,
-        private readonly lecturerService: LecturerService,
-    ) {}
+    constructor() {}
+
+    @ResolveField(() => [CourseModuleEntity])
+    courseModules(@Parent() section: CourseSectionEntity) {
+        return section.modules;
+    }
 }

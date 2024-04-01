@@ -12,6 +12,8 @@ import { Course } from './entities/course.entity';
 import { CourseApiService } from './services/course-api.service';
 import { CourseService } from './services/course.service';
 import { CourseContentEntity } from './entities/course-content.entity';
+import { SectionResolver } from './resolvers/section.resolver';
+import { ModuleResolver } from './resolvers/module.resolver';
 
 @Module({
     imports: [
@@ -26,6 +28,8 @@ import { CourseContentEntity } from './entities/course-content.entity';
     ],
     providers: [
         CourseResolver,
+        SectionResolver,
+        ModuleResolver,
         CourseApiService,
         CourseService,
         CourseConfiguration,
