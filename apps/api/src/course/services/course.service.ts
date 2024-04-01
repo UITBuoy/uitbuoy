@@ -56,6 +56,10 @@ export class CourseService {
     async findAllSections(token: string, course_id: number) {
         const result = await this.sectionRepo.find({
             where: { course: { id: course_id } },
+            order: {
+                section: 'ASC',
+                modules: { modname: 'DESC', contents: { id: 'ASC' } },
+            },
             relations: { modules: { contents: true } },
         });
         if (!result.length) {
