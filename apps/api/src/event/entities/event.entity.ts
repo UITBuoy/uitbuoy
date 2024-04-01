@@ -101,9 +101,9 @@ export class EventEntity {
     @Column({ nullable: true })
     overdue: boolean;
 
-    @Field(() => String, { nullable: true })
-    @Column({ nullable: true })
-    icon: string;
+    // @Field(() => String, { nullable: true })
+    // @Column({ nullable: true })
+    // icon: string;
 
     @Field(() => String, { nullable: true })
     @Column({ nullable: true })
@@ -117,17 +117,17 @@ export class EventEntity {
     @Column({ nullable: true })
     purpose: string;
 
-    @Field(() => String, { nullable: true })
-    @Column({ nullable: true })
-    action: string; //class action
+    // @Field(() => String, { nullable: true })
+    // @Column({ nullable: true })
+    // action: string; //class action
 
     @Field(() => String, { nullable: true })
     @Column({ nullable: true })
     url: string;
 
-    @Field(() => String, { nullable: true })
-    @Column({ nullable: true })
-    subscription: string;
+    // @Field(() => String, { nullable: true })
+    // @Column({ nullable: true })
+    // subscription: string;
 
     @Field(() => Boolean, { nullable: true })
     @Column({ nullable: true })
