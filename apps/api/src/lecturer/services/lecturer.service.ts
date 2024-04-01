@@ -14,7 +14,7 @@ export class LecturerService {
     ) {}
 
     async save(token: string, ids: number[]) {
-        await Promise.all(
+        return await Promise.all(
             ids.map(async (id) => {
                 const lecturer =
                     await this.lecturerApiService.getLecturerProfile({
@@ -27,7 +27,7 @@ export class LecturerService {
         );
     }
 
-    async findLecturerByIds(token: string, ids: number[]) {
+    async findByIds(token: string, ids: number[]) {
         const results = await this.repo.findBy({ id: In(ids) });
         if (!results.every((v) => !!v)) {
             const lecturers = await Promise.all(
@@ -44,5 +44,9 @@ export class LecturerService {
             return lecturers;
         }
         return results;
+    }
+
+    async findByCourseId(id: number) {
+        return this.repo.findBy({ courses: { id } });
     }
 }
