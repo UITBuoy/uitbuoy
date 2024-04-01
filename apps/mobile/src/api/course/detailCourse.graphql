@@ -18,6 +18,8 @@ query GeneralDetailCourse($id: Int!) {
         events {
             activityname
             description
+            id
+            modulename
             name
             overdue
             purpose

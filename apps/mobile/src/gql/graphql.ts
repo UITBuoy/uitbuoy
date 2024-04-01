@@ -327,7 +327,7 @@ export type GeneralDetailCourseQueryVariables = Exact<{
 }>;
 
 
-export type GeneralDetailCourseQuery = { __typename?: 'Query', course: { __typename?: 'Course', coursecategory?: string | null, courseimage?: string | null, display_name?: string | null, enddate?: number | null, fullname?: string | null, id?: number | null, idnumber?: string | null, name?: string | null, section?: number | null, shortname?: string | null, startdate?: number | null, contacts: Array<{ __typename?: 'Lecturer', fullname?: string | null, id: number }>, events: Array<{ __typename?: 'EventEntity', activityname?: string | null, description?: string | null, name: string, overdue?: boolean | null, purpose?: string | null, timestart?: number | null }>, contentSections: Array<{ __typename?: 'CourseSectionEntity', name: string, section?: number | null, summary?: string | null, id: number, courseModules: Array<{ __typename?: 'CourseModuleEntity', downloadcontent?: number | null, id: number, modicon?: string | null, modname: string, modplural?: string | null, name: string, url?: string | null, courseContents?: Array<{ __typename?: 'CourseContentEntity', author?: string | null, filename?: string | null, filepath?: string | null, filesize?: string | null, fileurl?: string | null, id: number, sortorder?: string | null, timecreated?: string | null, timemodified?: string | null, type?: string | null, userid?: string | null }> | null }> }> } };
+export type GeneralDetailCourseQuery = { __typename?: 'Query', course: { __typename?: 'Course', coursecategory?: string | null, courseimage?: string | null, display_name?: string | null, enddate?: number | null, fullname?: string | null, id?: number | null, idnumber?: string | null, name?: string | null, section?: number | null, shortname?: string | null, startdate?: number | null, contacts: Array<{ __typename?: 'Lecturer', fullname?: string | null, id: number }>, events: Array<{ __typename?: 'EventEntity', activityname?: string | null, description?: string | null, id: number, modulename?: string | null, name: string, overdue?: boolean | null, purpose?: string | null, timestart?: number | null }>, contentSections: Array<{ __typename?: 'CourseSectionEntity', name: string, section?: number | null, summary?: string | null, id: number, courseModules: Array<{ __typename?: 'CourseModuleEntity', downloadcontent?: number | null, id: number, modicon?: string | null, modname: string, modplural?: string | null, name: string, url?: string | null, courseContents?: Array<{ __typename?: 'CourseContentEntity', author?: string | null, filename?: string | null, filepath?: string | null, filesize?: string | null, fileurl?: string | null, id: number, sortorder?: string | null, timecreated?: string | null, timemodified?: string | null, type?: string | null, userid?: string | null }> | null }> }> } };
 
 export type SearchCoursesQueryVariables = Exact<{
   isNew?: InputMaybe<Scalars['Boolean']['input']>;
@@ -427,6 +427,8 @@ export const GeneralDetailCourseDocument = gql`
     events {
       activityname
       description
+      id
+      modulename
       name
       overdue
       purpose
