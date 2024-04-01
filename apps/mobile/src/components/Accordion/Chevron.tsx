@@ -11,7 +11,8 @@ type Props = {
 
 const Chevron = ({ progress }: Props) => {
     const iconStyle = useAnimatedStyle(() => ({
-        transform: [{ rotate: `${progress.value * -180}deg` }],
+        //@ts-ignore
+        transform: [{ rotate: `${progress.value * -180}deg` }, { scale: 1.5 }],
     }));
 
     return (
