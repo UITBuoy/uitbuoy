@@ -10,15 +10,7 @@ export default function CourseItem({
     shortname,
     courseimage,
     id,
-}: Pick<
-    Course,
-    | 'fullname'
-    | 'display_name'
-    | 'idnumber'
-    | 'shortname'
-    | 'courseimage'
-    | 'id'
->) {
+}: Partial<Course>) {
     return (
         <TouchableNativeFeedback
             onPress={() => {
@@ -32,7 +24,6 @@ export default function CourseItem({
                 <Image
                     style={{
                         width: 60,
-                        // height: 60,
                         backgroundColor: 'red',
                         borderRadius: 8,
                     }}

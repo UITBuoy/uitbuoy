@@ -44,7 +44,9 @@ export class CourseService {
         return response;
     }
 
-    async save(courses: Course[]) {
+    async save(courses: Course[]): Promise<void>;
+    async save(courses: Course): Promise<void>;
+    async save(courses: unknown): Promise<void> {
         this.courseRepo.save(courses);
     }
 
@@ -60,5 +62,9 @@ export class CourseService {
 
         this.contentRepo.save(contents);
         return contents;
+    }
+
+    async findCourseById(id: number) {
+        return this.courseRepo.findOneBy({ id });
     }
 }
