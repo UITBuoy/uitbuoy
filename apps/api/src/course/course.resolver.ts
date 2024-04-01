@@ -18,6 +18,7 @@ import { CourseApiService } from './services/course-api.service';
 import moment from 'moment';
 import { EventEntity } from '@/event/entities/event.entity';
 import { EventApiService } from '@/event/services/event-api.service';
+import { LecturerService } from '@/lecturer/services/lecturer.service';
 
 @Resolver(() => Course)
 export class CourseResolver {
@@ -25,6 +26,7 @@ export class CourseResolver {
         private readonly courseService: CourseService,
         private readonly courseApiService: CourseApiService,
         private readonly eventApiService: EventApiService,
+        private readonly lecturerService: LecturerService,
     ) {}
 
     @Query(() => [Course])
@@ -69,6 +71,10 @@ export class CourseResolver {
                     id: course_id,
                 });
             apiCourse.users = [user];
+            await this.lecturerService.save(
+                user.token,
+                apiCourse.contacts.map((contact) => contact.id),
+            );
             await this.courseService.save(apiCourse);
             return apiCourse;
         }

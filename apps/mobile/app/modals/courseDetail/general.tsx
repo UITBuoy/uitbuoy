@@ -15,6 +15,8 @@ export default function GeneralPage({ id }: Props) {
         variables: { id },
     });
 
+    console.log({ data });
+
     const hasDeadline = data?.course.events.some(
         (event) =>
             moment(new Date(event.timestart * 1000)).diff(moment(), 'days') > 0,

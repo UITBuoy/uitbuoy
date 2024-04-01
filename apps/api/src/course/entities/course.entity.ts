@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import type { CourseContentEntity } from './course-content.entity';
 import type { User } from '@/user/entities/user.entity';
+import type { Lecturer } from '@/lecturer/lecturer.entity';
 
 @ObjectType()
 @Entity()
@@ -117,8 +118,8 @@ export class Course {
     @Column({ nullable: true })
     coursecategory: string;
 
-    @Field(() => [CourseContact])
-    contacts: CourseContact[];
+    @ManyToMany('Lecturer', 'courses')
+    contacts: Relation<Lecturer[]>;
 
     @OneToMany('CourseContentEntity', 'courseid')
     contents: Relation<CourseContentEntity>[];
@@ -130,13 +131,4 @@ export class Course {
     loadFullName?() {
         this.display_name = this.fullname.split(' - ').at(0);
     }
-}
-
-@ObjectType()
-export class CourseContact {
-    @Field()
-    id: string;
-
-    @Field()
-    fullname: string;
 }
