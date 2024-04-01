@@ -1,14 +1,14 @@
+import { QueryArgs } from '@/common/args/query.arg';
 import { UseGuards } from '@nestjs/common';
 import { Args, Query, Resolver } from '@nestjs/graphql';
+import moment from 'moment';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { User } from 'src/user/entities/user.entity';
-import { CourseService } from './services/course.service';
-import { Course } from './entities/course.entity';
 import { CourseContentEntity } from './entities/course-content.entity';
-import { QueryArgs } from '@/common/args/query.arg';
+import { Course } from './entities/course.entity';
 import { CourseApiService } from './services/course-api.service';
-import moment from 'moment';
+import { CourseService } from './services/course.service';
 
 @Resolver(() => Course)
 export class CourseResolver {

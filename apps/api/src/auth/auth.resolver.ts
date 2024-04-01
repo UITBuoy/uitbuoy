@@ -2,7 +2,7 @@ import {
     COOKIE_NAME,
     COOKIE_PATH,
     REFRESH_TIME,
-} from '@/common/constants/cookie';
+} from 'src/common/constants/cookie';
 import { UserService } from '@/user/user.service';
 import { UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
