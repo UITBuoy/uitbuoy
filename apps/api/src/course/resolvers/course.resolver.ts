@@ -10,11 +10,11 @@ import {
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { User } from 'src/user/entities/user.entity';
-import { CourseService } from './services/course.service';
-import { Course } from './entities/course.entity';
-import { CourseSectionEntity } from './entities/course-section.entity';
+import { CourseService } from '../services/course.service';
+import { Course } from '../entities/course.entity';
+import { CourseSectionEntity } from '../entities/course-section.entity';
 import { QueryArgs } from '@/common/args/query.arg';
-import { CourseApiService } from './services/course-api.service';
+import { CourseApiService } from '../services/course-api.service';
 import moment from 'moment';
 import { EventEntity } from '@/event/entities/event.entity';
 import { EventApiService } from '@/event/services/event-api.service';
@@ -84,13 +84,9 @@ export class CourseResolver {
         return course;
     }
 
-    @Query(() => [CourseSectionEntity])
-    @UseGuards(JwtAuthGuard)
-    findAllCourseContents(
-        @CurrentUser() user: User,
-        @Args('course_id') course_id: number,
-    ) {
-        return this.courseService.findCourseContents(user.token, course_id);
+    @ResolveField(() => [CourseSectionEntity])
+    async contentSections(@CurrentUser() user: User, @Parent() course: Course) {
+        return this.courseService.findAllSections(user.token, course.id);
     }
 
     @ResolveField(() => [Lecturer])

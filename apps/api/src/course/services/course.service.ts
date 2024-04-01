@@ -6,15 +6,18 @@ import { CourseApiService } from '@/course/services/course-api.service';
 import { CourseSectionEntity } from '../entities/course-section.entity';
 import { CourseModuleEntity } from '../entities/course-module.entity';
 import { User } from '@/user/entities/user.entity';
+import { CourseContentEntity } from '../entities/course-content.entity';
 
 @Injectable()
 export class CourseService {
     constructor(
         @InjectRepository(Course) private courseRepo: Repository<Course>,
         @InjectRepository(CourseSectionEntity)
-        private contentRepo: Repository<CourseSectionEntity>,
+        private sectionRepo: Repository<CourseSectionEntity>,
         @InjectRepository(CourseModuleEntity)
         private moduleRepo: Repository<CourseModuleEntity>,
+        @InjectRepository(CourseContentEntity)
+        private contentRepo: Repository<CourseContentEntity>,
         private readonly courseApiService: CourseApiService,
     ) {}
 
@@ -50,18 +53,26 @@ export class CourseService {
         this.courseRepo.save(courses);
     }
 
-    async findCourseContents(token: string, course_id: number) {
-        const contents = await this.courseApiService.getCourseContent({
-            token,
-            course_id,
+    async findAllSections(token: string, course_id: number) {
+        const result = await this.sectionRepo.find({
+            where: { course: { id: course_id } },
+            relations: { modules: { contents: true } },
         });
+        if (!result.length) {
+            let sections = await this.courseApiService.getCourseContent({
+                token,
+                course_id,
+            });
 
-        contents.forEach((content) => {
-            this.moduleRepo.save(content.modules);
-        });
+            sections = sections.map((section) => ({
+                ...section,
+                course: { id: course_id },
+            })) as any;
 
-        this.contentRepo.save(contents);
-        return contents;
+            await this.sectionRepo.save(sections);
+            return sections;
+        }
+        return result;
     }
 
     async findCourseById(id: number) {

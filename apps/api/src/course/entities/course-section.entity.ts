@@ -50,6 +50,6 @@ export class CourseSectionEntity {
     @JoinColumn({ name: 'cousre_id' })
     course: Relation<Course>;
 
-    @OneToMany('CourseModuleEntity', 'section')
+    @OneToMany('CourseModuleEntity', 'section', { cascade: true })
     modules: Relation<CourseModuleEntity[]>;
 }
