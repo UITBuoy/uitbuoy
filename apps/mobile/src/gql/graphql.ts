@@ -56,7 +56,8 @@ export type Course = {
   __typename?: 'Course';
   categoryid?: Maybe<Scalars['Int']['output']>;
   categoryname?: Maybe<Scalars['String']['output']>;
-  contacts: Array<CourseContact>;
+  contacts: Array<Lecturer>;
+  contentSections: Array<CourseSectionEntity>;
   coursecategory?: Maybe<Scalars['String']['output']>;
   courseimage?: Maybe<Scalars['String']['output']>;
   display_name?: Maybe<Scalars['String']['output']>;
@@ -86,15 +87,65 @@ export type CourseEventsArgs = {
   isComing?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-export type CourseContact = {
-  __typename?: 'CourseContact';
-  fullname: Scalars['String']['output'];
-  id: Scalars['String']['output'];
-};
-
 export type CourseContentEntity = {
   __typename?: 'CourseContentEntity';
-  courseid?: Maybe<Course>;
+  author?: Maybe<Scalars['String']['output']>;
+  filename?: Maybe<Scalars['String']['output']>;
+  filepath?: Maybe<Scalars['String']['output']>;
+  filesize?: Maybe<Scalars['String']['output']>;
+  fileurl?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  sortorder?: Maybe<Scalars['String']['output']>;
+  timecreated?: Maybe<Scalars['String']['output']>;
+  timemodified?: Maybe<Scalars['String']['output']>;
+  type?: Maybe<Scalars['String']['output']>;
+  userid?: Maybe<Scalars['String']['output']>;
+};
+
+export type CourseModuleEntity = {
+  __typename?: 'CourseModuleEntity';
+  afterlink?: Maybe<Scalars['String']['output']>;
+  completion?: Maybe<Scalars['Int']['output']>;
+  completionnotify?: Maybe<Scalars['Int']['output']>;
+  contextid?: Maybe<Scalars['Int']['output']>;
+  course?: Maybe<Scalars['Int']['output']>;
+  courseContents?: Maybe<Array<CourseContentEntity>>;
+  customdata?: Maybe<Scalars['String']['output']>;
+  dates?: Maybe<Array<Scalars['String']['output']>>;
+  defaultgroupingid?: Maybe<Scalars['Int']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  downloadcontent?: Maybe<Scalars['Int']['output']>;
+  enablecompletion?: Maybe<Scalars['Int']['output']>;
+  format?: Maybe<Scalars['String']['output']>;
+  groupingid?: Maybe<Scalars['Int']['output']>;
+  groupmode?: Maybe<Scalars['Int']['output']>;
+  groupmodeforce?: Maybe<Scalars['Int']['output']>;
+  id: Scalars['Int']['output'];
+  indent?: Maybe<Scalars['Int']['output']>;
+  instance?: Maybe<Scalars['Int']['output']>;
+  lang?: Maybe<Scalars['String']['output']>;
+  maxbytes?: Maybe<Scalars['Int']['output']>;
+  modicon?: Maybe<Scalars['String']['output']>;
+  modname: Scalars['String']['output'];
+  modplural?: Maybe<Scalars['String']['output']>;
+  module?: Maybe<Scalars['Int']['output']>;
+  name: Scalars['String']['output'];
+  newsitems?: Maybe<Scalars['Int']['output']>;
+  noviewlink?: Maybe<Scalars['Boolean']['output']>;
+  onclick?: Maybe<Scalars['String']['output']>;
+  sectionnum?: Maybe<Scalars['Int']['output']>;
+  showgrades?: Maybe<Scalars['Int']['output']>;
+  showreports?: Maybe<Scalars['Int']['output']>;
+  theme?: Maybe<Scalars['String']['output']>;
+  url?: Maybe<Scalars['String']['output']>;
+  uservisible?: Maybe<Scalars['Boolean']['output']>;
+  visible?: Maybe<Scalars['Int']['output']>;
+  visibleoncoursepage?: Maybe<Scalars['Int']['output']>;
+};
+
+export type CourseSectionEntity = {
+  __typename?: 'CourseSectionEntity';
+  courseModules: Array<CourseModuleEntity>;
   hiddenbynumsections?: Maybe<Scalars['Int']['output']>;
   id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
@@ -107,7 +158,6 @@ export type CourseContentEntity = {
 
 export type EventEntity = {
   __typename?: 'EventEntity';
-  action?: Maybe<Scalars['String']['output']>;
   activityname?: Maybe<Scalars['String']['output']>;
   activitystr?: Maybe<Scalars['String']['output']>;
   candelete?: Maybe<Scalars['Boolean']['output']>;
@@ -124,7 +174,6 @@ export type EventEntity = {
   formattedtime?: Maybe<Scalars['String']['output']>;
   groupid?: Maybe<Scalars['String']['output']>;
   groupname?: Maybe<Scalars['String']['output']>;
-  icon?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
   instance?: Maybe<Scalars['Int']['output']>;
   isactionevent?: Maybe<Scalars['Boolean']['output']>;
@@ -138,7 +187,6 @@ export type EventEntity = {
   overdue?: Maybe<Scalars['Boolean']['output']>;
   purpose?: Maybe<Scalars['String']['output']>;
   repeatid?: Maybe<Scalars['String']['output']>;
-  subscription?: Maybe<Scalars['String']['output']>;
   timeduration?: Maybe<Scalars['Int']['output']>;
   timemodified?: Maybe<Scalars['Int']['output']>;
   timesort?: Maybe<Scalars['Int']['output']>;
@@ -148,6 +196,17 @@ export type EventEntity = {
   userid?: Maybe<Scalars['Int']['output']>;
   viewurl?: Maybe<Scalars['String']['output']>;
   visible?: Maybe<Scalars['Int']['output']>;
+};
+
+export type Lecturer = {
+  __typename?: 'Lecturer';
+  email?: Maybe<Scalars['String']['output']>;
+  firstaccess?: Maybe<Scalars['Float']['output']>;
+  fullname?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Float']['output'];
+  lastaccess?: Maybe<Scalars['Float']['output']>;
+  profileimageurl?: Maybe<Scalars['String']['output']>;
+  profileimageurlsmall?: Maybe<Scalars['String']['output']>;
 };
 
 export type Mutation = {
@@ -172,7 +231,6 @@ export type Query = {
   __typename?: 'Query';
   course: Course;
   findAll: Array<Subject>;
-  findAllCourseContents: Array<CourseContentEntity>;
   findOne: Array<Subject>;
   profile: User;
   userCourses: Array<Course>;
@@ -182,16 +240,14 @@ export type Query = {
 
 export type QueryCourseArgs = {
   course_id: Scalars['Int']['input'];
+  isNew?: InputMaybe<Scalars['Boolean']['input']>;
+  isRecent?: InputMaybe<Scalars['Boolean']['input']>;
+  keyword?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type QueryFindAllArgs = {
   nameVN: Scalars['String']['input'];
-};
-
-
-export type QueryFindAllCourseContentsArgs = {
-  course_id: Scalars['Float']['input'];
 };
 
 
@@ -271,7 +327,7 @@ export type GeneralDetailCourseQueryVariables = Exact<{
 }>;
 
 
-export type GeneralDetailCourseQuery = { __typename?: 'Query', course: { __typename?: 'Course', coursecategory?: string | null, courseimage?: string | null, display_name?: string | null, enddate?: number | null, fullname?: string | null, id?: number | null, idnumber?: string | null, name?: string | null, section?: number | null, shortname?: string | null, startdate?: number | null, contacts: Array<{ __typename?: 'CourseContact', fullname: string, id: string }>, events: Array<{ __typename?: 'EventEntity', activityname?: string | null, description?: string | null, name: string, overdue?: boolean | null, purpose?: string | null, timestart?: number | null }> } };
+export type GeneralDetailCourseQuery = { __typename?: 'Query', course: { __typename?: 'Course', coursecategory?: string | null, courseimage?: string | null, display_name?: string | null, enddate?: number | null, fullname?: string | null, id?: number | null, idnumber?: string | null, name?: string | null, section?: number | null, shortname?: string | null, startdate?: number | null, contacts: Array<{ __typename?: 'Lecturer', fullname?: string | null, id: number }>, events: Array<{ __typename?: 'EventEntity', activityname?: string | null, description?: string | null, name: string, overdue?: boolean | null, purpose?: string | null, timestart?: number | null }>, contentSections: Array<{ __typename?: 'CourseSectionEntity', name: string, section?: number | null, summary?: string | null, id: number, courseModules: Array<{ __typename?: 'CourseModuleEntity', downloadcontent?: number | null, id: number, modicon?: string | null, modname: string, modplural?: string | null, name: string, url?: string | null, courseContents?: Array<{ __typename?: 'CourseContentEntity', author?: string | null, filename?: string | null, filepath?: string | null, filesize?: string | null, fileurl?: string | null, id: number, sortorder?: string | null, timecreated?: string | null, timemodified?: string | null, type?: string | null, userid?: string | null }> | null }> }> } };
 
 export type SearchCoursesQueryVariables = Exact<{
   isNew?: InputMaybe<Scalars['Boolean']['input']>;
@@ -375,6 +431,34 @@ export const GeneralDetailCourseDocument = gql`
       overdue
       purpose
       timestart
+    }
+    contentSections {
+      name
+      section
+      summary
+      id
+      courseModules {
+        downloadcontent
+        id
+        modicon
+        modname
+        modplural
+        name
+        url
+        courseContents {
+          author
+          filename
+          filepath
+          filesize
+          fileurl
+          id
+          sortorder
+          timecreated
+          timemodified
+          type
+          userid
+        }
+      }
     }
   }
 }

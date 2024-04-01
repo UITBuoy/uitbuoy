@@ -23,5 +23,33 @@ query GeneralDetailCourse($id: Int!) {
             purpose
             timestart
         }
+        contentSections {
+            name
+            section
+            summary
+            id
+            courseModules {
+                downloadcontent
+                id
+                modicon
+                modname
+                modplural
+                name
+                url
+                courseContents {
+                    author
+                    filename
+                    filepath
+                    filesize
+                    fileurl
+                    id
+                    sortorder
+                    timecreated
+                    timemodified
+                    type
+                    userid
+                }
+            }
+        }
     }
 }
