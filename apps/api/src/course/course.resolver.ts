@@ -19,6 +19,7 @@ import moment from 'moment';
 import { EventEntity } from '@/event/entities/event.entity';
 import { EventApiService } from '@/event/services/event-api.service';
 import { LecturerService } from '@/lecturer/services/lecturer.service';
+import { Lecturer } from '@/lecturer/lecturer.entity';
 
 @Resolver(() => Course)
 export class CourseResolver {
@@ -71,7 +72,7 @@ export class CourseResolver {
                     id: course_id,
                 });
             apiCourse.users = [user];
-            await this.lecturerService.save(
+            apiCourse.contacts = await this.lecturerService.save(
                 user.token,
                 apiCourse.contacts.map((contact) => contact.id),
             );
@@ -90,6 +91,11 @@ export class CourseResolver {
         @Args('course_id') course_id: number,
     ) {
         return this.courseService.findCourseContents(user.token, course_id);
+    }
+
+    @ResolveField(() => [Lecturer])
+    async contacts(@CurrentUser() user: User, @Parent() course: Course) {
+        return this.lecturerService.findByCourseId(course.id);
     }
 
     @ResolveField(() => [EventEntity])

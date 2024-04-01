@@ -16,31 +16,31 @@ export class Lecturer {
     @PrimaryColumn()
     id: number;
 
-    @Field()
-    @Column()
+    @Field({ nullable: true })
+    @Column({ nullable: true })
     fullname: string;
 
-    @Field()
-    @Column()
+    @Field({ nullable: true })
+    @Column({ nullable: true })
     email: string;
 
-    @Field()
-    @Column()
+    @Field({ nullable: true })
+    @Column({ nullable: true })
     firstaccess: number;
 
-    @Field()
-    @Column()
+    @Field({ nullable: true })
+    @Column({ nullable: true })
     lastaccess: number;
 
-    @Field()
-    @Column()
+    @Field({ nullable: true })
+    @Column({ nullable: true })
     profileimageurlsmall: string;
 
-    @Field()
-    @Column()
+    @Field({ nullable: true })
+    @Column({ nullable: true })
     profileimageurl: string;
 
-    @ManyToMany('Course', 'contacts')
+    @ManyToMany('Course', 'contacts', { cascade: true })
     @JoinTable()
     courses: Relation<Course>;
 }
