@@ -68,7 +68,7 @@ const CourseContentAccordion = ({ value }: Props) => {
                         return (
                             <TouchableNativeFeedback key={i}>
                                 <View className=" w-full flex flex-row gap-4 items-center px-3 py-4 border-t-[0.2px] border-t-neutral-60">
-                                    {modname === 'resouce' ? (
+                                    {modname === 'resource' ? (
                                         <ResourceIcon />
                                     ) : modname === 'folder' ? (
                                         <FolderIcon />
