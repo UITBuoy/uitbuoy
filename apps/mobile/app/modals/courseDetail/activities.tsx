@@ -15,7 +15,6 @@ export default function ActitivitiesPage({ id }: Props) {
     const { data, loading, error } = useGeneralDetailCourseQuery({
         variables: { id },
     });
-    console.log(data);
 
     return (
         <ScrollView className="flex-1 bg-white">

@@ -66,11 +66,12 @@ export default function GeneralPage({ id }: Props) {
                         </Text>
                         <View className=" mx-4 mt-2 flex flex-col gap-4">
                             {data?.course.contentSections.map(
-                                ({ name, courseModules }) => (
+                                ({ name, summary, courseModules }) => (
                                     <CourseContentAccordion
                                         key={name}
                                         value={{
                                             name,
+                                            summary,
                                             contents: courseModules,
                                         }}
                                     />
