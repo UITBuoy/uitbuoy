@@ -348,7 +348,7 @@ export type DetailAssignmentCourseQueryVariables = Exact<{
 }>;
 
 
-export type DetailAssignmentCourseQuery = { __typename?: 'Query', course: { __typename?: 'Course', display_name?: string | null, fullname?: string | null, id?: number | null, shortname?: string | null, assignment: { __typename?: 'Assignment', allowsubmissionsfromdate?: number | null, cmid?: number | null, course?: number | null, duedate?: number | null, id?: number | null, intro?: string | null, name?: string | null, timemodified?: number | null } } };
+export type DetailAssignmentCourseQuery = { __typename?: 'Query', assignmentCourse: { __typename?: 'Course', display_name?: string | null, fullname?: string | null, id?: number | null, shortname?: string | null, assignment: { __typename?: 'Assignment', allowsubmissionsfromdate?: number | null, cmid?: number | null, course?: number | null, duedate?: number | null, id?: number | null, intro?: string | null, name?: string | null, timemodified?: number | null } } };
 
 export type GeneralDetailCourseQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -436,7 +436,7 @@ export type LoginApiMutationResult = Apollo.MutationResult<LoginApiMutation>;
 export type LoginApiMutationOptions = Apollo.BaseMutationOptions<LoginApiMutation, LoginApiMutationVariables>;
 export const DetailAssignmentCourseDocument = gql`
     query DetailAssignmentCourse($id: Int!, $assignment_id: Int!) {
-  course(course_id: $id) {
+  assignmentCourse: course(course_id: $id) {
     display_name
     fullname
     id

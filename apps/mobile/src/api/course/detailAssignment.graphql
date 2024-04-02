@@ -1,5 +1,5 @@
 query DetailAssignmentCourse($id: Int!, $assignment_id: Int!) {
-    course(course_id: $id) {
+    assignmentCourse: course(course_id: $id) {
         display_name
         fullname
         id

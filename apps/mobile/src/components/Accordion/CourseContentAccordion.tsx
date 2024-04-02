@@ -1,7 +1,6 @@
-import React, { ReactNode, useState } from 'react';
+import { router } from 'expo-router';
+import React from 'react';
 import {
-    PixelRatio,
-    Pressable,
     StyleSheet,
     Text,
     TouchableNativeFeedback,
@@ -17,13 +16,12 @@ import Animated, {
     useSharedValue,
     withTiming,
 } from 'react-native-reanimated';
-import Chevron from './Chevron';
-import ResourceIcon from '../../icons/resource';
+import RenderHtml from 'react-native-render-html';
+import AssignIcon from '../../icons/assign';
 import FolderIcon from '../../icons/folder';
 import ForumIcon from '../../icons/forum';
-import AssignIcon from '../../icons/assign';
-import RenderHtml from 'react-native-render-html';
-import { router } from 'expo-router';
+import ResourceIcon from '../../icons/resource';
+import Chevron from './Chevron';
 
 type Props = {
     value: {
@@ -94,12 +92,12 @@ const CourseContentAccordion = ({ value }: Props) => {
                                     if (modname === 'assign') {
                                         router.push({
                                             pathname: '/modals/detail-activity',
-                                            params: {},
-                                            // params: {
-                                            //     course_id:
-                                            //         value.course_id || '',
-                                            //     assignment_id: id || '',
-                                            // },
+                                            params: {
+                                                id,
+                                                assignment_id: id,
+                                                course_id:
+                                                    value.course_id || '',
+                                            },
                                         });
                                     }
                                 }}
