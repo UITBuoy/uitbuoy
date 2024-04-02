@@ -23,12 +23,13 @@ import FolderIcon from '../../icons/folder';
 import ForumIcon from '../../icons/forum';
 import AssignIcon from '../../icons/assign';
 import RenderHtml from 'react-native-render-html';
+import { router } from 'expo-router';
 
 type Props = {
     value: {
         name: string;
         summary?: string;
-        contents: { modname: string; name: string }[];
+        contents: { id: number; modname: string; name: string }[];
     };
 };
 
@@ -86,7 +87,17 @@ const CourseContentAccordion = ({ value }: Props) => {
                     </View>
                     {value.contents.map(({ name, modname }, i) => {
                         return (
-                            <TouchableNativeFeedback key={i}>
+                            <TouchableNativeFeedback
+                                key={i}
+                                onPress={() => {
+                                    if (modname === 'assign') {
+                                        router.push({
+                                            pathname: '/modals/detail-activity',
+                                            params: value.contents[i],
+                                        });
+                                    }
+                                }}
+                            >
                                 <View className=" w-full flex flex-row gap-4 items-center px-3 py-4 border-t-[0.2px] border-t-neutral-60">
                                     {modname === 'resource' ? (
                                         <ResourceIcon />
