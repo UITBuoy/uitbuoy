@@ -20,6 +20,8 @@ import { EventEntity } from '@/event/entities/event.entity';
 import { EventApiService } from '@/event/services/event-api.service';
 import { LecturerService } from '@/lecturer/services/lecturer.service';
 import { Lecturer } from '@/lecturer/lecturer.entity';
+import { AssignmentApiService } from '@/event/services/assignment-api.service';
+import { Assignment } from '@/event/entities/assignment.entity';
 
 @Resolver(() => Course)
 export class CourseResolver {
@@ -28,6 +30,7 @@ export class CourseResolver {
         private readonly courseApiService: CourseApiService,
         private readonly eventApiService: EventApiService,
         private readonly lecturerService: LecturerService,
+        private readonly assignmentApiService: AssignmentApiService,
     ) {}
 
     @Query(() => [Course])
@@ -92,6 +95,27 @@ export class CourseResolver {
     @ResolveField(() => [Lecturer])
     async contacts(@CurrentUser() user: User, @Parent() course: Course) {
         return this.lecturerService.findByCourseId(course.id);
+    }
+
+    @ResolveField(() => Assignment)
+    async assignment(
+        @CurrentUser() user: User,
+        @Parent() course: Course,
+        @Args('cmid', { type: () => Int }) cmid: number,
+    ) {
+        const assignments = await this.assignmentApiService.getAssigmentList({
+            ...user,
+            courseid: course.id,
+        });
+        return assignments.find((assignment) => assignment.cmid === cmid);
+    }
+
+    @ResolveField(() => [Assignment])
+    async assignments(@CurrentUser() user: User, @Parent() course: Course) {
+        return this.assignmentApiService.getAssigmentList({
+            ...user,
+            courseid: course.id,
+        });
     }
 
     @ResolveField(() => [EventEntity])
