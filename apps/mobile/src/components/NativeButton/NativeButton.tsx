@@ -7,7 +7,7 @@ export default function NativeButton({
     return (
         <View
             className={`${className} overflow-hidden`}
-            style={{ borderRadius: 14, overflow: 'hidden' }}
+            style={{ borderRadius: 12, overflow: 'hidden' }}
         >
             <TouchableNativeFeedback
                 background={TouchableNativeFeedback.Ripple('#aaa', true)}
