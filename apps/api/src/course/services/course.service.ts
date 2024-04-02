@@ -70,6 +70,17 @@ export class CourseService {
 
             sections = sections.map((section) => ({
                 ...section,
+                modules: [
+                    ...section.modules.map((module) =>
+                        module.modname === 'assign'
+                            ? {
+                                  ...module,
+                                  assignOpenedDate: module.dates[0].timestamp,
+                                  assignDueDate: module.dates[1].timestamp,
+                              }
+                            : module,
+                    ),
+                ],
                 course: { id: course_id },
             })) as any;
 

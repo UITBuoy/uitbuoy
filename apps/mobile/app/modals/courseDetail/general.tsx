@@ -35,8 +35,6 @@ export default function GeneralPage({ id }: Props) {
         Infinity,
     );
 
-    console.log(data);
-
     return (
         <ScrollView className="flex-1 bg-white">
             <View className=" py-5 flex flex-col gap-4">
