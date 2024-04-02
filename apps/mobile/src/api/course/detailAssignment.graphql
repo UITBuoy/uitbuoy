@@ -1,0 +1,18 @@
+query DetailAssignmentCourse($id: Int!, $assignment_id: Int!) {
+    course(course_id: $id) {
+        display_name
+        fullname
+        id
+        shortname
+        assignment(cmid: $assignment_id) {
+            allowsubmissionsfromdate
+            cmid
+            course
+            duedate
+            id
+            intro
+            name
+            timemodified
+        }
+    }
+}

@@ -29,6 +29,7 @@ type Props = {
     value: {
         name: string;
         summary?: string;
+        course_id: number;
         contents: { id: number; modname: string; name: string }[];
     };
 };
@@ -85,7 +86,7 @@ const CourseContentAccordion = ({ value }: Props) => {
                             source={{ html: value.summary }}
                         />
                     </View>
-                    {value.contents.map(({ name, modname }, i) => {
+                    {value.contents.map(({ name, modname, id }, i) => {
                         return (
                             <TouchableNativeFeedback
                                 key={i}
@@ -93,7 +94,12 @@ const CourseContentAccordion = ({ value }: Props) => {
                                     if (modname === 'assign') {
                                         router.push({
                                             pathname: '/modals/detail-activity',
-                                            params: value.contents[i],
+                                            params: {},
+                                            // params: {
+                                            //     course_id:
+                                            //         value.course_id || '',
+                                            //     assignment_id: id || '',
+                                            // },
                                         });
                                     }
                                 }}

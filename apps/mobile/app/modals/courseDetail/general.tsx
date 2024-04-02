@@ -72,6 +72,7 @@ export default function GeneralPage({ id }: Props) {
                                         value={{
                                             name,
                                             summary,
+                                            course_id: id,
                                             contents: courseModules,
                                         }}
                                     />
