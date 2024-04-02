@@ -18,6 +18,18 @@ export type Scalars = {
   Date: { input: any; output: any; }
 };
 
+export type Assignment = {
+  __typename?: 'Assignment';
+  allowsubmissionsfromdate?: Maybe<Scalars['Int']['output']>;
+  cmid?: Maybe<Scalars['Int']['output']>;
+  course?: Maybe<Scalars['Int']['output']>;
+  duedate?: Maybe<Scalars['Int']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
+  intro?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  timemodified?: Maybe<Scalars['Int']['output']>;
+};
+
 export type AuthEntity = {
   __typename?: 'AuthEntity';
   accessTokenExpiredDate?: Maybe<Scalars['Date']['output']>;
@@ -54,6 +66,8 @@ export type Calendar = {
 
 export type Course = {
   __typename?: 'Course';
+  assignment: Assignment;
+  assignments: Array<Assignment>;
   categoryid?: Maybe<Scalars['Int']['output']>;
   categoryname?: Maybe<Scalars['String']['output']>;
   contacts: Array<Lecturer>;
@@ -80,6 +94,11 @@ export type Course = {
   uservisible?: Maybe<Scalars['Boolean']['output']>;
   viewurl?: Maybe<Scalars['String']['output']>;
   visible?: Maybe<Scalars['Boolean']['output']>;
+};
+
+
+export type CourseAssignmentArgs = {
+  cmid: Scalars['Int']['input'];
 };
 
 
@@ -323,12 +342,20 @@ export type LoginApiMutationVariables = Exact<{
 
 export type LoginApiMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthEntity', access_token: string, refresh_token?: string | null, auth?: string | null, city?: string | null, confirmed?: string | null, country?: string | null, department?: string | null, email: string, firstaccess?: number | null, fullname: string, id?: number | null, lang?: string | null, lastaccess?: number | null, mailformat?: string | null, profileimageurl?: string | null, profileimageurlsmall?: string | null, suspended?: string | null, theme?: string | null, timezone?: string | null, token: string, username: string } };
 
+export type DetailAssignmentCourseQueryVariables = Exact<{
+  id: Scalars['Int']['input'];
+  assignment_id: Scalars['Int']['input'];
+}>;
+
+
+export type DetailAssignmentCourseQuery = { __typename?: 'Query', course: { __typename?: 'Course', display_name?: string | null, fullname?: string | null, id?: number | null, shortname?: string | null, assignment: { __typename?: 'Assignment', allowsubmissionsfromdate?: number | null, cmid?: number | null, course?: number | null, duedate?: number | null, id?: number | null, intro?: string | null, name?: string | null, timemodified?: number | null } } };
+
 export type GeneralDetailCourseQueryVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
 
 
-export type GeneralDetailCourseQuery = { __typename?: 'Query', course: { __typename?: 'Course', coursecategory?: string | null, courseimage?: string | null, display_name?: string | null, enddate?: number | null, fullname?: string | null, id?: number | null, idnumber?: string | null, name?: string | null, section?: number | null, shortname?: string | null, startdate?: number | null, contacts: Array<{ __typename?: 'Lecturer', fullname?: string | null, id: number }>, events: Array<{ __typename?: 'EventEntity', activityname?: string | null, description?: string | null, id: number, modulename?: string | null, name: string, overdue?: boolean | null, purpose?: string | null, timestart?: number | null }>, contentSections: Array<{ __typename?: 'CourseSectionEntity', name: string, section?: number | null, summary?: string | null, id: number, courseModules: Array<{ __typename?: 'CourseModuleEntity', downloadcontent?: number | null, id: number, modicon?: string | null, modname: string, modplural?: string | null, name: string, url?: string | null, assignOpenedDate?: number | null, assignDueDate?: number | null, courseContents?: Array<{ __typename?: 'CourseContentEntity', author?: string | null, filename?: string | null, filepath?: string | null, filesize?: string | null, fileurl?: string | null, id: number, sortorder?: string | null, timecreated?: string | null, timemodified?: string | null, type?: string | null, userid?: string | null }> | null }> }> } };
+export type GeneralDetailCourseQuery = { __typename?: 'Query', course: { __typename?: 'Course', coursecategory?: string | null, courseimage?: string | null, display_name?: string | null, enddate?: number | null, fullname?: string | null, id?: number | null, idnumber?: string | null, name?: string | null, section?: number | null, shortname?: string | null, startdate?: number | null, contacts: Array<{ __typename?: 'Lecturer', fullname?: string | null, id: number }>, assignments: Array<{ __typename?: 'Assignment', allowsubmissionsfromdate?: number | null, cmid?: number | null, course?: number | null, duedate?: number | null, id?: number | null, intro?: string | null, name?: string | null, timemodified?: number | null }>, events: Array<{ __typename?: 'EventEntity', activityname?: string | null, description?: string | null, id: number, modulename?: string | null, name: string, overdue?: boolean | null, purpose?: string | null, timestart?: number | null }>, contentSections: Array<{ __typename?: 'CourseSectionEntity', name: string, section?: number | null, summary?: string | null, id: number, courseModules: Array<{ __typename?: 'CourseModuleEntity', downloadcontent?: number | null, id: number, modicon?: string | null, modname: string, modplural?: string | null, name: string, url?: string | null, assignOpenedDate?: number | null, assignDueDate?: number | null, courseContents?: Array<{ __typename?: 'CourseContentEntity', author?: string | null, filename?: string | null, filepath?: string | null, filesize?: string | null, fileurl?: string | null, id: number, sortorder?: string | null, timecreated?: string | null, timemodified?: string | null, type?: string | null, userid?: string | null }> | null }> }> } };
 
 export type SearchCoursesQueryVariables = Exact<{
   isNew?: InputMaybe<Scalars['Boolean']['input']>;
@@ -407,6 +434,63 @@ export function useLoginApiMutation(baseOptions?: Apollo.MutationHookOptions<Log
 export type LoginApiMutationHookResult = ReturnType<typeof useLoginApiMutation>;
 export type LoginApiMutationResult = Apollo.MutationResult<LoginApiMutation>;
 export type LoginApiMutationOptions = Apollo.BaseMutationOptions<LoginApiMutation, LoginApiMutationVariables>;
+export const DetailAssignmentCourseDocument = gql`
+    query DetailAssignmentCourse($id: Int!, $assignment_id: Int!) {
+  course(course_id: $id) {
+    display_name
+    fullname
+    id
+    shortname
+    assignment(cmid: $assignment_id) {
+      allowsubmissionsfromdate
+      cmid
+      course
+      duedate
+      id
+      intro
+      name
+      timemodified
+    }
+  }
+}
+    `;
+
+/**
+ * __useDetailAssignmentCourseQuery__
+ *
+ * To run a query within a React component, call `useDetailAssignmentCourseQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDetailAssignmentCourseQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDetailAssignmentCourseQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *      assignment_id: // value for 'assignment_id'
+ *   },
+ * });
+ */
+export function useDetailAssignmentCourseQuery(baseOptions: Apollo.QueryHookOptions<DetailAssignmentCourseQuery, DetailAssignmentCourseQueryVariables> & ({ variables: DetailAssignmentCourseQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DetailAssignmentCourseQuery, DetailAssignmentCourseQueryVariables>(DetailAssignmentCourseDocument, options);
+      }
+export function useDetailAssignmentCourseLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DetailAssignmentCourseQuery, DetailAssignmentCourseQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DetailAssignmentCourseQuery, DetailAssignmentCourseQueryVariables>(DetailAssignmentCourseDocument, options);
+        }
+export function useDetailAssignmentCourseSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<DetailAssignmentCourseQuery, DetailAssignmentCourseQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<DetailAssignmentCourseQuery, DetailAssignmentCourseQueryVariables>(DetailAssignmentCourseDocument, options);
+        }
+export type DetailAssignmentCourseQueryHookResult = ReturnType<typeof useDetailAssignmentCourseQuery>;
+export type DetailAssignmentCourseLazyQueryHookResult = ReturnType<typeof useDetailAssignmentCourseLazyQuery>;
+export type DetailAssignmentCourseSuspenseQueryHookResult = ReturnType<typeof useDetailAssignmentCourseSuspenseQuery>;
+export type DetailAssignmentCourseQueryResult = Apollo.QueryResult<DetailAssignmentCourseQuery, DetailAssignmentCourseQueryVariables>;
+export function refetchDetailAssignmentCourseQuery(variables: DetailAssignmentCourseQueryVariables) {
+      return { query: DetailAssignmentCourseDocument, variables: variables }
+    }
 export const GeneralDetailCourseDocument = gql`
     query GeneralDetailCourse($id: Int!) {
   course(course_id: $id) {
@@ -424,6 +508,16 @@ export const GeneralDetailCourseDocument = gql`
     contacts {
       fullname
       id
+    }
+    assignments {
+      allowsubmissionsfromdate
+      cmid
+      course
+      duedate
+      id
+      intro
+      name
+      timemodified
     }
     events {
       activityname

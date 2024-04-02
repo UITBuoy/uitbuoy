@@ -112,6 +112,7 @@ export default function Layout() {
                                 headerStyle: { backgroundColor: 'white' },
                                 headerTintColor: 'black',
                                 headerTitleStyle: { fontSize: 16 },
+                                headerTitleAlign: 'center',
                             }}
                         />
                     </Stack>

@@ -15,6 +15,16 @@ query GeneralDetailCourse($id: Int!) {
             fullname
             id
         }
+        assignments {
+            allowsubmissionsfromdate
+            cmid
+            course
+            duedate
+            id
+            intro
+            name
+            timemodified
+        }
         events {
             activityname
             description
