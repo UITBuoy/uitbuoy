@@ -134,13 +134,21 @@ export class CourseModuleEntity {
     @Column({ nullable: true })
     onclick: string;
 
+    @Field(() => Int, { nullable: true })
+    @Column({ nullable: true })
+    assignOpenedDate: number;
+
+    @Field(() => Int, { nullable: true })
+    @Column({ nullable: true })
+    assignDueDate: number;
+
     // @Field(() => String, { nullable: true })
     // @Column({ nullable: true })
     // activitybadge: string;
 
-    @Field(() => [String], { nullable: true })
-    @Column('simple-array', { nullable: true })
-    dates: string[];
+    // @Field(() => [String], { nullable: true })
+    // @Column('simple-array', { nullable: true })
+    dates: { timestamp: number }[];
 
     @Field(() => String, { nullable: true })
     @Column({ nullable: true })

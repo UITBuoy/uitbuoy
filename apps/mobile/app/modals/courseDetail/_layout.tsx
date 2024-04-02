@@ -42,7 +42,12 @@ export default function Layout() {
                     )}
                 />
                 <Tab.Screen name="Notice" component={NoticePage} />
-                <Tab.Screen name="Resource" component={ResourcePage} />
+                <Tab.Screen
+                    name="Resource"
+                    children={() => (
+                        <ResourcePage id={parseInt(params.id.toString(), 10)} />
+                    )}
+                />
             </Tab.Navigator>
         </View>
     );

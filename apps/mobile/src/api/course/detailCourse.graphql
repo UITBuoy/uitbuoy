@@ -38,6 +38,8 @@ query GeneralDetailCourse($id: Int!) {
                 modplural
                 name
                 url
+                assignOpenedDate
+                assignDueDate
                 courseContents {
                     author
                     filename
