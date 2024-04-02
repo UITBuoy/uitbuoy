@@ -1,9 +1,11 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
 import {
+    PixelRatio,
     Pressable,
     StyleSheet,
     Text,
     TouchableNativeFeedback,
+    useWindowDimensions,
     View,
 } from 'react-native';
 import Animated, {
@@ -20,15 +22,19 @@ import ResourceIcon from '../../icons/resource';
 import FolderIcon from '../../icons/folder';
 import ForumIcon from '../../icons/forum';
 import AssignIcon from '../../icons/assign';
+import RenderHtml from 'react-native-render-html';
 
 type Props = {
     value: {
         name: string;
+        summary?: string;
         contents: { modname: string; name: string }[];
     };
 };
 
 const CourseContentAccordion = ({ value }: Props) => {
+    const { width } = useWindowDimensions();
+
     const listRef = useAnimatedRef();
     const heightValue = useSharedValue(0);
     const open = useSharedValue(false);
@@ -57,13 +63,27 @@ const CourseContentAccordion = ({ value }: Props) => {
                     open.value = !open.value;
                 }}
             >
-                <View style={styles.titleContainer}>
-                    <Text className=" font-semibold text-lg">{value.name}</Text>
-                    <Chevron progress={progress} />
+                <View className=" w-full p-4 flex-row justify-between items-center">
+                    <Text className=" flex-1 font-semibold text-lg mr-2">
+                        {value.name}
+                    </Text>
+                    {value.contents.length > 0 || value.summary ? (
+                        <Chevron progress={progress} />
+                    ) : null}
                 </View>
             </TouchableNativeFeedback>
             <Animated.View style={heightAnimationStyle}>
                 <Animated.View style={styles.contentContainer} ref={listRef}>
+                    <View className=" px-4">
+                        <RenderHtml
+                            contentWidth={width - 50}
+                            baseStyle={{
+                                padding: 0,
+                                margin: 0,
+                            }}
+                            source={{ html: value.summary }}
+                        />
+                    </View>
                     {value.contents.map(({ name, modname }, i) => {
                         return (
                             <TouchableNativeFeedback key={i}>
@@ -97,12 +117,6 @@ const CourseContentAccordion = ({ value }: Props) => {
 export default CourseContentAccordion;
 
 const styles = StyleSheet.create({
-    titleContainer: {
-        padding: 16,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
     contentContainer: {
         position: 'absolute',
         width: '100%',
