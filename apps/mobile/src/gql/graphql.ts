@@ -26,6 +26,8 @@ export type Assignment = {
   duedate?: Maybe<Scalars['Int']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
   intro?: Maybe<Scalars['String']['output']>;
+  introattachments?: Maybe<Array<IntroFile>>;
+  introfiles?: Maybe<Array<IntroFile>>;
   name?: Maybe<Scalars['String']['output']>;
   timemodified?: Maybe<Scalars['Int']['output']>;
 };
@@ -218,6 +220,17 @@ export type EventEntity = {
   visible?: Maybe<Scalars['Int']['output']>;
 };
 
+export type IntroFile = {
+  __typename?: 'IntroFile';
+  filename?: Maybe<Scalars['String']['output']>;
+  filepath?: Maybe<Scalars['String']['output']>;
+  filesize?: Maybe<Scalars['Int']['output']>;
+  fileurl?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['String']['output']>;
+  mimetype?: Maybe<Scalars['String']['output']>;
+  timemodified?: Maybe<Scalars['Int']['output']>;
+};
+
 export type Lecturer = {
   __typename?: 'Lecturer';
   email?: Maybe<Scalars['String']['output']>;
@@ -348,7 +361,7 @@ export type DetailAssignmentCourseQueryVariables = Exact<{
 }>;
 
 
-export type DetailAssignmentCourseQuery = { __typename?: 'Query', assignmentCourse: { __typename?: 'Course', display_name?: string | null, fullname?: string | null, id?: number | null, shortname?: string | null, assignment: { __typename?: 'Assignment', allowsubmissionsfromdate?: number | null, cmid?: number | null, course?: number | null, duedate?: number | null, id?: number | null, intro?: string | null, name?: string | null, timemodified?: number | null } } };
+export type DetailAssignmentCourseQuery = { __typename?: 'Query', assignmentCourse: { __typename?: 'Course', display_name?: string | null, fullname?: string | null, id?: number | null, shortname?: string | null, assignment: { __typename?: 'Assignment', allowsubmissionsfromdate?: number | null, cmid?: number | null, course?: number | null, duedate?: number | null, id?: number | null, intro?: string | null, name?: string | null, timemodified?: number | null, introattachments?: Array<{ __typename?: 'IntroFile', filename?: string | null, filepath?: string | null, filesize?: number | null, fileurl?: string | null, id?: string | null, mimetype?: string | null, timemodified?: number | null }> | null, introfiles?: Array<{ __typename?: 'IntroFile', filename?: string | null, filepath?: string | null, filesize?: number | null, fileurl?: string | null, id?: string | null, mimetype?: string | null, timemodified?: number | null }> | null } } };
 
 export type GeneralDetailCourseQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -377,7 +390,7 @@ export type UserCoursesQuery = { __typename?: 'Query', userCourses: Array<{ __ty
 export type UserEventsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserEventsQuery = { __typename?: 'Query', userEvents: Array<{ __typename?: 'EventEntity', activityname?: string | null, purpose?: string | null, overdue?: boolean | null, timeduration?: number | null, timeusermidnight?: number | null, timestart?: number | null, timesort?: number | null, timemodified?: number | null, name: string, id: number, course: { __typename?: 'Course', categoryid?: number | null, categoryname?: string | null, coursecategory?: string | null, courseimage?: string | null, display_name?: string | null, enddate?: number | null, fullname?: string | null, hiddenbynumsections?: number | null, id?: number | null, idnumber?: string | null, name?: string | null, pdfexportfont?: string | null, section?: number | null, shortname?: string | null, showactivitydates?: boolean | null, showcompletionconditions?: string | null, sortorder?: number | null, startdate?: number | null, uservisible?: boolean | null, viewurl?: string | null, visible?: boolean | null } }> };
+export type UserEventsQuery = { __typename?: 'Query', userEvents: Array<{ __typename?: 'EventEntity', activityname?: string | null, purpose?: string | null, overdue?: boolean | null, timeduration?: number | null, timeusermidnight?: number | null, timestart?: number | null, timesort?: number | null, timemodified?: number | null, name: string, id: number, instance?: number | null, course: { __typename?: 'Course', categoryid?: number | null, categoryname?: string | null, coursecategory?: string | null, courseimage?: string | null, display_name?: string | null, enddate?: number | null, fullname?: string | null, hiddenbynumsections?: number | null, id?: number | null, idnumber?: string | null, name?: string | null, pdfexportfont?: string | null, section?: number | null, shortname?: string | null, showactivitydates?: boolean | null, showcompletionconditions?: string | null, sortorder?: number | null, startdate?: number | null, uservisible?: boolean | null, viewurl?: string | null, visible?: boolean | null } }> };
 
 
 export const LoginApiDocument = gql`
@@ -450,6 +463,24 @@ export const DetailAssignmentCourseDocument = gql`
       intro
       name
       timemodified
+      introattachments {
+        filename
+        filepath
+        filesize
+        fileurl
+        id
+        mimetype
+        timemodified
+      }
+      introfiles {
+        filename
+        filepath
+        filesize
+        fileurl
+        id
+        mimetype
+        timemodified
+      }
     }
   }
 }
@@ -716,6 +747,7 @@ export const UserEventsDocument = gql`
     timemodified
     name
     id
+    instance
     course {
       categoryid
       categoryname

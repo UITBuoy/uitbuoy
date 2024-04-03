@@ -3,6 +3,7 @@ import { Text, TouchableNativeFeedback, View } from 'react-native';
 import EMPTY_REMAINING_ACTIVITIES from '../../../assets/empty-remaining-activities.png';
 import { useUserEventsQuery } from '../../gql/graphql';
 import moment from 'moment';
+import { router } from 'expo-router';
 
 export default function RemainingActivities() {
     const { data, loading, error } = useUserEventsQuery();
@@ -14,8 +15,21 @@ export default function RemainingActivities() {
             </Text>
             <View className=" py-5">
                 {data?.userEvents.map(
-                    ({ id, activityname, timestart, course }) => (
-                        <TouchableNativeFeedback key={id}>
+                    ({ id, activityname, timestart, course }, i) => (
+                        <TouchableNativeFeedback
+                            key={id}
+                            onPress={() => {
+                                router.push({
+                                    pathname: '/modals/detail-activity',
+                                    params: {
+                                        id,
+                                        assignment_id:
+                                            data.userEvents[i].instance,
+                                        course_id: data.userEvents[i].course.id,
+                                    },
+                                });
+                            }}
+                        >
                             <View className=" px-4 py-4 ">
                                 <View className="flex-1 flex flex-row justify-between items-center gap-4">
                                     <View className=" w-4/5 flex flex-col gap-1">
