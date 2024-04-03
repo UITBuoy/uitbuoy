@@ -10,6 +10,7 @@ query UserEvents {
         timemodified
         name
         id
+        instance
         course {
             categoryid
             categoryname

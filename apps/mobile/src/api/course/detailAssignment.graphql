@@ -13,6 +13,24 @@ query DetailAssignmentCourse($id: Int!, $assignment_id: Int!) {
             intro
             name
             timemodified
+            introattachments {
+                filename
+                filepath
+                filesize
+                fileurl
+                id
+                mimetype
+                timemodified
+            }
+            introfiles {
+                filename
+                filepath
+                filesize
+                fileurl
+                id
+                mimetype
+                timemodified
+            }
         }
     }
 }
