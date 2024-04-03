@@ -362,9 +362,6 @@ importers:
       expo-image:
         specifier: ^1.10.6
         version: 1.10.6(expo@50.0.14)
-      expo-intent-launcher:
-        specifier: ^10.11.0
-        version: 10.11.0(expo@50.0.14)
       expo-linear-gradient:
         specifier: ^12.7.2
         version: 12.7.2(expo@50.0.14)
@@ -12723,14 +12720,6 @@ packages:
       expo: '*'
     dependencies:
       '@react-native/assets-registry': 0.73.1
-      expo: 50.0.14(@babel/core@7.24.3)(@react-native/babel-preset@0.73.21)
-    dev: false
-
-  /expo-intent-launcher@10.11.0(expo@50.0.14):
-    resolution: {integrity: sha512-yRwirZa1JdkWvKKF/cPruzawNhscqeA1OSYtB1ECri+8yh1YtWKN1ttbNd/dlYZcpwzYHIMKR/D0PY+9BX5zqg==}
-    peerDependencies:
-      expo: '*'
-    dependencies:
       expo: 50.0.14(@babel/core@7.24.3)(@react-native/babel-preset@0.73.21)
     dev: false
 

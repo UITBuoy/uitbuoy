@@ -1,18 +1,16 @@
-import { forwardRef, Module } from '@nestjs/common';
-import { Action } from './entities/action.entity';
-import { ApiModule } from 'src/api/api.module';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { EventService } from './services/event.service';
-import { EventResolver } from './event.resolver';
-import { EventApiService } from './services/event-api.service';
-import { CourseModule } from '@/course/course.module';
-import { AssignmentApiService } from './services/assignment-api.service';
+import { ApiModule } from 'src/api/api.module';
+import { Action } from './entities/action.entity';
 import { Assignment } from './entities/assignment.entity';
+import { EventResolver } from './event.resolver';
+import { AssignmentApiService } from './services/assignment-api.service';
+import { EventApiService } from './services/event-api.service';
+import { EventService } from './services/event.service';
 
 @Module({
     imports: [
         ApiModule,
-        forwardRef(() => CourseModule),
         TypeOrmModule.forFeature([Event]),
         TypeOrmModule.forFeature([Action]),
         TypeOrmModule.forFeature([Assignment]),
