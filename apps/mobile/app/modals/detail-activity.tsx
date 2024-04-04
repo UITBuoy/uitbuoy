@@ -1,5 +1,5 @@
 import { Spinner } from '@gluestack-ui/themed';
-import { useGlobalSearchParams } from 'expo-router';
+import { router, useGlobalSearchParams } from 'expo-router';
 import React from 'react';
 import {
     Platform,
@@ -41,16 +41,36 @@ export default function DetailActivity() {
     const assignment = data?.assignmentCourse?.assignment;
 
     return (
-        <View className=" flex-1 bg-white pt-10">
-            {loading && !assignment ? (
+        <View className=" flex-1 bg-white pt-4">
+            {loading || !assignment ? (
                 <Spinner />
             ) : (
                 <View className=" flex-1">
                     <ScrollView className=" flex-1">
-                        <View className=" flex-1 flex-col gap-6">
-                            <View className=" px-4 w-full flex-row gap-6">
-                                <View className=" pt-2">
-                                    <AssignIcon scale={1.5} />
+                        <NativeButton
+                            key={data.assignmentCourse.id}
+                            onPress={() => {
+                                console.log(data);
+                                router.push({
+                                    pathname: `/modals/courseDetail`,
+                                    params: { ...data.assignmentCourse },
+                                });
+                            }}
+                            className=" mx-4"
+                        >
+                            <View className=" bg-primary-95 flex flex-col gap-1 p-3 border-[0.5px] rounded-2xl border-neutral-80">
+                                <Text className=" text-primary-50">
+                                    {data.assignmentCourse.shortname}
+                                </Text>
+                                <Text className=" text-primary-50 font-medium">
+                                    {data.assignmentCourse.display_name}
+                                </Text>
+                            </View>
+                        </NativeButton>
+                        <View className=" mt-10 flex-1 flex-col gap-6">
+                            <View className=" px-4 w-full flex-row items-center gap-3">
+                                <View className=" pt-0">
+                                    <AssignIcon scale={1.2} />
                                 </View>
                                 <Text className=" flex-1 text-xl font-medium">
                                     {assignment.name}
