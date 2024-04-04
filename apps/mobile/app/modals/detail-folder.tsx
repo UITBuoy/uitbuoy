@@ -23,6 +23,7 @@ export default function DetailActivity() {
                     flexDirection: 'column',
                     gap: 10,
                     marginTop: 16,
+                    paddingBottom: 32
                 }}
                 data={folder.courseContents}
                 keyExtractor={(item) => item.id.toString()}
