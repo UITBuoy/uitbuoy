@@ -18,6 +18,7 @@ import AssignIcon from '../../src/icons/assign';
 import { useAuth } from '../../src/stores/auth.store';
 import * as FileSystem from 'expo-file-system';
 import * as IntentLauncher from 'expo-intent-launcher';
+import { useViewFile } from '../../src/hooks/file/useViewFile';
 
 export default function DetailActivity() {
     const { width } = useWindowDimensions();
@@ -28,6 +29,8 @@ export default function DetailActivity() {
         assignment_id: string;
     }>();
 
+    const viewFile = useViewFile();
+
     const { data, loading, error } = useDetailAssignmentCourseQuery({
         variables: {
             id: parseInt(params.course_id, 10),
@@ -36,61 +39,6 @@ export default function DetailActivity() {
     });
 
     const assignment = data?.assignmentCourse?.assignment;
-
-    async function downloadFile(file: IntroFile) {
-        const filename = file.fileurl.split('/').at(-1);
-        const fileUri = FileSystem.documentDirectory + `${filename}`;
-
-        const downloadResumable = FileSystem.createDownloadResumable(
-            `${file.fileurl}?token=${authData.token}`,
-            fileUri,
-            {},
-        );
-
-        try {
-            const { uri } = await downloadResumable.downloadAsync();
-
-            // const permissions =
-            //     await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
-            // if (!permissions.granted) {
-            //     return;
-            // }
-
-            // const base64 =
-            //     await FileSystem.StorageAccessFramework.readAsStringAsync(uri, {
-            //         encoding: FileSystem.EncodingType.Base64,
-            //     });
-            // const fileUri =
-            //     await FileSystem.StorageAccessFramework.createFileAsync(
-            //         permissions.directoryUri,
-            //         filename,
-            //         file.mimetype,
-            //     ).then(async (uri) => {
-            //         await FileSystem.writeAsStringAsync(uri, base64, {
-            //             encoding: FileSystem.EncodingType.Base64,
-            //         });
-            //     });
-
-            // console.log('Finished downloading to ', fileUri);
-
-            FileSystem.getContentUriAsync(uri).then((cUri) => {
-                if (Platform.OS === 'ios') {
-                    // Sharing.shareAsync(cUri.uri);
-                } else {
-                    IntentLauncher.startActivityAsync(
-                        'android.intent.action.VIEW',
-                        {
-                            data: cUri,
-                            flags: 1,
-                            type: file.mimetype,
-                        },
-                    );
-                }
-            });
-        } catch (e) {
-            console.error(e);
-        }
-    }
 
     return (
         <View className=" flex-1 bg-white pt-10">
@@ -171,7 +119,7 @@ export default function DetailActivity() {
                                     key={file.filename}
                                     borderRadius={6}
                                     className=" m-2"
-                                    onPress={() => downloadFile(file)}
+                                    onPress={() => viewFile(file)}
                                 >
                                     <View className=" self-start py-1 px-3 border-[1px] border-primary-60 rounded-lg">
                                         <Text className=" w-fit text-primary-60">

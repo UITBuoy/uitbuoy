@@ -7,6 +7,7 @@ import AssignIcon from '../../../src/icons/assign';
 import FolderIcon from '../../../src/icons/folder';
 import ForumIcon from '../../../src/icons/forum';
 import ResourceIcon from '../../../src/icons/resource';
+import { router } from 'expo-router';
 
 type Props = {
     id: number;
@@ -40,12 +41,31 @@ export default function ResourcePage({ id }: Props) {
                     <View className=" mx-4 mt-2 flex flex-col gap-4">
                         {folders.map(
                             ({
+                                id,
                                 name,
                                 assignDueDate,
                                 assignOpenedDate,
+                                courseContents,
                                 modname,
                             }) => (
-                                <NativeButton className=" mx-4" key={name}>
+                                <NativeButton
+                                    className=" mx-4"
+                                    key={name}
+                                    onPress={() => {
+                                        router.push({
+                                            pathname: '/modals/detail-folder',
+                                            params: {
+                                                id,
+                                                name,
+                                                str_folderFiles: encodeURI(
+                                                    JSON.stringify(
+                                                        courseContents,
+                                                    ),
+                                                ),
+                                            },
+                                        });
+                                    }}
+                                >
                                     <View className=" flex flex-row gap-3 p-6 px-4 border-[0.5px] rounded-2xl border-neutral-80">
                                         {modname === 'resouce' ? (
                                             <ResourceIcon />

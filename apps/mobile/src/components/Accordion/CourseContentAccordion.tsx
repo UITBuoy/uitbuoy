@@ -22,17 +22,21 @@ import FolderIcon from '../../icons/folder';
 import ForumIcon from '../../icons/forum';
 import ResourceIcon from '../../icons/resource';
 import Chevron from './Chevron';
+import { CourseModuleEntity } from '../../gql/graphql';
+import { useDetailFolderRouter } from '../../stores/folder-detail.store';
 
 type Props = {
     value: {
         name: string;
         summary?: string;
         course_id: number;
-        contents: { id: number; modname: string; name: string }[];
+        contents: CourseModuleEntity[];
     };
 };
 
 const CourseContentAccordion = ({ value }: Props) => {
+    const { navigateFolder } = useDetailFolderRouter();
+
     const { width } = useWindowDimensions();
 
     const listRef = useAnimatedRef();
@@ -84,45 +88,55 @@ const CourseContentAccordion = ({ value }: Props) => {
                             source={{ html: value.summary }}
                         />
                     </View>
-                    {value.contents.map(({ name, modname, id }, i) => {
-                        return (
-                            <TouchableNativeFeedback
-                                key={i}
-                                onPress={() => {
-                                    if (modname === 'assign') {
-                                        router.push({
-                                            pathname: '/modals/detail-activity',
-                                            params: {
+                    {value.contents.map(
+                        ({ courseContents, name, modname, id }, i) => {
+                            return (
+                                <TouchableNativeFeedback
+                                    key={i}
+                                    onPress={() => {
+                                        if (modname === 'assign') {
+                                            router.push({
+                                                pathname:
+                                                    '/modals/detail-activity',
+                                                params: {
+                                                    id,
+                                                    assignment_id: id,
+                                                    course_id:
+                                                        value.course_id || '',
+                                                },
+                                            });
+                                        } else if (modname == 'folder') {
+                                            navigateFolder({
                                                 id,
-                                                assignment_id: id,
-                                                course_id:
-                                                    value.course_id || '',
-                                            },
-                                        });
-                                    }
-                                }}
-                            >
-                                <View className=" w-full flex flex-row gap-4 items-center px-3 py-4 border-t-[0.2px] border-t-neutral-60">
-                                    {modname === 'resource' ? (
-                                        <ResourceIcon />
-                                    ) : modname === 'folder' ? (
-                                        <FolderIcon />
-                                    ) : modname === 'forum' ? (
-                                        <ForumIcon />
-                                    ) : modname === 'assign' ? (
-                                        <AssignIcon />
-                                    ) : (
-                                        <></>
-                                    )}
-                                    <View className="flex-1">
-                                        <Text className=" font-medium">
-                                            {name}
-                                        </Text>
+                                                modname,
+                                                name,
+                                                courseContents,
+                                            });
+                                        }
+                                    }}
+                                >
+                                    <View className=" w-full flex flex-row gap-4 items-center px-3 py-4 border-t-[0.2px] border-t-neutral-60">
+                                        {modname === 'resource' ? (
+                                            <ResourceIcon />
+                                        ) : modname === 'folder' ? (
+                                            <FolderIcon />
+                                        ) : modname === 'forum' ? (
+                                            <ForumIcon />
+                                        ) : modname === 'assign' ? (
+                                            <AssignIcon />
+                                        ) : (
+                                            <></>
+                                        )}
+                                        <View className="flex-1">
+                                            <Text className=" font-medium">
+                                                {name}
+                                            </Text>
+                                        </View>
                                     </View>
-                                </View>
-                            </TouchableNativeFeedback>
-                        );
-                    })}
+                                </TouchableNativeFeedback>
+                            );
+                        },
+                    )}
                 </Animated.View>
             </Animated.View>
         </View>
