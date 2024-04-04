@@ -38,16 +38,40 @@ export default function DetailActivity() {
     const assignment = data?.assignmentCourse?.assignment;
 
     async function downloadFile(file: IntroFile) {
+        const filename = file.fileurl.split('/').at(-1);
+        const fileUri = FileSystem.documentDirectory + `${filename}`;
+
         const downloadResumable = FileSystem.createDownloadResumable(
-            file.fileurl,
-            FileSystem.documentDirectory + file.fileurl.split('/').at(-1),
+            `${file.fileurl}?token=${authData.token}`,
+            fileUri,
             {},
         );
 
         try {
             const { uri } = await downloadResumable.downloadAsync();
 
-            console.log('Finished downloading to ', uri);
+            // const permissions =
+            //     await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+            // if (!permissions.granted) {
+            //     return;
+            // }
+
+            // const base64 =
+            //     await FileSystem.StorageAccessFramework.readAsStringAsync(uri, {
+            //         encoding: FileSystem.EncodingType.Base64,
+            //     });
+            // const fileUri =
+            //     await FileSystem.StorageAccessFramework.createFileAsync(
+            //         permissions.directoryUri,
+            //         filename,
+            //         file.mimetype,
+            //     ).then(async (uri) => {
+            //         await FileSystem.writeAsStringAsync(uri, base64, {
+            //             encoding: FileSystem.EncodingType.Base64,
+            //         });
+            //     });
+
+            // console.log('Finished downloading to ', fileUri);
 
             FileSystem.getContentUriAsync(uri).then((cUri) => {
                 if (Platform.OS === 'ios') {
@@ -84,7 +108,7 @@ export default function DetailActivity() {
                                     {assignment.name}
                                 </Text>
                             </View>
-                            <View className=" flex-col gap-4 bg-neutral-99 p-4">
+                            <View className=" mt-4 flex-col gap-4 bg-neutral-99 p-4">
                                 <View className=" flex-row items-center gap-4">
                                     <Text className=" w-[80px] p-1 rounded-lg text-center bg-[#71eda7] text-black font-medium">
                                         Opened
