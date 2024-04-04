@@ -1,13 +1,12 @@
-import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
-import { EventService } from './services/event.service';
-import { CourseService } from '@/course/services/course.service';
-import { EventApiService } from './services/event-api.service';
-import { EventEntity } from './entities/event.entity';
-import { UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { CurrentUser } from '@/auth/decorators/current-user.decorator';
-import { User } from '@/user/entities/user.entity';
+import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { Course } from '@/course/entities/course.entity';
+import { User } from '@/user/entities/user.entity';
+import { UseGuards } from '@nestjs/common';
+import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { EventEntity } from './entities/event.entity';
+import { EventApiService } from './services/event-api.service';
+import { EventService } from './services/event.service';
 
 @Resolver(() => EventEntity)
 export class EventResolver {

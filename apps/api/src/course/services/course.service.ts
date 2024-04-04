@@ -7,6 +7,7 @@ import { CourseSectionEntity } from '../entities/course-section.entity';
 import { CourseModuleEntity } from '../entities/course-module.entity';
 import { User } from '@/user/entities/user.entity';
 import { CourseContentEntity } from '../entities/course-content.entity';
+import { QueryArgs } from '@/common/args/query.arg';
 
 @Injectable()
 export class CourseService {
@@ -14,14 +15,15 @@ export class CourseService {
         @InjectRepository(Course) private courseRepo: Repository<Course>,
         @InjectRepository(CourseSectionEntity)
         private sectionRepo: Repository<CourseSectionEntity>,
-        @InjectRepository(CourseModuleEntity)
-        private moduleRepo: Repository<CourseModuleEntity>,
-        @InjectRepository(CourseContentEntity)
-        private contentRepo: Repository<CourseContentEntity>,
         private readonly courseApiService: CourseApiService,
     ) {}
 
-    async findAllCoursesOfUser(user: User, keyword: string): Promise<Course[]> {
+    async findAllCoursesOfUser(
+        user: User,
+        queryArgs: QueryArgs,
+    ): Promise<Course[]> {
+        const keyword = queryArgs.keyword?.trim();
+
         const response = await this.courseRepo
             .createQueryBuilder('course')
             .innerJoin(
@@ -39,6 +41,12 @@ export class CourseService {
             .orWhere(
                 keyword
                     ? `unaccent(course.fullname) ilike ('%' || unaccent(:keyword) || '%')`
+                    : 'true',
+                { keyword },
+            )
+            .orWhere(
+                queryArgs.isRecent
+                    ? ``
                     : 'true',
                 { keyword },
             )

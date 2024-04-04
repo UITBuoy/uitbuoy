@@ -38,14 +38,17 @@ export class CourseResolver {
     async userCourses(@CurrentUser() user: User, @Args() queryArgs: QueryArgs) {
         if (queryArgs.isNew) {
             const apiCourses = (
-                await this.courseApiService.findAllCoursesOfUser(user)
+                await this.courseApiService.findAllCoursesOfUser({
+                    ...user,
+                    ...queryArgs,
+                })
             ).map((course) => ({ ...course, users: [user] }));
             await this.courseService.save(apiCourses);
         }
 
         const courses = await this.courseService.findAllCoursesOfUser(
             user,
-            queryArgs.keyword?.trim(),
+            queryArgs,
         );
 
         if (queryArgs.isRecent) {

@@ -4,6 +4,7 @@ import { CourseSectionEntity } from '@/course/entities/course-section.entity';
 import { Course } from 'src/course/entities/course.entity';
 import { CourseNotFoundException } from 'src/course/errors/not-found.error';
 import { ApiService } from '../../api/api.service';
+import moment from 'moment';
 
 @Injectable()
 export class CourseApiService {
@@ -29,8 +30,10 @@ export class CourseApiService {
 
     async findAllCoursesOfUser({
         token,
+        isRecent = true,
     }: {
         token: string;
+        isRecent?: boolean;
     }): Promise<Course[]> {
         const classifications = ['past', 'inprogress', 'future'];
 
@@ -53,6 +56,15 @@ export class CourseApiService {
             throw new CourseNotFoundException();
         }
 
+        if (isRecent)
+            return courses.filter(
+                ({ startdate }) =>
+                    moment().diff(
+                        moment(new Date(startdate * 1000)),
+                        'months',
+                        true,
+                    ) < 5,
+            );
         return courses;
     }
 

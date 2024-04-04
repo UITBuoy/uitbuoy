@@ -13,6 +13,8 @@ import { ModuleResolver } from './resolvers/module.resolver';
 import { SectionResolver } from './resolvers/section.resolver';
 import { CourseApiService } from './services/course-api.service';
 import { CourseService } from './services/course.service';
+import { EventApiService } from '@/event/services/event-api.service';
+import { AssignmentApiService } from '@/event/services/assignment-api.service';
 
 @Module({
     imports: [
@@ -31,6 +33,8 @@ import { CourseService } from './services/course.service';
         CourseApiService,
         CourseService,
         CourseConfiguration,
+        EventApiService,
+        AssignmentApiService,
     ],
     exports: [CourseService, CourseApiService],
 })

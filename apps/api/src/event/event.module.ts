@@ -1,3 +1,4 @@
+import { CourseApiService } from '@/course/services/course-api.service';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApiModule } from 'src/api/api.module';
@@ -16,6 +17,7 @@ import { EventService } from './services/event.service';
         TypeOrmModule.forFeature([Assignment]),
     ],
     providers: [
+        CourseApiService,
         EventService,
         EventApiService,
         EventResolver,
