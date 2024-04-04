@@ -44,12 +44,6 @@ export class CourseService {
                     : 'true',
                 { keyword },
             )
-            .orWhere(
-                queryArgs.isRecent
-                    ? ``
-                    : 'true',
-                { keyword },
-            )
             .orderBy('course.startdate', 'DESC')
             .getMany();
         return response;
