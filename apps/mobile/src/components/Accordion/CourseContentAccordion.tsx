@@ -70,7 +70,7 @@ const CourseContentAccordion = ({ value }: Props) => {
                 }}
             >
                 <View className=" w-full p-4 flex-row justify-between items-center">
-                    <Text className=" flex-1 font-semibold text-lg mr-2">
+                    <Text className=" flex-1 font-semibold mr-2">
                         {value.name}
                     </Text>
                     {value.contents.length > 0 || value.summary ? (
