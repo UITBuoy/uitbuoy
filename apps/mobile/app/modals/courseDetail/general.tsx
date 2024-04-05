@@ -1,11 +1,15 @@
-import { useLocalSearchParams } from 'expo-router';
-import { ScrollView, Text, TouchableNativeFeedback, View } from 'react-native';
-import { useGeneralDetailCourseQuery } from '../../../src/gql/graphql';
-import NativeButton from '../../../src/components/NativeButton/NativeButton';
-import CourseAlert from '../../../src/components/CourseAlert/CourseAlert';
-import moment from 'moment';
 import { Spinner } from '@gluestack-ui/themed';
+import moment from 'moment';
+import { useMemo } from 'react';
+import { ScrollView, Text, View } from 'react-native';
 import CourseContentAccordion from '../../../src/components/Accordion/CourseContentAccordion';
+import CourseAlert from '../../../src/components/CourseAlert/CourseAlert';
+import NativeButton from '../../../src/components/NativeButton/NativeButton';
+import {
+    CourseModuleEntity,
+    EventEntity,
+    useGeneralDetailCourseQuery,
+} from '../../../src/gql/graphql';
 
 type Props = {
     id: number;
@@ -21,19 +25,35 @@ export default function GeneralPage({ id }: Props) {
             moment(new Date(event.timestart * 1000)).diff(moment(), 'days') > 0,
     );
 
-    const mostRecentDeadline = data?.course.events.reduce(
-        (min, event) =>
-            moment(new Date(event.timestart * 1000)).diff(moment(), 'days') > 0
-                ? Math.min(
-                      moment(new Date(event.timestart * 1000)).diff(
-                          moment(),
-                          'days',
-                      ),
-                      min,
-                  )
-                : min,
-        Infinity,
-    );
+    const mostRecentActivity = useMemo(() => {
+        let value: Partial<CourseModuleEntity>;
+        data?.course.contentSections.forEach((section) => {
+            section.courseModules.forEach((module) => {
+                if (!data) return;
+                if (module.modname != 'assign') return;
+                if (!value) {
+                    value = module;
+                    return;
+                }
+                if (
+                    moment(new Date(module.assignDueDate * 1000)).diff(
+                        new Date(),
+                        'days',
+                    ) < 0
+                )
+                    return;
+                if (
+                    moment(new Date(value.assignDueDate * 1000)).diff(
+                        new Date(module.assignDueDate * 1000),
+                        'days',
+                    ) > 0
+                ) {
+                    value = module;
+                }
+            });
+        });
+        return value || { assignDueDate: 0 };
+    }, [data]);
 
     return (
         <ScrollView className="flex-1 bg-white">
@@ -47,7 +67,8 @@ export default function GeneralPage({ id }: Props) {
                         <CourseAlert
                             className=" mx-4 mb-4"
                             hasDeadline={hasDeadline}
-                            mostRecentDeadline={mostRecentDeadline}
+                            courseId={id}
+                            mostRecentDeadline={mostRecentActivity}
                         />
                         {data?.course.contacts.map(({ fullname, id }) => (
                             <NativeButton className=" mx-4" key={id}>

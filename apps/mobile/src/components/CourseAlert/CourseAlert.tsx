@@ -6,20 +6,36 @@ import REST_TIME_LEFT from '../../../assets/rest-time-left.png';
 import { Image } from 'expo-image';
 import React from 'react';
 import NativeButton from '../NativeButton/NativeButton';
+import { CourseModuleEntity, EventEntity } from '../../gql/graphql';
+import moment from 'moment';
+import { router } from 'expo-router';
 
 type Props = React.ComponentProps<typeof View> & {
     hasDeadline: boolean;
-    mostRecentDeadline: number;
+    mostRecentDeadline: Partial<CourseModuleEntity>;
+    courseId: number;
 };
 
 export default function CourseAlert({
     hasDeadline,
     mostRecentDeadline,
+    courseId,
     className,
 }: Props) {
     return (
         <NativeButton
             className={`rounded-xl flex justify-center items-center ${className}`}
+            onPress={() => {
+                if (!hasDeadline) return;
+                router.push({
+                    pathname: '/modals/detail-activity',
+                    params: {
+                        id: mostRecentDeadline.id,
+                        assignment_id: mostRecentDeadline.id,
+                        course_id: courseId,
+                    },
+                });
+            }}
         >
             {hasDeadline ? (
                 <View
@@ -42,7 +58,11 @@ export default function CourseAlert({
                         }}
                     />
                     <Text className=" text-neutral-30 font-semibold">
-                        Exercises are due in {mostRecentDeadline} days
+                        Exercises are due in{' '}
+                        {moment(
+                            new Date(mostRecentDeadline.assignDueDate * 1000),
+                        ).diff(moment(new Date()), 'days')}{' '}
+                        days
                     </Text>
                 </View>
             ) : (

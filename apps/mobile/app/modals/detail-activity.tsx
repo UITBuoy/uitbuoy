@@ -1,24 +1,13 @@
 import { Spinner } from '@gluestack-ui/themed';
 import { router, useGlobalSearchParams } from 'expo-router';
 import React from 'react';
-import {
-    Platform,
-    ScrollView,
-    Text,
-    useWindowDimensions,
-    View,
-} from 'react-native';
+import { ScrollView, Text, useWindowDimensions, View } from 'react-native';
 import RenderHtml from 'react-native-render-html';
 import NativeButton from '../../src/components/NativeButton/NativeButton';
-import {
-    IntroFile,
-    useDetailAssignmentCourseQuery,
-} from '../../src/gql/graphql';
+import { useDetailAssignmentCourseQuery } from '../../src/gql/graphql';
+import { useViewFile } from '../../src/hooks/file/useViewFile';
 import AssignIcon from '../../src/icons/assign';
 import { useAuth } from '../../src/stores/auth.store';
-import * as FileSystem from 'expo-file-system';
-import * as IntentLauncher from 'expo-intent-launcher';
-import { useViewFile } from '../../src/hooks/file/useViewFile';
 
 export default function DetailActivity() {
     const { width } = useWindowDimensions();
@@ -50,7 +39,6 @@ export default function DetailActivity() {
                         <NativeButton
                             key={data.assignmentCourse.id}
                             onPress={() => {
-                                console.log(data);
                                 router.push({
                                     pathname: `/modals/courseDetail`,
                                     params: { ...data.assignmentCourse },
