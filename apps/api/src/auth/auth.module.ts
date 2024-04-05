@@ -12,12 +12,17 @@ import { AuthService } from './auth.service';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.stategy';
 import { JwtStrategy } from './strategies/jwt.stategy';
 import { TokenService } from '@/common/services/token.service';
+import { GoogleOAuth2Strategy } from './strategies/google-oauth2.strategy';
+import { GoogleOAuth2SessionSerializer } from './serializer/google-oauth2.serializer';
+import { AuthController } from './auth.controller';
 
 @Module({
     imports: [
         UserModule,
         ApiModule,
-        PassportModule,
+        PassportModule.register({
+            session: false,
+        }),
         LoggerModule,
         JwtModule.registerAsync({
             imports: [ConfigModule, CommonModule],
@@ -30,13 +35,16 @@ import { TokenService } from '@/common/services/token.service';
         ConfigModule,
     ],
     providers: [
+        GoogleOAuth2SessionSerializer,
         AuthService,
         ApiService,
         TokenService,
+        GoogleOAuth2Strategy,
         JwtStrategy,
         JwtRefreshStrategy,
         AuthResolver,
     ],
+    controllers: [AuthController],
     exports: [AuthService],
 })
 export class AuthModule {}
