@@ -24,6 +24,8 @@ import ResourceIcon from '../../icons/resource';
 import Chevron from './Chevron';
 import { CourseModuleEntity } from '../../gql/graphql';
 import { useDetailFolderRouter } from '../../stores/folder-detail.store';
+import UrlIcon from '../../icons/url';
+import LabelIcon from '../../icons/label';
 
 type Props = {
     value: {
@@ -105,13 +107,8 @@ const CourseContentAccordion = ({ value }: Props) => {
                                                         value.course_id || '',
                                                 },
                                             });
-                                        } else if (modname == 'folder') {
-                                            navigateFolder({
-                                                id,
-                                                modname,
-                                                name,
-                                                courseContents,
-                                            });
+                                        } else {
+                                            navigateFolder(value.contents[i]);
                                         }
                                     }}
                                 >
@@ -122,6 +119,10 @@ const CourseContentAccordion = ({ value }: Props) => {
                                             <FolderIcon />
                                         ) : modname === 'forum' ? (
                                             <ForumIcon />
+                                        ) : modname === 'url' ? (
+                                            <UrlIcon />
+                                        ) : modname === 'label' ? (
+                                            <LabelIcon />
                                         ) : modname === 'assign' ? (
                                             <AssignIcon />
                                         ) : (

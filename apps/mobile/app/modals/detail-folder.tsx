@@ -1,12 +1,15 @@
 import { useNavigation } from 'expo-router';
 import React, { useEffect } from 'react';
-import { FlatList, Text, View } from 'react-native';
+import { FlatList, Text, useWindowDimensions, View } from 'react-native';
+import RenderHtml from 'react-native-render-html';
 import NativeButton from '../../src/components/NativeButton/NativeButton';
 import { useViewFile } from '../../src/hooks/file/useViewFile';
 import { useDetailFolderRouter } from '../../src/stores/folder-detail.store';
 
 export default function DetailActivity() {
     const navigation = useNavigation();
+
+    const { width } = useWindowDimensions();
 
     const { folder } = useDetailFolderRouter();
     const viewFile = useViewFile();
@@ -15,15 +18,27 @@ export default function DetailActivity() {
         navigation.setOptions({ title: folder.name });
     }, []);
 
+    console.log({ folder });
+
     return (
-        <View className=" flex-1 bg-white pt-5">
+        <View className=" flex-1 bg-white pt-0">
+            {folder.description ? (
+                <RenderHtml
+                    contentWidth={width - 50}
+                    baseStyle={{
+                        paddingHorizontal: 16,
+                        margin: 0,
+                    }}
+                    source={{ html: folder.description }}
+                />
+            ) : null}
             <FlatList
                 contentContainerStyle={{
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 10,
                     marginTop: 16,
-                    paddingBottom: 32
+                    paddingBottom: 32,
                 }}
                 data={folder.courseContents}
                 keyExtractor={(item) => item.id.toString()}
@@ -31,7 +46,7 @@ export default function DetailActivity() {
                     <NativeButton
                         key={item.filename}
                         onPress={() =>
-                            item.fileurl
+                            item.fileurl && item.type === 'file'
                                 ? viewFile({ fileurl: item.fileurl })
                                 : null
                         }
@@ -41,9 +56,14 @@ export default function DetailActivity() {
                             <Text className=" font-medium">
                                 {item.filename}
                             </Text>
-                            <Text className=" font-light text-sm">
-                                {(parseInt(item.filesize) / 1000).toFixed(1)} kB
-                            </Text>
+                            {item.type === 'file' ? (
+                                <Text className=" font-light text-sm">
+                                    {(parseInt(item.filesize) / 1000).toFixed(
+                                        1,
+                                    )}{' '}
+                                    kB
+                                </Text>
+                            ) : null}
                         </View>
                     </NativeButton>
                 )}

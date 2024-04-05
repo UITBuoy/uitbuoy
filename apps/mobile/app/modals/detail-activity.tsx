@@ -106,7 +106,7 @@ export default function DetailActivity() {
                                         }}
                                         tagsStyles={{
                                             img: { padding: 0, margin: 10 },
-                                            p: { padding: 0, margin: 0 },
+                                            p: { padding: 0, margin: 5 },
                                         }}
                                         source={{
                                             html: assignment.intro.replace(

@@ -42,6 +42,7 @@ query GeneralDetailCourse($id: Int!) {
             id
             courseModules {
                 downloadcontent
+                description
                 id
                 modicon
                 modname
