@@ -26,4 +26,10 @@ export class UserResolver {
         const responseUser = await this.userService.findById(user.id);
         return responseUser.googleUsers.length;
     }
+
+    @ResolveField(() => [GoogleUser])
+    async googleUsers(@CurrentUser() user: User) {
+        const responseUser = await this.userService.findById(user.id);
+        return responseUser.googleUsers;
+    }
 }
