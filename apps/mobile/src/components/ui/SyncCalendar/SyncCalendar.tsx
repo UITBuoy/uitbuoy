@@ -1,11 +1,5 @@
-import {
-    Text,
-    TouchableHighlight,
-    TouchableNativeFeedback,
-    TouchableNativeFeedbackComponent,
-    TouchableOpacity,
-    View,
-} from 'react-native';
+import { router } from 'expo-router';
+import { Text, TouchableNativeFeedback, View } from 'react-native';
 
 export default function SyncCalendar() {
     return (
@@ -17,7 +11,11 @@ export default function SyncCalendar() {
                 Connect to your Google account to sync with Google calendar.
             </Text>
             <View className=" mt-3 self-end flex items-center">
-                <TouchableNativeFeedback>
+                <TouchableNativeFeedback
+                    onPress={() => {
+                        router.push({ pathname: '/modals/google-integration' });
+                    }}
+                >
                     <View className=" w-min py-3 px-5 bg-primary-60 rounded-xl">
                         <Text className=" w-min font-semibold text-white">
                             Connect

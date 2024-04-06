@@ -20,7 +20,7 @@ export const useAuth = create<
         immer<IAuth>((set, get) => ({
             isLogin: false,
             authLogin: (authEntity) => {
-                if (authEntity.access_token) {
+                if (authEntity?.access_token) {
                     set((state) => {
                         state.isLogin = true;
                         state.authData = authEntity;

@@ -4,15 +4,14 @@ import { GoogleAuthGuard } from './guards/google-oauth2.guard';
 
 @Controller('auth')
 export class AuthController {
-    @Get('google/login')
-    @UseGuards(GoogleAuthGuard)
-    handleLogin() {
-        return { msg: 'Google Authentication' };
-    }
-
-    @Get('google/redirect')
-    @UseGuards(GoogleAuthGuard)
-    handleRedirect(@Req() req: Request) {
-        return { msg: 'OK' };
-    }
+    // @Get('google/login')
+    // @UseGuards(GoogleAuthGuard)
+    // handleLogin() {
+    //     return { msg: 'Google Authentication' };
+    // }
+    // @Get('google/redirect')
+    // @UseGuards(GoogleAuthGuard)
+    // handleRedirect(@Req() req: Request) {
+    //     return { msg: 'OK' };
+    // }
 }

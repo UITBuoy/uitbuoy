@@ -31,35 +31,9 @@ export const unstable_settings = {
 export default function Layout() {
     const colorScheme = useColorScheme();
 
-    const {
-        authData: { access_token, refresh_token },
-    } = useAuth();
-
-    let client;
-
-    // const authLink = setContext((_, { headers }) => {
-    //     const decodedAccessToken = jwtDecode(access_token);
-    //     const decodedRefreshToken = jwtDecode(refresh_token);
-
-    //     const now = new Date().getTime() / 1000;
-
-    //     let token = access_token;
-
-    //     if (decodedAccessToken.exp >= now) {
-    //         token = refresh_token;
-    //     }
-
-    //     return {
-    //         headers: {
-    //             ...headers,
-    //             authorization: token ? `Bearer ${token}` : '',
-    //         },
-    //     };
-    // });
-
     const link = useApolloLink();
 
-    client = new ApolloClient({
+    const client = new ApolloClient({
         link,
         cache: new InMemoryCache(),
     });
@@ -119,6 +93,19 @@ export default function Layout() {
                             name="modals/detail-folder"
                             options={{
                                 title: 'Folder',
+                                presentation: 'modal',
+                                animation: 'fade_from_bottom',
+                                headerShadowVisible: false,
+                                headerStyle: { backgroundColor: 'white' },
+                                headerTintColor: 'black',
+                                headerTitleStyle: { fontSize: 16 },
+                                headerTitleAlign: 'center',
+                            }}
+                        />
+                        <Stack.Screen
+                            name="modals/google-integration"
+                            options={{
+                                title: 'Google integration',
                                 presentation: 'modal',
                                 animation: 'fade_from_bottom',
                                 headerShadowVisible: false,
