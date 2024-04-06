@@ -1,15 +1,10 @@
 import React from 'react';
-import { Text, useColorScheme } from 'react-native';
+import { useColorScheme } from 'react-native';
 
 import { Stack } from 'expo-router';
 import { GluestackUIProvider } from '../src/components/gluestack-ui-provider/';
 
-import {
-    ApolloClient,
-    ApolloProvider,
-    createHttpLink,
-    InMemoryCache,
-} from '@apollo/client';
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import '../global.css';
 
 import {
@@ -17,11 +12,7 @@ import {
     DefaultTheme,
     ThemeProvider,
 } from '@react-navigation/native';
-import { setContext } from '@apollo/client/link/context';
-import { useAuth } from '../src/stores/auth.store';
-import { AuthEntity } from '../src/gql/graphql';
 
-import { jwtDecode } from 'jwt-decode';
 import { useApolloLink } from '../src/utils/auth';
 
 export const unstable_settings = {
