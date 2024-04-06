@@ -27,6 +27,9 @@ export class UserService {
     }
 
     async findById(id: number) {
-        return this.repo.findOneBy({ id });
+        return this.repo.findOne({
+            where: { id },
+            relations: { googleUsers: true },
+        });
     }
 }
