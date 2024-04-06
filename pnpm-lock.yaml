@@ -377,6 +377,9 @@ importers:
       expo-image:
         specifier: ^1.10.6
         version: 1.10.6(expo@50.0.14)
+      expo-intent-launcher:
+        specifier: ^10.11.0
+        version: 10.11.0(expo@50.0.14)
       expo-linear-gradient:
         specifier: ^12.7.2
         version: 12.7.2(expo@50.0.14)
@@ -407,11 +410,14 @@ importers:
       react-native:
         specifier: 0.73.6
         version: 0.73.6(@babel/core@7.24.3)(@babel/preset-env@7.24.3)(react@18.2.0)
+      react-native-pager-view:
+        specifier: ^6.2.3
+        version: 6.3.0(react-native@0.73.6)(react@18.2.0)
       react-native-reanimated:
         specifier: ~3.6.3
         version: 3.6.3(@babel/core@7.24.3)(@babel/plugin-proposal-nullish-coalescing-operator@7.18.6)(@babel/plugin-proposal-optional-chaining@7.21.0)(@babel/plugin-transform-arrow-functions@7.24.1)(@babel/plugin-transform-shorthand-properties@7.24.1)(@babel/plugin-transform-template-literals@7.24.1)(react-native@0.73.6)(react@18.2.0)
       react-native-render-html:
-        specifier: ^6.3.4
+        specifier: 6.3.4
         version: 6.3.4(@types/react-native@0.73.0)(@types/react@18.2.73)(react-native@0.73.6)(react@18.2.0)
       react-native-safe-area-context:
         specifier: 4.8.2
@@ -12943,6 +12949,14 @@ packages:
       expo: '*'
     dependencies:
       '@react-native/assets-registry': 0.73.1
+      expo: 50.0.14(@babel/core@7.24.3)(@react-native/babel-preset@0.73.21)
+    dev: false
+
+  /expo-intent-launcher@10.11.0(expo@50.0.14):
+    resolution: {integrity: sha512-yRwirZa1JdkWvKKF/cPruzawNhscqeA1OSYtB1ECri+8yh1YtWKN1ttbNd/dlYZcpwzYHIMKR/D0PY+9BX5zqg==}
+    peerDependencies:
+      expo: '*'
+    dependencies:
       expo: 50.0.14(@babel/core@7.24.3)(@react-native/babel-preset@0.73.21)
     dev: false
 
