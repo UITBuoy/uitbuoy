@@ -1,11 +1,10 @@
-import React from 'react';
-import { View, Text } from 'react-native';
-import NativeButton from '../../src/components/NativeButton/NativeButton';
 import {
     GoogleSignin,
     GoogleSigninButton,
     statusCodes,
 } from '@react-native-google-signin/google-signin';
+import React from 'react';
+import { View } from 'react-native';
 
 export default function GoogleIntegration() {
     GoogleSignin.configure({
@@ -24,8 +23,10 @@ export default function GoogleIntegration() {
         try {
             await GoogleSignin.hasPlayServices();
             const userInfo = await GoogleSignin.signIn();
-            console.log({ userInfo });
+            const token = await GoogleSignin.getTokens();
+            console.log({ userInfo, token });
         } catch (error) {
+            console.log({ error });
             if (error.code === statusCodes.SIGN_IN_CANCELLED) {
                 // user cancelled the login flow
             } else if (error.code === statusCodes.IN_PROGRESS) {
@@ -39,17 +40,10 @@ export default function GoogleIntegration() {
     }
 
     return (
-        <View className=" flex-1 bg-white pt-0">
-            {/* <NativeButton onPress={() => {}} className=" mt-5 mx-4">
-                <View className=" bg-primary-95 p-4">
-                    <Text className=" color-primary-50 font-medium">
-                        Connect with Google
-                    </Text>
-                </View>
-            </NativeButton> */}
+        <View className=" flex-1 items-center bg-white pt-10">
             <GoogleSigninButton
                 size={GoogleSigninButton.Size.Wide}
-                color={GoogleSigninButton.Color.Dark}
+                color={GoogleSigninButton.Color.Light}
                 onPress={signIn}
             />
         </View>
