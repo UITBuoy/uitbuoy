@@ -4,7 +4,8 @@ import {
     statusCodes,
 } from '@react-native-google-signin/google-signin';
 import React from 'react';
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
+import NativeButton from '../../src/components/NativeButton/NativeButton';
 
 export default function GoogleIntegration() {
     GoogleSignin.configure({
@@ -46,6 +47,18 @@ export default function GoogleIntegration() {
                 color={GoogleSigninButton.Color.Light}
                 onPress={signIn}
             />
+            <NativeButton
+                className=" mt-5"
+                onPress={async () => {
+                    await GoogleSignin.signOut();
+                }}
+            >
+                <View className=" p-4 px-10 bg-primary-90 ">
+                    <Text className="color-primary-50 font-medium">
+                        Sign out
+                    </Text>
+                </View>
+            </NativeButton>
         </View>
     );
 }
