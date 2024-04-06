@@ -10,6 +10,7 @@ import {
     PrimaryColumn,
     Relation,
 } from 'typeorm';
+import type { GoogleUser } from './google-user.entity';
 
 @ObjectType()
 @Entity()
@@ -95,6 +96,9 @@ export class User {
 
     @OneToMany('Calendar', 'user')
     calendars: Relation<Calendar>[];
+
+    @OneToMany('GoogleUser', 'user')
+    googleUsers: Relation<GoogleUser>[];
 
     @ManyToMany('Course', 'users')
     @JoinTable()
