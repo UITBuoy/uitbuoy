@@ -35,11 +35,11 @@ import { AuthController } from './auth.controller';
         ConfigModule,
     ],
     providers: [
-        GoogleOAuth2SessionSerializer,
+        // GoogleOAuth2SessionSerializer,
         AuthService,
         ApiService,
         TokenService,
-        GoogleOAuth2Strategy,
+        // GoogleOAuth2Strategy,
         JwtStrategy,
         JwtRefreshStrategy,
         AuthResolver,

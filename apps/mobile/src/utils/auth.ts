@@ -34,8 +34,8 @@ export function useApolloLink() {
         return {
             headers: {
                 ...headers,
-                authorization: authData.access_token
-                    ? `Bearer ${authData.access_token}`
+                authorization: authData?.access_token
+                    ? `Bearer ${authData?.access_token}`
                     : '',
             },
         };
