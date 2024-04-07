@@ -1,6 +1,7 @@
 import type { Course } from '@/course/entities/course.entity';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, Int32, PrimaryColumn, Relation } from 'typeorm';
+import type { EventReminder } from './event-reminder.entity';
 
 @ObjectType()
 @Entity()
@@ -165,10 +166,7 @@ export class EventEntity {
     @Column({ nullable: true })
     groupname: string;
 
-    // @Field(() => Course)
     course: Relation<Course>;
 
-    // @Field(() => [Calendar], { nullable: true })
-    // @OneToMany(() => Calendar, (calendar) => calendar.event)
-    // calendars: Calendar[];
+    reminders: Relation<EventReminder[]>;
 }
