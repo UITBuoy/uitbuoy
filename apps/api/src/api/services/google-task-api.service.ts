@@ -25,4 +25,32 @@ export class GoogleTasksApiService {
 
         return result;
     }
+
+    async createTask({
+        accessToken,
+        title,
+        notes,
+        due,
+        taskList,
+    }: {
+        accessToken: string;
+        title: string;
+        notes: string;
+        due: number;
+        taskList: string;
+    }): Promise<TaskListDto> {
+        const response = await axios.post(
+            `${this.BASE_URL}/lists/${taskList}/tasks`,
+            { title, notes, due },
+            { headers: { Authorization: `Bearer ${accessToken}` } },
+        );
+
+        const result = response.data;
+
+        if (response.status != 200) {
+            throw new GoogleTaskException();
+        }
+
+        return result;
+    }
 }
