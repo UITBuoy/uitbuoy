@@ -3,7 +3,7 @@ import WS_FUNCTION from 'src/common/constants/function-name';
 import { CourseSectionEntity } from '@/course/entities/course-section.entity';
 import { Course } from 'src/course/entities/course.entity';
 import { CourseNotFoundException } from 'src/course/errors/not-found.error';
-import { ApiService } from '../../api/api.service';
+import { ApiService } from '../../api/services/api.service';
 import moment from 'moment';
 
 @Injectable()
