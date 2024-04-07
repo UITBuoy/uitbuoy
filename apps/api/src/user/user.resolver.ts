@@ -5,7 +5,7 @@ import { Args, Mutation, ResolveField, Resolver } from '@nestjs/graphql';
 import { CreateGoogleUserInput } from './dto/create-google-user.input';
 import { GoogleUser } from './entities/google-user.entity';
 import { User } from './entities/user.entity';
-import { UserService } from './user.service';
+import { UserService } from './services/user.service';
 
 @Resolver(() => User)
 export class UserResolver {

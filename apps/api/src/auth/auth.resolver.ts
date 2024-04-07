@@ -3,7 +3,7 @@ import {
     COOKIE_PATH,
     REFRESH_TIME,
 } from '@/common/constants/cookie';
-import { UserService } from '@/user/user.service';
+import { UserService } from '@/user/services/user.service';
 import { UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 // import { Response } from 'express-serve-static-core';

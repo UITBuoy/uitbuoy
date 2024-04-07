@@ -14,8 +14,8 @@ import {
 @Entity()
 export class GoogleCalendarEvent {
     @Field()
-    @PrimaryColumn({ generated: true })
-    id: number;
+    @PrimaryColumn()
+    id: string;
 
     @Field(() => Int)
     @Column()
