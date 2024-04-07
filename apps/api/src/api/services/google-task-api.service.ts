@@ -3,6 +3,7 @@ import axios from 'axios';
 import { GoogleTaskException } from '../errors/google-task.error';
 import { TaskListDto } from '../dto/task-list.dto';
 import { TaskDto } from '../dto/task.dto';
+import { htmlToPlainText } from '@/common/utils/contentConverter';
 
 @Injectable()
 export class GoogleTasksApiService {
@@ -42,7 +43,7 @@ export class GoogleTasksApiService {
     }): Promise<TaskDto> {
         const response = await axios.post(
             `${this.BASE_URL}/lists/${taskList}/tasks`,
-            { title, notes, due },
+            { title, notes: htmlToPlainText(notes), due },
             { headers: { Authorization: `Bearer ${accessToken}` } },
         );
 
@@ -72,7 +73,7 @@ export class GoogleTasksApiService {
     }): Promise<TaskDto> {
         const response = await axios.put(
             `${this.BASE_URL}/lists/${taskList}/tasks/${taskId}`,
-            { id: taskId, title, notes, due },
+            { id: taskId, title, notes: htmlToPlainText(notes), due },
             { headers: { Authorization: `Bearer ${accessToken}` } },
         );
 
