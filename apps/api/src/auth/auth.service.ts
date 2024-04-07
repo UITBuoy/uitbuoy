@@ -62,7 +62,10 @@ export class AuthService {
             },
             {
                 secret: this.configService.get('ACCESS_TOKEN_SECRET'),
-                expiresIn: '1h',
+                expiresIn:
+                    this.configService.get('ENVIRONMENT') === 'development'
+                        ? '100d'
+                        : '1h',
             },
         );
         const accessTokenExpiredDate = moment().add(1, 'hour').toDate();
