@@ -13,11 +13,11 @@ import type { EventEntity } from './event.entity';
 @ObjectType()
 @Entity()
 export class EventReminder {
-    @Field()
+    @Field(() => Int)
     @PrimaryColumn({ generated: true })
     id: number;
 
-    @ManyToOne('EventEntity', 'reminders')
+    @ManyToOne('EventEntity', 'reminders', { cascade: true })
     @JoinColumn({ name: 'event_id' })
     event: Relation<EventEntity>;
 
