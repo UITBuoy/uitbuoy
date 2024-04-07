@@ -22,7 +22,9 @@ export class EventService {
         return this.eventRepo.find({
             where: isComing
                 ? {
-                      timestart: MoreThan(new Date().getTime() / 1000),
+                      timestart: MoreThan(
+                          Math.floor(new Date().getTime() / 1000),
+                      ),
                   }
                 : {},
         });

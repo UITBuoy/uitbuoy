@@ -1,0 +1,14 @@
+mutation AddGoogleUser(
+    $accessToken: String!
+    $googleUser: CreateGoogleUserInput!
+) {
+    addGoogleUser(accessToken: $accessToken, googleUser: $googleUser) {
+        email
+        familyName
+        givenName
+        id
+        name
+        photo
+        taskListId
+    }
+}

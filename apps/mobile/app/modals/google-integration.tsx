@@ -6,25 +6,24 @@ import {
 import React, { useEffect } from 'react';
 import { Text, View } from 'react-native';
 import NativeButton from '../../src/components/NativeButton/NativeButton';
+import { useAddGoogleUserMutation } from '../../src/gql/graphql';
 
 export default function GoogleIntegration() {
-    GoogleSignin.configure({
-        webClientId:
-            '683520066916-c8afnsf4lstvc2dnt43qgusqm2olmiko.apps.googleusercontent.com',
-        scopes: [
-            'profile',
-            'email',
-            'https://www.googleapis.com/auth/calendar',
-            'https://www.googleapis.com/auth/tasks',
-        ],
-        offlineAccess: true,
-    });
+    const [addGoogleAccount, { data, loading, error }] =
+        useAddGoogleUserMutation();
 
     useEffect(() => {
-        (async () => {
-            const isSignedIn = await GoogleSignin.isSignedIn();
-            console.log({ isSignedIn });
-        })();
+        GoogleSignin.configure({
+            webClientId:
+                '683520066916-c8afnsf4lstvc2dnt43qgusqm2olmiko.apps.googleusercontent.com',
+            scopes: [
+                'profile',
+                'email',
+                'https://www.googleapis.com/auth/calendar',
+                'https://www.googleapis.com/auth/tasks',
+            ],
+            offlineAccess: true,
+        });
     }, []);
 
     async function signIn() {
@@ -32,6 +31,12 @@ export default function GoogleIntegration() {
             await GoogleSignin.hasPlayServices();
             const userInfo = await GoogleSignin.signIn();
             const token = await GoogleSignin.getTokens();
+            addGoogleAccount({
+                variables: {
+                    accessToken: token.accessToken,
+                    googleUser: userInfo.user,
+                },
+            });
             console.log({ userInfo, token });
         } catch (error) {
             console.log({ error, statusCodes });
