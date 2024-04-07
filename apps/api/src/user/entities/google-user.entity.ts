@@ -44,4 +44,8 @@ export class GoogleUser {
 
     @OneToMany('GoogleCalendarEvent', 'googleUser')
     events: Relation<GoogleCalendarEvent>;
+
+    @Field({ nullable: true })
+    @Column({ nullable: true })
+    taskListId: string;
 }
