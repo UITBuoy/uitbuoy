@@ -70,9 +70,9 @@ export class GoogleTasksApiService {
         taskList: string;
         taskId: string;
     }): Promise<TaskDto> {
-        const response = await axios.post(
+        const response = await axios.put(
             `${this.BASE_URL}/lists/${taskList}/tasks/${taskId}`,
-            { title, notes, due },
+            { id: taskId, title, notes, due },
             { headers: { Authorization: `Bearer ${accessToken}` } },
         );
 

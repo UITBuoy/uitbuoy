@@ -4,6 +4,8 @@ import {
     Column,
     Entity,
     Int32,
+    JoinColumn,
+    ManyToOne,
     OneToMany,
     PrimaryColumn,
     Relation,
@@ -173,6 +175,8 @@ export class EventEntity {
     @Column({ nullable: true })
     groupname: string;
 
+    @ManyToOne('Course')
+    @JoinColumn({ name: 'course_id' })
     course: Relation<Course>;
 
     @OneToMany('EventReminder', 'event')

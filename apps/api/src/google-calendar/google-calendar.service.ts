@@ -24,8 +24,8 @@ export class GoogleCalendarService {
             await Promise.all(
                 events.map(async (event) => {
                     const googleCalendarEvent = await this.repo.findOneBy({
-                        event,
-                        googleUser,
+                        event: { id: event.id },
+                        googleUser: { id: googleUser.id },
                     });
 
                     if (googleCalendarEvent) {
@@ -70,5 +70,15 @@ export class GoogleCalendarService {
             );
 
         return this.repo.save(googleCalendarEvents);
+    }
+
+    async findById(id: string) {
+        return this.repo.findOne({
+            where: { id },
+            relations: {
+                event: true,
+                googleUser: true,
+            },
+        });
     }
 }
