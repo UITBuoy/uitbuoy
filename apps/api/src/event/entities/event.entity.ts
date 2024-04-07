@@ -74,19 +74,19 @@ export class EventEntity {
     eventtype: string;
 
     @Field(() => Int, { nullable: true })
-    @Column(() => Int32)
+    @Column()
     timestart: number;
 
     @Field(() => Int, { nullable: true })
-    @Column(() => Int32)
+    @Column()
     timeduration: number;
 
     @Field(() => Int, { nullable: true })
-    @Column(() => Int32)
+    @Column()
     timesort: number;
 
     @Field(() => Int, { nullable: true })
-    @Column(() => Int32)
+    @Column()
     timeusermidnight: number;
 
     @Field(() => Int, { nullable: true })

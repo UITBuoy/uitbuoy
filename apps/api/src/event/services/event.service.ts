@@ -1,25 +1,30 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CalendarApiService } from '@/calendar/services/calender-api.service';
-import { Repository } from 'typeorm';
+import { MoreThan, Repository } from 'typeorm';
+import { EventEntity } from '../entities/event.entity';
 
 @Injectable()
 export class EventService {
     constructor(
-        @InjectRepository(Event) private eventRepo: Repository<Event>,
+        @InjectRepository(EventEntity)
+        private eventRepo: Repository<EventEntity>,
     ) {}
 
-    // async findCourseContents(token: string, course_id: number) {
-    //     const contents = await this.courseApiService.getCourseContent({
-    //         token,
-    //         course_id,
-    //     });
+    async save(events: EventEntity[]) {
+        return this.eventRepo.save(events);
+    }
 
-    //     contents.forEach((content) => {
-    //         this.moduleRepo.save(content.modules);
-    //     });
+    async findById(id: number): Promise<EventEntity> {
+        return this.eventRepo.findOne({ where: { id } });
+    }
 
-    //     this.contentRepo.save(contents);
-    //     return contents;
-    // }
+    async findAll(isComing?: boolean): Promise<EventEntity[]> {
+        return this.eventRepo.find({
+            where: isComing
+                ? {
+                      timestart: MoreThan(new Date().getTime() / 1000),
+                  }
+                : {},
+        });
+    }
 }
