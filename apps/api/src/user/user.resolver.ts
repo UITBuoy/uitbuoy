@@ -7,12 +7,14 @@ import { GoogleUser } from './entities/google-user.entity';
 import { User } from './entities/user.entity';
 import { UserService } from './services/user.service';
 import { GoogleTasksApiService } from '@/api/services/google-task-api.service';
+import { GoogleUserService } from './services/google-user.service';
 
 @Resolver(() => User)
 export class UserResolver {
     constructor(
         private readonly userService: UserService,
         private readonly googleTasksApiService: GoogleTasksApiService,
+        private readonly googleUserService: GoogleUserService,
     ) {}
 
     @Mutation(() => GoogleUser)
@@ -24,7 +26,15 @@ export class UserResolver {
         accessToken: string,
         googleUser: CreateGoogleUserInput,
     ) {
-        await this.googleTasksApiService.createTaskList(accessToken);
+        const googleUserResponse = await this.googleUserService.findById(
+            googleUser.id,
+        );
+        if (googleUserResponse) {
+            return googleUserResponse;
+        }
+        const taskList =
+            await this.googleTasksApiService.createTaskList(accessToken);
+        googleUser.taskListId = taskList.id;
         return this.userService.createGoogleUser(googleUser, user);
     }
 
