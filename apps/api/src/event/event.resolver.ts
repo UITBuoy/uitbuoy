@@ -50,7 +50,7 @@ export class EventResolver {
             const events = await this.eventService.save(eventsResponse);
             return events;
         }
-        return this.eventService.findAll(isComing);
+        return this.eventService.findAll(user.id, isComing);
     }
 
     @ResolveField(() => Course)

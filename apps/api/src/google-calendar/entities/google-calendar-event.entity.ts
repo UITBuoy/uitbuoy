@@ -1,6 +1,6 @@
 import type { EventEntity } from '@/event/entities/event.entity';
 import type { GoogleUser } from '@/user/entities/google-user.entity';
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType, Float } from '@nestjs/graphql';
 import {
     Column,
     Entity,
@@ -17,8 +17,8 @@ export class GoogleCalendarEvent {
     @PrimaryColumn()
     id: string;
 
-    @Field(() => Int)
-    @Column()
+    @Field(() => Float)
+    @Column({ type: 'bigint' })
     lastSync: number;
 
     @ManyToOne('EventEntity')

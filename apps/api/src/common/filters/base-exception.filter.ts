@@ -11,12 +11,6 @@ export class BaseExceptionFilter implements GqlExceptionFilter {
     catch(exception: BaseException, host: ArgumentsHost) {
         const gqlHost = GqlArgumentsHost.create(host);
         gqlHost.getContext().res;
-        // const filteredException = Object.fromEntries(
-        //     Object.entries(exception).filter(([key, value]) => {
-        //         console.log({ key });
-        //         return !key.includes('.');
-        //     }),
-        // );
         const filteredException = JSON.parse(
             JSON.stringify(exception, (key, val) =>
                 key.includes('.') ? undefined : val,

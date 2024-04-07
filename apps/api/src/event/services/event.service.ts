@@ -15,18 +15,27 @@ export class EventService {
     }
 
     async findById(id: number): Promise<EventEntity> {
-        return this.eventRepo.findOne({ where: { id } });
+        return this.eventRepo.findOne({
+            where: { id },
+            relations: { course: true },
+        });
     }
 
-    async findAll(isComing?: boolean): Promise<EventEntity[]> {
+    async findAll(
+        userId: number,
+        isComing?: boolean,
+        withCourse = true,
+    ): Promise<EventEntity[]> {
         return this.eventRepo.find({
             where: isComing
                 ? {
                       timestart: MoreThan(
                           Math.floor(new Date().getTime() / 1000),
                       ),
+                      course: { users: { id: userId } },
                   }
-                : {},
+                : { course: { users: { id: userId } } },
+            relations: { course: withCourse },
         });
     }
 }

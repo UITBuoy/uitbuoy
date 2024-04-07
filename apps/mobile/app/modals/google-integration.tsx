@@ -71,6 +71,11 @@ export default function GoogleIntegration() {
                     </Text>
                 </View>
             </NativeButton>
+            <NativeButton className=" mt-5" onPress={async () => {}}>
+                <View className=" p-4 px-10 bg-primary-90 ">
+                    <Text className="color-primary-50 font-medium">Sync</Text>
+                </View>
+            </NativeButton>
         </View>
     );
 }
