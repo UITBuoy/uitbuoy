@@ -15,6 +15,7 @@ export default function GoogleIntegration() {
             'profile',
             'email',
             'https://www.googleapis.com/auth/calendar',
+            'https://www.googleapis.com/auth/tasks',
         ],
         offlineAccess: true,
     });
