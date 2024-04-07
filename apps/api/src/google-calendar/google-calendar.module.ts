@@ -5,9 +5,11 @@ import { EventModule } from '@/event/event.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GoogleCalendarEvent } from './entities/google-calendar-event.entity';
 import { UserModule } from '@/user/user.module';
+import { ApiModule } from '@/api/api.module';
 
 @Module({
     imports: [
+        ApiModule,
         EventModule,
         forwardRef(() => UserModule),
         TypeOrmModule.forFeature([GoogleCalendarEvent]),

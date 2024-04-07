@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { GoogleTaskException } from '../errors/google-task.error';
 import { TaskListDto } from '../dto/task-list.dto';
+import { TaskDto } from '../dto/task.dto';
 
 @Injectable()
 export class GoogleTasksApiService {
@@ -36,11 +37,41 @@ export class GoogleTasksApiService {
         accessToken: string;
         title: string;
         notes: string;
-        due: number;
+        due: string;
         taskList: string;
-    }): Promise<TaskListDto> {
+    }): Promise<TaskDto> {
         const response = await axios.post(
             `${this.BASE_URL}/lists/${taskList}/tasks`,
+            { title, notes, due },
+            { headers: { Authorization: `Bearer ${accessToken}` } },
+        );
+
+        const result = response.data;
+
+        if (response.status != 200) {
+            throw new GoogleTaskException();
+        }
+
+        return result;
+    }
+
+    async updateTask({
+        accessToken,
+        title,
+        notes,
+        due,
+        taskList,
+        taskId,
+    }: {
+        accessToken: string;
+        title: string;
+        notes: string;
+        due: string;
+        taskList: string;
+        taskId: string;
+    }): Promise<TaskDto> {
+        const response = await axios.post(
+            `${this.BASE_URL}/lists/${taskList}/tasks/${taskId}`,
             { title, notes, due },
             { headers: { Authorization: `Bearer ${accessToken}` } },
         );
