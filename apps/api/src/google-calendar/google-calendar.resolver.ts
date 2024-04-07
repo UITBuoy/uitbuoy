@@ -20,8 +20,8 @@ export class GoogleCalendarResolver {
     @UseGuards(JwtAuthGuard)
     async syncEvent(
         @CurrentUser() user: User,
-        @Args() googleUserId: string,
-        @Args() accessToken: string,
+        @Args('googleUserId') googleUserId: string,
+        @Args('accessToken') accessToken: string,
     ): Promise<GoogleCalendarEvent[]> {
         const events = await this.eventApiService.getEventList({
             token: user.token,
