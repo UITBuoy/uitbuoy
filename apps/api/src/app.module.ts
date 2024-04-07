@@ -27,6 +27,7 @@ import { SubjectModule } from './subject/subject.module';
 import { UserModule } from './user/user.module';
 import { DateScalar } from './common/scalars/date.scalar';
 import { CommonModule } from './common/common.module';
+import { GoogleCalendarModule } from './google-calendar/google-calendar.module';
 
 @Module({
     imports: [
@@ -171,6 +172,7 @@ import { CommonModule } from './common/common.module';
         LoggerModule,
         LecturerModule,
         CommonModule,
+        GoogleCalendarModule,
     ],
     controllers: [AppController],
     providers: [
