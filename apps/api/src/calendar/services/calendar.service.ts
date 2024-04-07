@@ -5,7 +5,7 @@ import { Calendar } from '../entities/calendar.entity';
 import { CalendarApiService } from '@/calendar/services/calender-api.service';
 import { EventEntity } from 'src/event/entities/event.entity';
 import { User } from 'src/user/entities/user.entity';
-import { UserService } from 'src/user/user.service';
+import { UserService } from '@/user/services/user.service';
 
 @Injectable()
 export class CalendarService {

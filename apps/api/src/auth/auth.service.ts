@@ -6,7 +6,7 @@ import axios from 'axios';
 import { MoodleException } from 'src/api/errors/moodle.error';
 import { UserApiService } from 'src/api/services/user-api.service';
 import API_URL from 'src/common/constants/url';
-import { UserService } from 'src/user/user.service';
+import { UserService } from '@/user/services/user.service';
 import { AuthEntity } from './entities/auth.entity';
 import moment from 'moment';
 
