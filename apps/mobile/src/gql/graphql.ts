@@ -44,7 +44,9 @@ export type AuthEntity = {
   email: Scalars['String']['output'];
   firstaccess?: Maybe<Scalars['Int']['output']>;
   fullname: Scalars['String']['output'];
+  googleUsers: Array<GoogleUser>;
   id?: Maybe<Scalars['Int']['output']>;
+  isIntegrateWithGoogle: Scalars['Boolean']['output'];
   lang?: Maybe<Scalars['String']['output']>;
   lastaccess?: Maybe<Scalars['Int']['output']>;
   mailformat?: Maybe<Scalars['String']['output']>;
@@ -178,6 +180,16 @@ export type CourseSectionEntity = {
   visible?: Maybe<Scalars['Int']['output']>;
 };
 
+export type CreateGoogleUserInput = {
+  email: Scalars['String']['input'];
+  familyName: Scalars['String']['input'];
+  givenName: Scalars['String']['input'];
+  id: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  photo: Scalars['String']['input'];
+  taskListId?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type EventEntity = {
   __typename?: 'EventEntity';
   activityname?: Maybe<Scalars['String']['output']>;
@@ -220,6 +232,35 @@ export type EventEntity = {
   visible?: Maybe<Scalars['Int']['output']>;
 };
 
+export type EventReminder = {
+  __typename?: 'EventReminder';
+  id: Scalars['Int']['output'];
+  isMute?: Maybe<Scalars['Boolean']['output']>;
+  minutes?: Maybe<Scalars['Int']['output']>;
+};
+
+export type EventReminderInput = {
+  isMute?: InputMaybe<Scalars['Boolean']['input']>;
+  minutes?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type GoogleCalendarEvent = {
+  __typename?: 'GoogleCalendarEvent';
+  id: Scalars['String']['output'];
+  lastSync: Scalars['Int']['output'];
+};
+
+export type GoogleUser = {
+  __typename?: 'GoogleUser';
+  email: Scalars['String']['output'];
+  familyName: Scalars['String']['output'];
+  givenName: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  photo: Scalars['String']['output'];
+  taskListId?: Maybe<Scalars['String']['output']>;
+};
+
 export type IntroFile = {
   __typename?: 'IntroFile';
   filename?: Maybe<Scalars['String']['output']>;
@@ -244,9 +285,24 @@ export type Lecturer = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addEventReminder: EventReminder;
+  addGoogleUser: GoogleUser;
   findAllEventByCourseIds: Array<Calendar>;
   login: AuthEntity;
   refreshToken: AuthEntity;
+  syncEvent: Array<GoogleCalendarEvent>;
+};
+
+
+export type MutationAddEventReminderArgs = {
+  event_id: Scalars['Int']['input'];
+  reminder: EventReminderInput;
+};
+
+
+export type MutationAddGoogleUserArgs = {
+  accessToken: Scalars['String']['input'];
+  googleUser: CreateGoogleUserInput;
 };
 
 
@@ -258,6 +314,12 @@ export type MutationFindAllEventByCourseIdsArgs = {
 export type MutationLoginArgs = {
   password: Scalars['String']['input'];
   username: Scalars['String']['input'];
+};
+
+
+export type MutationSyncEventArgs = {
+  accessToken: Scalars['String']['input'];
+  googleUserId: Scalars['String']['input'];
 };
 
 export type Query = {
@@ -298,6 +360,9 @@ export type QueryUserCoursesArgs = {
 
 export type QueryUserEventsArgs = {
   isComing?: InputMaybe<Scalars['Boolean']['input']>;
+  isNew?: InputMaybe<Scalars['Boolean']['input']>;
+  isRecent?: InputMaybe<Scalars['Boolean']['input']>;
+  keyword?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Subject = {
@@ -327,7 +392,9 @@ export type User = {
   email: Scalars['String']['output'];
   firstaccess?: Maybe<Scalars['Int']['output']>;
   fullname: Scalars['String']['output'];
+  googleUsers: Array<GoogleUser>;
   id?: Maybe<Scalars['Int']['output']>;
+  isIntegrateWithGoogle: Scalars['Boolean']['output'];
   lang?: Maybe<Scalars['String']['output']>;
   lastaccess?: Maybe<Scalars['Int']['output']>;
   mailformat?: Maybe<Scalars['String']['output']>;
@@ -346,6 +413,14 @@ export type UserPreference = {
   name: Scalars['String']['output'];
   value: Scalars['String']['output'];
 };
+
+export type AddGoogleUserMutationVariables = Exact<{
+  accessToken: Scalars['String']['input'];
+  googleUser: CreateGoogleUserInput;
+}>;
+
+
+export type AddGoogleUserMutation = { __typename?: 'Mutation', addGoogleUser: { __typename?: 'GoogleUser', email: string, familyName: string, givenName: string, id: string, name: string, photo: string, taskListId?: string | null } };
 
 export type LoginApiMutationVariables = Exact<{
   password: Scalars['String']['input'];
@@ -393,6 +468,46 @@ export type UserEventsQueryVariables = Exact<{ [key: string]: never; }>;
 export type UserEventsQuery = { __typename?: 'Query', userEvents: Array<{ __typename?: 'EventEntity', activityname?: string | null, purpose?: string | null, overdue?: boolean | null, timeduration?: number | null, timeusermidnight?: number | null, timestart?: number | null, timesort?: number | null, timemodified?: number | null, name: string, id: number, instance?: number | null, course: { __typename?: 'Course', categoryid?: number | null, categoryname?: string | null, coursecategory?: string | null, courseimage?: string | null, display_name?: string | null, enddate?: number | null, fullname?: string | null, hiddenbynumsections?: number | null, id?: number | null, idnumber?: string | null, name?: string | null, pdfexportfont?: string | null, section?: number | null, shortname?: string | null, showactivitydates?: boolean | null, showcompletionconditions?: string | null, sortorder?: number | null, startdate?: number | null, uservisible?: boolean | null, viewurl?: string | null, visible?: boolean | null } }> };
 
 
+export const AddGoogleUserDocument = gql`
+    mutation AddGoogleUser($accessToken: String!, $googleUser: CreateGoogleUserInput!) {
+  addGoogleUser(accessToken: $accessToken, googleUser: $googleUser) {
+    email
+    familyName
+    givenName
+    id
+    name
+    photo
+    taskListId
+  }
+}
+    `;
+export type AddGoogleUserMutationFn = Apollo.MutationFunction<AddGoogleUserMutation, AddGoogleUserMutationVariables>;
+
+/**
+ * __useAddGoogleUserMutation__
+ *
+ * To run a mutation, you first call `useAddGoogleUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddGoogleUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addGoogleUserMutation, { data, loading, error }] = useAddGoogleUserMutation({
+ *   variables: {
+ *      accessToken: // value for 'accessToken'
+ *      googleUser: // value for 'googleUser'
+ *   },
+ * });
+ */
+export function useAddGoogleUserMutation(baseOptions?: Apollo.MutationHookOptions<AddGoogleUserMutation, AddGoogleUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddGoogleUserMutation, AddGoogleUserMutationVariables>(AddGoogleUserDocument, options);
+      }
+export type AddGoogleUserMutationHookResult = ReturnType<typeof useAddGoogleUserMutation>;
+export type AddGoogleUserMutationResult = Apollo.MutationResult<AddGoogleUserMutation>;
+export type AddGoogleUserMutationOptions = Apollo.BaseMutationOptions<AddGoogleUserMutation, AddGoogleUserMutationVariables>;
 export const LoginApiDocument = gql`
     mutation LoginAPI($password: String!, $username: String!) {
   login(password: $password, username: $username) {

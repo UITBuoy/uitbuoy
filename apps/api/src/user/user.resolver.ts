@@ -22,9 +22,9 @@ export class UserResolver {
     async addGoogleUser(
         @CurrentUser() user: User,
         @Args({ name: 'googleUser', type: () => CreateGoogleUserInput })
+        googleUser: CreateGoogleUserInput,
         @Args('accessToken')
         accessToken: string,
-        googleUser: CreateGoogleUserInput,
     ) {
         const googleUserResponse = await this.googleUserService.findById(
             googleUser.id,
