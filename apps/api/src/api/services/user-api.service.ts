@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ApiService } from '../api.service';
+import { ApiService } from './api.service';
 import WS_FUNCTION from 'src/common/constants/function-name';
 import { UserNotFoundException } from 'src/user/errors/not-found.error';
 import { User } from 'src/user/entities/user.entity';

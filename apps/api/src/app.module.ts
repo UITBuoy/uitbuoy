@@ -10,7 +10,7 @@ import { join } from 'path';
 import * as winston from 'winston';
 import * as winstonMongoDB from 'winston-mongodb';
 import { ApiModule } from './api/api.module';
-import { ApiService } from './api/api.service';
+import { ApiService } from './api/services/api.service';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';

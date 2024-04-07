@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import API_URL from 'src/common/constants/url';
-import { MoodleException } from './errors/moodle.error';
+import { MoodleException } from '../errors/moodle.error';
 
 @Injectable()
 export class ApiService {

@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ApiService } from './api.service';
+import { ApiService } from './services/api.service';
 import { UserApiService } from './services/user-api.service';
 
 @Module({

@@ -1,4 +1,4 @@
-import { ApiService } from '@/api/api.service';
+import { ApiService } from '@/api/services/api.service';
 import { Injectable } from '@nestjs/common';
 import { Assignment } from '../entities/assignment.entity';
 import WS_FUNCTION from '@/common/constants/function-name';
