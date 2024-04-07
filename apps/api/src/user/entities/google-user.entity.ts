@@ -1,9 +1,11 @@
+import type { GoogleCalendarEvent } from '@/google-calendar/entities/google-calendar-event.entity';
 import { Field, ObjectType } from '@nestjs/graphql';
 import {
     Column,
     Entity,
     JoinColumn,
     ManyToOne,
+    OneToMany,
     PrimaryColumn,
     Relation,
 } from 'typeorm';
@@ -39,4 +41,7 @@ export class GoogleUser {
     @ManyToOne('User', 'googleUsers')
     @JoinColumn({ name: 'user' })
     user: Relation<User>;
+
+    @OneToMany('GoogleCalendarEvent', 'googleUser')
+    events: Relation<GoogleCalendarEvent>;
 }
