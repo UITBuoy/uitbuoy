@@ -1,5 +1,13 @@
+import type { User } from '@/user/entities/user.entity';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, ManyToOne, PrimaryColumn, Relation } from 'typeorm';
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    PrimaryColumn,
+    Relation,
+} from 'typeorm';
 import type { EventEntity } from './event.entity';
 
 @ObjectType()
@@ -10,7 +18,12 @@ export class EventReminder {
     id: number;
 
     @ManyToOne('EventEntity', 'reminders')
+    @JoinColumn({ name: 'event_id' })
     event: Relation<EventEntity>;
+
+    @ManyToOne('User', 'reminders')
+    @JoinColumn({ name: 'user_id' })
+    user: Relation<User>;
 
     @Field(() => Boolean, { nullable: true, defaultValue: false })
     @Column()
@@ -19,4 +32,9 @@ export class EventReminder {
     @Field(() => Int, { nullable: true, defaultValue: 30 })
     @Column()
     minutes: number;
+
+    constructor(isMute: boolean, minutes: number) {
+        this.isMute = isMute;
+        this.minutes = minutes;
+    }
 }

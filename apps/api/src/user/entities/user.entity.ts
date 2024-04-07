@@ -1,5 +1,6 @@
 import { Calendar } from '@/calendar/entities/calendar.entity';
 import type { Course } from '@/course/entities/course.entity';
+import type { EventReminder } from '@/event/entities/event-reminder.entity';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import {
     Column,
@@ -103,6 +104,9 @@ export class User {
     @ManyToMany('Course', 'users')
     @JoinTable()
     courses: Relation<Course[]>;
+
+    @OneToMany('EventReminder', 'event')
+    reminders: Relation<EventReminder[]>;
 
     constructor(data: any) {
         if (!data) return;

@@ -1,6 +1,13 @@
 import type { Course } from '@/course/entities/course.entity';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, Int32, PrimaryColumn, Relation } from 'typeorm';
+import {
+    Column,
+    Entity,
+    Int32,
+    OneToMany,
+    PrimaryColumn,
+    Relation,
+} from 'typeorm';
 import type { EventReminder } from './event-reminder.entity';
 
 @ObjectType()
@@ -168,5 +175,6 @@ export class EventEntity {
 
     course: Relation<Course>;
 
+    @OneToMany('EventReminder', 'event')
     reminders: Relation<EventReminder[]>;
 }
