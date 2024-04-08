@@ -8,7 +8,6 @@ import { Repository } from 'typeorm';
 import { Subject } from '../entities/subject.entity';
 
 @Injectable()
-// export class SubjectConfiguration implements OnApplicationBootstrap {
 export class SubjectConfiguration {
     constructor(@InjectRepository(Subject) private repo: Repository<Subject>) {}
 
