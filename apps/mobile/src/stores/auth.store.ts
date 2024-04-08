@@ -12,6 +12,7 @@ export type GoogleData = {
     name: string;
     id: string;
     photo: string;
+    lastSync?: number;
 };
 
 export type IAuth = {
@@ -22,6 +23,7 @@ export type IAuth = {
     setGoogleData: (googleData: GoogleData) => any;
     authLogin: (authEntity: AuthEntity) => boolean;
     authLogout: () => boolean;
+    signOutGoogle: () => any;
     refreshAccessToken: (access_token: string) => any;
 };
 
@@ -37,6 +39,12 @@ export const useAuth = create<
                 set((state) => {
                     state.googleData = googleData;
                     state.isIntegrateWithGoogle = true;
+                });
+            },
+            signOutGoogle: () => {
+                set((state) => {
+                    state.googleData = undefined;
+                    state.isIntegrateWithGoogle = false;
                 });
             },
             authLogin: (authEntity) => {

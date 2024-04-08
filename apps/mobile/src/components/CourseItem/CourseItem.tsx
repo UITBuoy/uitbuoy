@@ -20,16 +20,17 @@ export default function CourseItem({
                 });
             }}
         >
-            <View className=" mx-4 border-[0.5px] rounded-2xl p-4 flex flex-row gap-4">
-                <Image
+            <View className=" mx-4 border-[0.5px] rounded-2xl p-4 px-6 flex flex-row gap-4">
+                {/* <Image
                     style={{
                         width: 60,
+                        height: 60,
                         backgroundColor: 'red',
                         borderRadius: 8,
                     }}
                     source={{ uri: courseimage }}
-                    contentFit="contain"
-                />
+                    // contentFit="cover"
+                /> */}
                 <View className=" flex-1">
                     <Text className=" text-lg font-semibold">
                         {display_name}

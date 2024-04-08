@@ -246,8 +246,10 @@ export type EventReminderInput = {
 
 export type GoogleCalendarEvent = {
   __typename?: 'GoogleCalendarEvent';
+  event: EventEntity;
+  googleUser: EventEntity;
   id: Scalars['String']['output'];
-  lastSync: Scalars['Int']['output'];
+  lastSync: Scalars['Float']['output'];
 };
 
 export type GoogleUser = {
@@ -290,7 +292,7 @@ export type Mutation = {
   findAllEventByCourseIds: Array<Calendar>;
   login: AuthEntity;
   refreshToken: AuthEntity;
-  syncEvent: Array<GoogleCalendarEvent>;
+  syncEvents: Array<GoogleCalendarEvent>;
 };
 
 
@@ -317,7 +319,7 @@ export type MutationLoginArgs = {
 };
 
 
-export type MutationSyncEventArgs = {
+export type MutationSyncEventsArgs = {
   accessToken: Scalars['String']['input'];
   googleUserId: Scalars['String']['input'];
 };
@@ -466,6 +468,14 @@ export type UserEventsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type UserEventsQuery = { __typename?: 'Query', userEvents: Array<{ __typename?: 'EventEntity', activityname?: string | null, purpose?: string | null, overdue?: boolean | null, timeduration?: number | null, timeusermidnight?: number | null, timestart?: number | null, timesort?: number | null, timemodified?: number | null, name: string, id: number, instance?: number | null, course: { __typename?: 'Course', categoryid?: number | null, categoryname?: string | null, coursecategory?: string | null, courseimage?: string | null, display_name?: string | null, enddate?: number | null, fullname?: string | null, hiddenbynumsections?: number | null, id?: number | null, idnumber?: string | null, name?: string | null, pdfexportfont?: string | null, section?: number | null, shortname?: string | null, showactivitydates?: boolean | null, showcompletionconditions?: string | null, sortorder?: number | null, startdate?: number | null, uservisible?: boolean | null, viewurl?: string | null, visible?: boolean | null } }> };
+
+export type SyncEventMutationVariables = Exact<{
+  accessToken: Scalars['String']['input'];
+  googleUserId: Scalars['String']['input'];
+}>;
+
+
+export type SyncEventMutation = { __typename?: 'Mutation', syncEvents: Array<{ __typename?: 'GoogleCalendarEvent', id: string, lastSync: number }> };
 
 
 export const AddGoogleUserDocument = gql`
@@ -925,3 +935,38 @@ export type UserEventsQueryResult = Apollo.QueryResult<UserEventsQuery, UserEven
 export function refetchUserEventsQuery(variables?: UserEventsQueryVariables) {
       return { query: UserEventsDocument, variables: variables }
     }
+export const SyncEventDocument = gql`
+    mutation SyncEvent($accessToken: String!, $googleUserId: String!) {
+  syncEvents(accessToken: $accessToken, googleUserId: $googleUserId) {
+    id
+    lastSync
+  }
+}
+    `;
+export type SyncEventMutationFn = Apollo.MutationFunction<SyncEventMutation, SyncEventMutationVariables>;
+
+/**
+ * __useSyncEventMutation__
+ *
+ * To run a mutation, you first call `useSyncEventMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSyncEventMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [syncEventMutation, { data, loading, error }] = useSyncEventMutation({
+ *   variables: {
+ *      accessToken: // value for 'accessToken'
+ *      googleUserId: // value for 'googleUserId'
+ *   },
+ * });
+ */
+export function useSyncEventMutation(baseOptions?: Apollo.MutationHookOptions<SyncEventMutation, SyncEventMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SyncEventMutation, SyncEventMutationVariables>(SyncEventDocument, options);
+      }
+export type SyncEventMutationHookResult = ReturnType<typeof useSyncEventMutation>;
+export type SyncEventMutationResult = Apollo.MutationResult<SyncEventMutation>;
+export type SyncEventMutationOptions = Apollo.BaseMutationOptions<SyncEventMutation, SyncEventMutationVariables>;

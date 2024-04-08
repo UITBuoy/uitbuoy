@@ -122,7 +122,7 @@ function MyTabBar({ state, descriptors, navigation, position }) {
                                     backgroundColor,
                                     flex: 1,
                                     paddingVertical: 8,
-                                    paddingHorizontal: 20,
+                                    paddingHorizontal: 25,
                                     borderRadius: 14,
                                 }}
                             >

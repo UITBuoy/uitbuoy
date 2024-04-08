@@ -1,0 +1,6 @@
+mutation SyncEvent($accessToken: String!, $googleUserId: String!) {
+    syncEvents(accessToken: $accessToken, googleUserId: $googleUserId) {
+        id
+        lastSync
+    }
+}
