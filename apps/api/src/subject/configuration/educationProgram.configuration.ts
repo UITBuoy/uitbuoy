@@ -28,11 +28,6 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
         for (let i = 0; i < courseLength; i++) {
             const courseName = $educationProgram('div.accordion').eq(i).text();
             courses.push({ course: courseName, majors: [] });
-            // const majorName = $educationProgram('div.panel')
-            //     .children('div.views-row')
-            //     .eq(i)
-            //     .children('a')
-            //     .text();
 
             const key = `${courseName}`;
 
@@ -57,34 +52,45 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
                 courses[i].majors.push({ majorName, link });
             }
         }
+        // for (let i = 0; i < courses.length; i++) {
+        //     for (let j = 0; j < courses[i].majors.length; j++) {
+        let link = `https://daa.uit.edu.vn/${courses[2].majors[5].link}`;
+        const $data = await getPayload(link);
+        for (let k = 0; k < 4; k++)
+            for (
+                let i = 0;
+                i <
+                $data('fieldset')
+                    .eq(1)
+                    .children('div.fieldset-wrapper')
+                    .children('table')
+                    .eq(k)
+                    .children('tbody')
+                    .children('tr').length;
+                i++
+            ) {
+                const trainingSystem = $data('fieldset')
+                    .eq(1)
+                    .children('div.fieldset-wrapper')
+                    .children('table')
+                    .eq(k)
+                    .children('tbody')
+                    .children('tr')
+                    .eq(i)
+                    .children('td')
+                    .eq(1)
+                    .not('p.&nbsp')
+                    .children('p')
+                    .text();
 
-        // for (let i = 0; i < Object.values(courses).length; i++) {
-        //     for (
-        //         let j = 0;
-        //         j < (Object.values(courses) as any)[i].links.length;
-        //         j++
-        //     ) {
-        // let link = `https://daa.uit.edu.vn/${(Object.values(courses) as any)[2].links[5]}`;
-        // const $data = await getPayload(link);
-        // for (let i = 0; i < 150; i++) {
-        //     const trainingSystem = $data('fieldset')
-        //         .eq(1)
-        //         .children('div.fieldset-wrapper')
-        //         .children('table')
-        //         .children('tbody')
-        //         .children('tr')
-        //         .eq(i)
-        //         .children('td')
-        //         .eq(1)
-        //         .children('p')
-        //         .text();
-        //     // console.log(trainingSystem);
-        // }
-        //     }
-        // }
-
-        console.log(JSON.stringify(courses));
+                if (
+                    trainingSystem.match(/^[A-Za-z]+\d+$/)
+                )
+                    console.log(trainingSystem);
+            }
     }
+    //     }
+    // }
 
     //once per 6 months
     @Cron('0 0 0 1 6 *') // Remember to test later (13/3/24)
