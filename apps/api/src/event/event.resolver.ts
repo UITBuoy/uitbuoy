@@ -48,7 +48,9 @@ export class EventResolver {
                 isComing,
             });
             const events = await this.eventService.save(eventsResponse);
-            return events;
+            return events.sort(
+                (a, b) => a.timeusermidnight - b.timeusermidnight,
+            );
         }
         return this.eventService.findAll(user.id, isComing);
     }
