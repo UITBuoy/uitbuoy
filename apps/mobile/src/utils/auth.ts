@@ -26,7 +26,10 @@ export function useApolloLink() {
     const { authData, refreshAccessToken } = useAuth();
 
     const link = createHttpLink({
-        uri: `http://${Constants.expoConfig.hostUri.split(`:`).shift().concat(`:3001`)}/graphql`,
+        uri:
+            process.env.EXPO_PUBLIC_ENVIRONMENT === 'development'
+                ? `http://${Constants.expoConfig.hostUri.split(`:`).shift().concat(`:3001`)}/graphql`
+                : process.env.EXPO_PUBLIC_API_URL,
         credentials: 'same-origin',
     });
 

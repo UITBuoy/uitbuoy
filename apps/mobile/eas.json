@@ -5,12 +5,25 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "http://localhost:3001/graphql",
+        "EXPO_PUBLIC_ENVIRONMENT": "development"
+      }
     },
     "preview": {
       "distribution": "internal"
     },
-    "production": {}
+    "production": {
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://2h6p2o3ggmtk7dyfr4kb5p7uoq0tdvme.lambda-url.ap-southeast-1.on.aws/graphql",
+        "EXPO_PUBLIC_ENVIRONMENT": "production"
+      },
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      }
+    }
   },
   "submit": {
     "production": {}
