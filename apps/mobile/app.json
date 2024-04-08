@@ -23,7 +23,8 @@
         "backgroundColor": "#ffffff"
       },
       "bundler": "metro",
-      "package": "com.uitbuoy.uitbuoy"
+      "package": "com.uitbuoy.uitbuoy",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png",
