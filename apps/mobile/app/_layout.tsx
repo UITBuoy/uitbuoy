@@ -18,14 +18,6 @@ export const unstable_settings = {
     initialRouteName: '(tabs)',
 };
 
-Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-        shouldShowAlert: true,
-        shouldPlaySound: false,
-        shouldSetBadge: false,
-    }),
-});
-
 // Can use this function below or use Expo's Push Notification Tool from: https://expo.dev/notifications
 async function sendPushNotification(expoPushToken) {
     const message = {
@@ -97,6 +89,19 @@ export default function Layout() {
     const responseListener = useRef(null);
 
     useEffect(() => {
+        (async () => {
+            Notifications.setNotificationHandler({
+                handleNotification: async () => ({
+                    shouldShowAlert: true,
+                    shouldPlaySound: false,
+                    shouldSetBadge: false,
+                }),
+            });
+
+            const token = (await Notifications.getExpoPushTokenAsync()).data;
+            console.log({ token });
+        })();
+
         registerForPushNotificationsAsync().then((token) => {
             console.log({ token });
             return setExpoPushToken(token);
