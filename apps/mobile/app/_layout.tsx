@@ -1,4 +1,9 @@
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import {
+    ApolloClient,
+    ApolloProvider,
+    InMemoryCache,
+    NormalizedCacheObject,
+} from '@apollo/client';
 import {
     DarkTheme,
     DefaultTheme,
@@ -13,6 +18,8 @@ import { Platform, useColorScheme } from 'react-native';
 import '../global.css';
 import { GluestackUIProvider } from '../src/components/gluestack-ui-provider/';
 import { useApolloLink } from '../src/utils/auth';
+// import { persistCache, AsyncStorageWrapper } from 'apollo3-cache-persist';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const unstable_settings = {
     initialRouteName: '(tabs)',
@@ -75,18 +82,33 @@ async function registerForPushNotificationsAsync() {
 }
 
 export default function Layout() {
-    const colorScheme = useColorScheme();
-
     const link = useApolloLink();
 
-    const client = new ApolloClient({
-        link,
-        cache: new InMemoryCache(),
-    });
+    const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>(
+        new ApolloClient({ link, cache: new InMemoryCache() }),
+    );
+
+    const colorScheme = useColorScheme();
+
     const [expoPushToken, setExpoPushToken] = useState('');
     const [notification, setNotification] = useState(false);
     const notificationListener = useRef(null);
     const responseListener = useRef(null);
+
+    useEffect(() => {
+        async function init() {
+            const cache = new InMemoryCache();
+
+            // await persistCache({
+            //     cache,
+            //     storage: new AsyncStorageWrapper(AsyncStorage),
+            // });
+
+            setClient(new ApolloClient({ link, cache }));
+        }
+
+        init();
+    }, []);
 
     useEffect(() => {
         (async () => {

@@ -1,19 +1,21 @@
+import { Spinner } from '@gluestack-ui/themed';
+import { useEffect } from 'react';
 import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import PageHeader from '../../src/components/PageHeader/PageHeader';
-import CourseSearch from '../../src/components/CourseSearch/CourseSearch';
-import { useUserCoursesQuery } from '../../src/gql/graphql';
 import CourseItem from '../../src/components/CourseItem/CourseItem';
-import { Spinner } from '@gluestack-ui/themed';
+import CourseSearch from '../../src/components/CourseSearch/CourseSearch';
+import PageHeader from '../../src/components/PageHeader/PageHeader';
+import { useUserCoursesLazyQuery } from '../../src/gql/graphql';
 
 export default function Page() {
-    const {
-        data: recentCourses,
-        loading,
-        error,
-    } = useUserCoursesQuery({
-        variables: { isNew: true, isRecent: true },
-    });
+    const [fetchCourses, { data: recentCourses, loading, error }] =
+        useUserCoursesLazyQuery();
+
+    useEffect(() => {
+        fetchCourses({
+            variables: { isNew: false, isRecent: true },
+        });
+    }, []);
 
     return (
         <View className=" flex-1 bg-white">
