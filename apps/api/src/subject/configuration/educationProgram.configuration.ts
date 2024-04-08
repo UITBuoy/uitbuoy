@@ -20,41 +20,70 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
         }
         const $educationProgram = await getPayload(API_URL.educationPrograms);
 
-        const courses = {};
+        const courses = [];
+        const majors = [];
 
-        const courseIndex: number = $educationProgram('div.acc-item').length;
+        const courseLength: number = $educationProgram('div.acc-item').length;
 
-        for (let i = 0; i < courseIndex; i++) {
-            const course = $educationProgram('div.accordion').eq(i).text();
+        for (let i = 0; i < courseLength; i++) {
+            const courseName = $educationProgram('div.accordion').eq(i).text();
+            courses.push({ course: courseName, majors: [] });
+            // const majorName = $educationProgram('div.panel')
+            //     .children('div.views-row')
+            //     .eq(i)
+            //     .children('a')
+            //     .text();
 
-            const key = `${course}`;
-            courses[key] = { majors: [], links: [] };
-            const majorIndex: number = $educationProgram('div.acc-item')
+            const key = `${courseName}`;
+
+            const majorLength: number = $educationProgram('div.acc-item')
                 .eq(i)
                 .children('div.panel')
                 .children('div.views-row').length;
 
-            for (let j = 0; j < majorIndex; j++) {
-                courses[key].majors.push(
-                    $educationProgram('div.panel')
-                        .eq(i)
-                        .children('div')
-                        .eq(j)
-                        .children('a')
-                        .text(),
-                );
-                courses[key].links.push(
-                    $educationProgram('div.panel')
-                        .eq(i)
-                        .children('div')
-                        .eq(j)
-                        .children('a')
-                        .attr('href'),
-                );
+            for (let j = 0; j < majorLength; j++) {
+                const majorName = $educationProgram('div.panel')
+                    .eq(i)
+                    .children('div')
+                    .eq(j)
+                    .children('a')
+                    .text();
+                const link = $educationProgram('div.panel')
+                    .eq(i)
+                    .children('div')
+                    .eq(j)
+                    .children('a')
+                    .attr('href');
+                courses[i].majors.push({ majorName, link });
             }
         }
-        console.log(courses);
-        console.log((Object.values(courses) as any)[0].majors[0]);
+
+        // for (let i = 0; i < Object.values(courses).length; i++) {
+        //     for (
+        //         let j = 0;
+        //         j < (Object.values(courses) as any)[i].links.length;
+        //         j++
+        //     ) {
+        // let link = `https://daa.uit.edu.vn/${(Object.values(courses) as any)[2].links[5]}`;
+        // const $data = await getPayload(link);
+        // for (let i = 0; i < 150; i++) {
+        //     const trainingSystem = $data('fieldset')
+        //         .eq(1)
+        //         .children('div.fieldset-wrapper')
+        //         .children('table')
+        //         .children('tbody')
+        //         .children('tr')
+        //         .eq(i)
+        //         .children('td')
+        //         .eq(1)
+        //         .children('p')
+        //         .text();
+        //     // console.log(trainingSystem);
+        // }
+        //     }
+        // }
+
+        console.log(JSON.stringify(courses));
     }
 
     //once per 6 months
