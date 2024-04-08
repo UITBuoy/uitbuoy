@@ -18,6 +18,7 @@ import { timeDiff } from '../../src/utils/timeDiff';
 export default function GoogleIntegration() {
     const { isIntegrateWithGoogle, googleData, setGoogleData, signOutGoogle } =
         useAuth();
+    console.log({ googleData });
 
     const [addGoogleAccount] = useAddGoogleUserMutation();
     const [syncEvent, { data, loading, error }] = useSyncEventMutation();
