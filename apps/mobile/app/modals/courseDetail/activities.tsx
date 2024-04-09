@@ -1,10 +1,8 @@
-import { ScrollView, Text, View } from 'react-native';
-import { useGeneralDetailCourseQuery } from '../../../src/gql/graphql';
 import { Spinner } from '@gluestack-ui/themed';
+import { router } from 'expo-router';
+import { ScrollView, Text, View } from 'react-native';
 import NativeButton from '../../../src/components/NativeButton/NativeButton';
-import ResourceIcon from '../../../src/icons/resource';
-import FolderIcon from '../../../src/icons/folder';
-import ForumIcon from '../../../src/icons/forum';
+import { useGeneralDetailCourseQuery } from '../../../src/gql/graphql';
 import AssignIcon from '../../../src/icons/assign';
 
 type Props = {
@@ -25,32 +23,27 @@ export default function ActitivitiesPage({ id }: Props) {
                     </View>
                 ) : (
                     <>
-                        {data?.course.events.map(
-                            ({
-                                activityname,
-                                modulename,
-                                description,
-                                timestart,
-                            }) => (
+                        {data?.course.assignments.map(
+                            ({ cmid, course, name, duedate }) => (
                                 <NativeButton
                                     className=" mx-4"
-                                    key={activityname}
+                                    key={name}
+                                    onPress={() => {
+                                        router.push({
+                                            pathname: '/modals/detail-activity',
+                                            params: {
+                                                id: cmid,
+                                                assignment_id: cmid,
+                                                course_id: course,
+                                            },
+                                        });
+                                    }}
                                 >
                                     <View className=" flex flex-row gap-3 p-6 px-4 border-[0.5px] rounded-2xl border-neutral-80">
-                                        {modulename === 'resouce' ? (
-                                            <ResourceIcon />
-                                        ) : modulename === 'folder' ? (
-                                            <FolderIcon />
-                                        ) : modulename === 'forum' ? (
-                                            <ForumIcon />
-                                        ) : modulename === 'assign' ? (
-                                            <AssignIcon />
-                                        ) : (
-                                            <></>
-                                        )}
+                                        <AssignIcon />
                                         <View className="flex-1">
                                             <Text className=" font-medium">
-                                                {activityname}
+                                                {name}
                                             </Text>
                                             <Text className=" mt-2 font-light">
                                                 {new Intl.DateTimeFormat(
@@ -62,7 +55,7 @@ export default function ActitivitiesPage({ id }: Props) {
                                                             'Asia/Ho_Chi_Minh',
                                                     },
                                                 ).format(
-                                                    new Date(timestart * 1000),
+                                                    new Date(duedate * 1000),
                                                 )}
                                             </Text>
                                         </View>
