@@ -32,10 +32,8 @@ export default function CourseItem({
                     // contentFit="cover"
                 /> */}
                 <View className=" flex-1">
-                    <Text className=" text-lg font-semibold">
-                        {display_name}
-                    </Text>
-                    <Text className=" font-medium mt-1">
+                    <Text className=" text-lg font-normal">{display_name}</Text>
+                    <Text className=" font-light mt-1">
                         {idnumber || shortname}
                     </Text>
                 </View>
