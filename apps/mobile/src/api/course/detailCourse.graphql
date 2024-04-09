@@ -34,6 +34,7 @@ query GeneralDetailCourse($id: Int!) {
             overdue
             purpose
             timestart
+            timeusermidnight
         }
         contentSections {
             name
