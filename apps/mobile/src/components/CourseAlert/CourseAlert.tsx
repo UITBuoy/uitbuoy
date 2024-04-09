@@ -7,6 +7,7 @@ import React from 'react';
 import Animated, {
     FadeInDown,
     FadeInRight,
+    FadeInUp,
     FadeOutRight,
     FadeOutUp,
     FlipInEasyX,
@@ -31,7 +32,7 @@ export default function CourseAlert({
     className,
 }: Props) {
     return (
-        <Animated.View entering={FlipInEasyX} exiting={FlipOutEasyX}>
+        <Animated.View entering={FadeInUp} exiting={FadeOutUp}>
             <NativeButton
                 className={`rounded-xl flex justify-center items-center ${className}`}
                 onPress={() => {
