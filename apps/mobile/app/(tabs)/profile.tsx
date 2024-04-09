@@ -97,7 +97,14 @@ export default function Page() {
                             <Text className=" mx-4 mt-10 px-4 font-semibold text-lg">
                                 Tài khoản Google
                             </Text>
-                            <NativeButton className=" mx-4 mt-1">
+                            <NativeButton
+                                className=" mx-4 mt-1"
+                                onPress={() => {
+                                    router.push({
+                                        pathname: '/modals/google-integration',
+                                    });
+                                }}
+                            >
                                 <View className="p-4 rounded-md flex flex-row gap-4">
                                     <Image
                                         source={{ uri: googleData.photo }}
