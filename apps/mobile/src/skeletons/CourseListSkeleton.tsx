@@ -25,8 +25,8 @@ export default function CourseListSkeleton() {
         .map((_, index) => (
             <Animated.View
                 key={index}
-                style={{ opacity }}
-                className=" mx-4 flex flex-col gap-4 py-4 px-6 border-[0.5px] border-neutral-70 rounded-2xl"
+                style={{ opacity, borderColor: '#CFCFCF' }}
+                className=" flex flex-col gap-4 py-4 px-6 border-[0.5px] "
             >
                 <Animated.View
                     style={{ opacity, width: randomRange(100, 300) }}

@@ -37,7 +37,7 @@ export default function Page() {
                         />
                     }
                 >
-                    <View className=" flex flex-col gap-4 pb-[120px]">
+                    <View className=" flex pb-[120px]">
                         {loading ? (
                             <>
                                 <CourseListSkeleton />

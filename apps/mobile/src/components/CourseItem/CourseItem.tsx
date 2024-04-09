@@ -20,7 +20,10 @@ export default function CourseItem({
                 });
             }}
         >
-            <View className=" mx-4 border-[0.5px] rounded-2xl p-4 px-6 flex flex-row gap-4">
+            <View
+                style={{ borderColor: '#CFCFCF' }}
+                className=" border-[0.5px] p-4 px-6 flex flex-row gap-4"
+            >
                 {/* <Image
                     style={{
                         width: 60,
@@ -32,7 +35,7 @@ export default function CourseItem({
                     // contentFit="cover"
                 /> */}
                 <View className=" flex-1">
-                    <Text className=" text-lg font-normal">{display_name}</Text>
+                    <Text className=" text-lg font-medium">{display_name}</Text>
                     <Text className=" font-light mt-1">
                         {idnumber || shortname}
                     </Text>

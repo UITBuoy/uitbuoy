@@ -21,7 +21,7 @@ export default function CourseSearchResultItem({
                 <SearchIcon className=" mt-2" scale={1.4} />
                 <View className="">
                     <Text className=" text-lg font-medium">{display_name}</Text>
-                    <Text className=" mt-1">{shortname}</Text>
+                    <Text className=" mt-1 font-light">{shortname}</Text>
                 </View>
             </View>
         </TouchableNativeFeedback>
