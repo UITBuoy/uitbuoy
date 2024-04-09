@@ -13,7 +13,7 @@ import {
     useSyncEventMutation,
 } from '../../src/gql/graphql';
 import { useAuth } from '../../src/stores/auth.store';
-import { timeDiff } from '../../src/utils/timeDiff';
+import { timeDiffString } from '../../src/utils/timeDiff';
 
 export default function GoogleIntegration() {
     const { isIntegrateWithGoogle, googleData, setGoogleData, signOutGoogle } =
@@ -139,7 +139,7 @@ export default function GoogleIntegration() {
                         </NativeButton>
                         {googleData.lastSync && !loading ? (
                             <View className=" mx-4 mt-3">
-                                <Text className=" text-neutral-30 text-center">{`Đồng bộ lần cuối: ${timeDiff(new Date(googleData.lastSync))}`}</Text>
+                                <Text className=" text-neutral-30 text-center">{`Đồng bộ lần cuối: ${timeDiffString(new Date(googleData.lastSync))}`}</Text>
                             </View>
                         ) : null}
                     </View>
