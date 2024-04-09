@@ -29,13 +29,13 @@ export class EventService {
         return this.eventRepo.find({
             where: isComing
                 ? {
-                      timeusermidnight: MoreThan(
+                      timestart: MoreThan(
                           Math.floor(new Date().getTime() / 1000),
                       ),
                       course: { users: { id: userId } },
                   }
                 : { course: { users: { id: userId } } },
-            order: { timeusermidnight: 'ASC' },
+            order: { timestart: 'ASC' },
             relations: { course: withCourse },
         });
     }
