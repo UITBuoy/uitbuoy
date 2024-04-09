@@ -9,7 +9,6 @@ export function useDeadline(id: number) {
     const { data, loading, error } = useGeneralDetailCourseQuery({
         variables: { id },
     });
-    console.log({ data });
 
     const hasDeadline = data?.course.assignments.some(
         (assignment) =>

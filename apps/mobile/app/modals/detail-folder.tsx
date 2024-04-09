@@ -18,8 +18,6 @@ export default function DetailActivity() {
         navigation.setOptions({ title: folder.name });
     }, []);
 
-    console.log({ folder });
-
     return (
         <View className=" flex-1 bg-white pt-0">
             {folder.description ? (
