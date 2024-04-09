@@ -1,22 +1,107 @@
 import { router } from 'expo-router';
-import { Text, TouchableOpacity, View } from 'react-native';
+import {
+    Text,
+    TouchableOpacity,
+    Image,
+    View,
+    ScrollView,
+    RefreshControl,
+} from 'react-native';
 import { useAuth } from '../../src/stores/auth.store';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import NativeButton from '../../src/components/NativeButton/NativeButton';
+import { useProfileLazyQuery } from '../../src/gql/graphql';
+import { useEffect } from 'react';
 
 export default function Page() {
-    const { authLogout } = useAuth();
+    const { googleData, authLogout } = useAuth();
+
+    const [refetch, { data, loading, error }] = useProfileLazyQuery();
+
+    useEffect(() => {
+        refetch();
+    }, []);
 
     return (
-        <SafeAreaView className=" pt-10">
-            <TouchableOpacity
-                className=" mt-10"
-                onPress={() => {
-                    router.replace('/login');
-                    authLogout();
-                }}
-            >
-                <Text>Logout</Text>
-            </TouchableOpacity>
-        </SafeAreaView>
+        <View className=" flex-1 bg-white">
+            <SafeAreaView className="">
+                <ScrollView
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={loading}
+                            onRefresh={() =>
+                                refetch({ fetchPolicy: 'no-cache' })
+                            }
+                        />
+                    }
+                >
+                    {loading || !data?.profile ? (
+                        <></>
+                    ) : (
+                        <>
+                            <View
+                                style={{ marginTop: 60 }}
+                                className=" mx-4 p-4 rounded-md flex flex-col gap-4"
+                            >
+                                <Image
+                                    source={{
+                                        uri: data.profile.profileimageurl,
+                                    }}
+                                    style={{ width: 100, height: 100 }}
+                                    className=" rounded-2xl"
+                                />
+                                <View className=" flex flex-col gap-1">
+                                    <Text className=" font-semibold text-lg">
+                                        {data.profile.fullname}
+                                    </Text>
+                                    <Text className=" text-neutral-40">
+                                        {data.profile.email}
+                                    </Text>
+                                </View>
+                            </View>
+                            <View className=" mx-4 p-4">
+                                <View className=" flex flex-col gap-1">
+                                    <Text className=" text-neutral-40">
+                                        Mã số sinh viên
+                                    </Text>
+                                    <Text className=" font-semibold text-lg">
+                                        {data.profile.username}
+                                    </Text>
+                                </View>
+                            </View>
+                            <NativeButton className=" mx-4 mt-10">
+                                <View className="p-4 rounded-md flex flex-row gap-4">
+                                    <Image
+                                        source={{ uri: googleData.photo }}
+                                        className=" w-12 h-12 rounded-full"
+                                    />
+                                    <View className=" flex flex-col gap-[2px]">
+                                        <Text className=" font-semibold text-lg">
+                                            {googleData.name}
+                                        </Text>
+                                        <Text className=" text-neutral-40">
+                                            {googleData.email}
+                                        </Text>
+                                    </View>
+                                </View>
+                            </NativeButton>
+                        </>
+                    )}
+                    <NativeButton
+                        className=" mx-6 mt-5"
+                        onPress={async () => {
+                            router.replace('/login');
+                            authLogout();
+                        }}
+                    >
+                        <View className=" p-4 px-10 rounded-2xl bg-[#FE5050] flex-row justify-center gap-2">
+                            <Text className=" text-white font-medium">
+                                Đăng xuất
+                            </Text>
+                        </View>
+                    </NativeButton>
+                </ScrollView>
+            </SafeAreaView>
+        </View>
     );
 }
