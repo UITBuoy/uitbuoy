@@ -7,6 +7,7 @@ import CourseSearch from '../../src/components/CourseSearch/CourseSearch';
 import PageHeader from '../../src/components/PageHeader/PageHeader';
 import { useUserCoursesLazyQuery } from '../../src/gql/graphql';
 import CourseListSkeleton from '../../src/skeletons/CourseListSkeleton';
+import Animated, { FadeInLeft, FadeOutLeft } from 'react-native-reanimated';
 
 export default function Page() {
     const [fetchCourses, { data: recentCourses, loading, error }] =
@@ -43,8 +44,16 @@ export default function Page() {
                                 <CourseListSkeleton />
                             </>
                         ) : (
-                            recentCourses?.userCourses.map((course) => (
-                                <CourseItem key={course.id} {...course} />
+                            recentCourses?.userCourses.map((course, index) => (
+                                <Animated.View
+                                    key={course.id}
+                                    entering={FadeInLeft.delay(
+                                        (index + 1) * 100,
+                                    )}
+                                    exiting={FadeOutLeft}
+                                >
+                                    <CourseItem {...course} />
+                                </Animated.View>
                             ))
                         )}
                     </View>
