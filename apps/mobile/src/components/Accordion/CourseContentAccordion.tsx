@@ -8,6 +8,8 @@ import {
     View,
 } from 'react-native';
 import Animated, {
+    FadeInDown,
+    FadeOutUp,
     measure,
     runOnUI,
     useAnimatedRef,
@@ -113,21 +115,26 @@ const CourseContentAccordion = ({ value }: Props) => {
                                     }}
                                 >
                                     <View className=" w-full flex flex-row gap-4 items-center px-3 py-4 border-t-[0.2px] border-t-neutral-60">
-                                        {modname === 'resource' ? (
-                                            <ResourceIcon />
-                                        ) : modname === 'folder' ? (
-                                            <FolderIcon />
-                                        ) : modname === 'forum' ? (
-                                            <ForumIcon />
-                                        ) : modname === 'url' ? (
-                                            <UrlIcon />
-                                        ) : modname === 'label' ? (
-                                            <LabelIcon />
-                                        ) : modname === 'assign' ? (
-                                            <AssignIcon />
-                                        ) : (
-                                            <></>
-                                        )}
+                                        <Animated.View
+                                            entering={FadeInDown}
+                                            exiting={FadeOutUp}
+                                        >
+                                            {modname === 'resource' ? (
+                                                <ResourceIcon />
+                                            ) : modname === 'folder' ? (
+                                                <FolderIcon />
+                                            ) : modname === 'forum' ? (
+                                                <ForumIcon />
+                                            ) : modname === 'url' ? (
+                                                <UrlIcon />
+                                            ) : modname === 'label' ? (
+                                                <LabelIcon />
+                                            ) : modname === 'assign' ? (
+                                                <AssignIcon />
+                                            ) : (
+                                                <></>
+                                            )}
+                                        </Animated.View>
                                         <View className="flex-1">
                                             <Text className=" font-medium">
                                                 {name}

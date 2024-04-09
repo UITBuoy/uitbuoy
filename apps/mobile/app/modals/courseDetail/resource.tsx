@@ -11,6 +11,7 @@ import { router } from 'expo-router';
 import { useDetailFolderRouter } from '../../../src/stores/folder-detail.store';
 import UrlIcon from '../../../src/icons/url';
 import LabelIcon from '../../../src/icons/label';
+import Animated, { FadeInDown, FadeOutUp } from 'react-native-reanimated';
 
 type Props = {
     id: number;
@@ -35,8 +36,6 @@ export default function ResourcePage({ id }: Props) {
         return folderList;
     }, [data]);
 
-    console.log(folders);
-
     return (
         <ScrollView className="flex-1 bg-white">
             <View className=" py-5 flex flex-col gap-4">
@@ -53,21 +52,26 @@ export default function ResourcePage({ id }: Props) {
                                 onPress={() => navigateFolder(folders[i])}
                             >
                                 <View className=" flex flex-row gap-3 p-4 border-[0.5px] rounded-2xl border-neutral-80">
-                                    {modname === 'resource' ? (
-                                        <ResourceIcon />
-                                    ) : modname === 'folder' ? (
-                                        <FolderIcon />
-                                    ) : modname === 'forum' ? (
-                                        <ForumIcon />
-                                    ) : modname === 'url' ? (
-                                        <UrlIcon />
-                                    ) : modname === 'label' ? (
-                                        <LabelIcon />
-                                    ) : modname === 'assign' ? (
-                                        <AssignIcon />
-                                    ) : (
-                                        <></>
-                                    )}
+                                    <Animated.View
+                                        entering={FadeInDown}
+                                        exiting={FadeOutUp}
+                                    >
+                                        {modname === 'resource' ? (
+                                            <ResourceIcon />
+                                        ) : modname === 'folder' ? (
+                                            <FolderIcon />
+                                        ) : modname === 'forum' ? (
+                                            <ForumIcon />
+                                        ) : modname === 'url' ? (
+                                            <UrlIcon />
+                                        ) : modname === 'label' ? (
+                                            <LabelIcon />
+                                        ) : modname === 'assign' ? (
+                                            <AssignIcon />
+                                        ) : (
+                                            <></>
+                                        )}
+                                    </Animated.View>
                                     <View className="flex-1">
                                         <Text className=" font-medium">
                                             {name}
