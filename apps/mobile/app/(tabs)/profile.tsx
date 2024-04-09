@@ -10,13 +10,26 @@ import {
 import { useAuth } from '../../src/stores/auth.store';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import NativeButton from '../../src/components/NativeButton/NativeButton';
-import { useProfileLazyQuery } from '../../src/gql/graphql';
+import {
+    useProfileLazyQuery,
+    useSyncEventMutation,
+} from '../../src/gql/graphql';
 import { useEffect } from 'react';
+import ProfileScreenSkeleton from '../../src/skeletons/ProfileScreenSkeleton';
+import Animated, {
+    FadeIn,
+    FadeInUp,
+    FadeOut,
+    FadeOutUp,
+} from 'react-native-reanimated';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 export default function Page() {
-    const { googleData, authLogout } = useAuth();
+    const { isIntegrateWithGoogle, setGoogleData, googleData, authLogout } =
+        useAuth();
 
     const [refetch, { data, loading, error }] = useProfileLazyQuery();
+    const [syncEvent] = useSyncEventMutation();
 
     useEffect(() => {
         refetch();
@@ -36,16 +49,20 @@ export default function Page() {
                     }
                 >
                     {loading || !data?.profile ? (
-                        <></>
+                        <ProfileScreenSkeleton />
                     ) : (
-                        <>
-                            <View
-                                style={{ marginTop: 60 }}
+                        <View className="" style={{}}>
+                            <Animated.View
+                                style={{ marginTop: 80 }}
                                 className=" mx-4 p-4 rounded-md flex flex-col gap-4"
+                                entering={FadeIn}
+                                exiting={FadeOut}
                             >
                                 <Image
                                     source={{
-                                        uri: data.profile.profileimageurl,
+                                        uri: data.profile.profileimageurl
+                                            .split('?')
+                                            .at(0),
                                     }}
                                     style={{ width: 100, height: 100 }}
                                     className=" rounded-2xl"
@@ -58,8 +75,12 @@ export default function Page() {
                                         {data.profile.email}
                                     </Text>
                                 </View>
-                            </View>
-                            <View className=" mx-4 p-4">
+                            </Animated.View>
+                            <Animated.View
+                                className=" mx-4 p-4"
+                                entering={FadeIn}
+                                exiting={FadeOut}
+                            >
                                 <View className=" flex flex-col gap-1">
                                     <Text className=" text-neutral-40">
                                         Mã số sinh viên
@@ -68,8 +89,15 @@ export default function Page() {
                                         {data.profile.username}
                                     </Text>
                                 </View>
-                            </View>
-                            <NativeButton className=" mx-4 mt-10">
+                            </Animated.View>
+                        </View>
+                    )}
+                    {isIntegrateWithGoogle && googleData ? (
+                        <>
+                            <Text className=" mx-4 mt-10 px-4 font-semibold text-lg">
+                                Tài khoản Google
+                            </Text>
+                            <NativeButton className=" mx-4 mt-1">
                                 <View className="p-4 rounded-md flex flex-row gap-4">
                                     <Image
                                         source={{ uri: googleData.photo }}
@@ -86,9 +114,50 @@ export default function Page() {
                                 </View>
                             </NativeButton>
                         </>
+                    ) : (
+                        <View className=" mx-4 mt-5">
+                            <View className="p-4 flex flex-col gap-4 bg-primary-70 rounded-2xl">
+                                <Text className=" font-semibold text-lg text-white">
+                                    Tích hợp với Google
+                                </Text>
+                                <View className=" flex flex-col gap-1">
+                                    <Text className=" font-normal text-base text-white">
+                                        - Đồng bộ deadline với Google Task,
+                                        Google Calendar
+                                    </Text>
+                                    <Text className=" font-normal text-base text-white">
+                                        - Đăng nhập nhanh chóng
+                                    </Text>
+                                </View>
+                                <View className=" ml-auto">
+                                    <NativeButton
+                                        onPress={async () => {
+                                            const userInfo =
+                                                await GoogleSignin.signInSilently();
+                                            const token =
+                                                await GoogleSignin.getTokens();
+                                            setGoogleData({
+                                                ...userInfo.user,
+                                                ...token,
+                                                lastSync: new Date().getTime(),
+                                            });
+                                        }}
+                                    >
+                                        <View className=" bg-white p-4">
+                                            <Text
+                                                style={{ color: '#3FB7E6' }}
+                                                className=" font-medium"
+                                            >
+                                                Đăng nhập
+                                            </Text>
+                                        </View>
+                                    </NativeButton>
+                                </View>
+                            </View>
+                        </View>
                     )}
                     <NativeButton
-                        className=" mx-6 mt-5"
+                        className=" mx-6 mt-10"
                         onPress={async () => {
                             router.replace('/login');
                             authLogout();

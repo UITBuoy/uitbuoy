@@ -66,7 +66,7 @@ export default function GoogleIntegration() {
 
     return (
         <View className=" flex-1 w-full items-center bg-white pt-2 px-6">
-            {isIntegrateWithGoogle ? (
+            {isIntegrateWithGoogle && googleData ? (
                 <View className=" flex-1 w-full">
                     <View className="mx-4 p-4 rounded-md flex flex-row gap-4">
                         <Image
