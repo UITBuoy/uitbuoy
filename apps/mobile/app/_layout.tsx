@@ -18,6 +18,7 @@ import { Platform, useColorScheme } from 'react-native';
 import '../global.css';
 import { GluestackUIProvider } from '../src/components/gluestack-ui-provider/';
 import { useApolloLink } from '../src/utils/auth';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 // import { persistCache, AsyncStorageWrapper } from 'apollo3-cache-persist';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -94,6 +95,20 @@ export default function Layout() {
     const [notification, setNotification] = useState(false);
     const notificationListener = useRef(null);
     const responseListener = useRef(null);
+
+    useEffect(() => {
+        GoogleSignin.configure({
+            webClientId:
+                '683520066916-c8afnsf4lstvc2dnt43qgusqm2olmiko.apps.googleusercontent.com',
+            scopes: [
+                'profile',
+                'email',
+                'https://www.googleapis.com/auth/calendar',
+                'https://www.googleapis.com/auth/tasks',
+            ],
+            offlineAccess: true,
+        });
+    }, []);
 
     useEffect(() => {
         async function init() {

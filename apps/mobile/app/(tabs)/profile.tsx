@@ -139,8 +139,9 @@ export default function Page() {
                                 <View className=" ml-auto">
                                     <NativeButton
                                         onPress={async () => {
+                                            await GoogleSignin.hasPlayServices();
                                             const userInfo =
-                                                await GoogleSignin.signInSilently();
+                                                await GoogleSignin.signIn();
                                             const token =
                                                 await GoogleSignin.getTokens();
                                             setGoogleData({
