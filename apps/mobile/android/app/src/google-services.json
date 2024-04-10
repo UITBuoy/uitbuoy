@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "220731768955",
+    "project_id": "uitbuoy",
+    "storage_bucket": "uitbuoy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:220731768955:android:73f9be7d14c085786622de",
+        "android_client_info": {
+          "package_name": "com.uitbuoy.uitbuoy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGS67mWkdXXQDOr7Zygomeo70ebyskAEk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
