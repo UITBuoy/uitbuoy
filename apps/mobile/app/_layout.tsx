@@ -19,8 +19,8 @@ import '../global.css';
 import { GluestackUIProvider } from '../src/components/gluestack-ui-provider/';
 import { useApolloLink } from '../src/utils/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-// import { persistCache, AsyncStorageWrapper } from 'apollo3-cache-persist';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
+import { persistCache, AsyncStorageWrapper } from 'apollo3-cache-persist';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const unstable_settings = {
     initialRouteName: '(tabs)',
@@ -135,8 +135,15 @@ export default function Layout() {
                 }),
             });
 
-            const token = (await Notifications.getExpoPushTokenAsync()).data;
-            console.log({ token });
+            try {
+                const token = (await Notifications.getExpoPushTokenAsync())
+                    .data;
+                const token2 = (await Notifications.getDevicePushTokenAsync())
+                    .data;
+                console.log({ token, token2 });
+            } catch (error) {
+                console.log({ error });
+            }
         })();
 
         registerForPushNotificationsAsync().then((token) => {

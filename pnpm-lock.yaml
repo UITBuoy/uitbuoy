@@ -359,12 +359,18 @@ importers:
       '@react-navigation/material-top-tabs':
         specifier: ^6.6.13
         version: 6.6.13(@react-navigation/native@6.1.17)(react-native-pager-view@6.3.0)(react-native-tab-view@3.5.2)(react-native@0.73.6)(react@18.2.0)
+      apollo3-cache-persist:
+        specifier: ^0.15.0
+        version: 0.15.0(@apollo/client@3.9.9)
       expo:
         specifier: ~50.0.14
         version: 50.0.14(@babel/core@7.24.3)(@react-native/babel-preset@0.73.21)
       expo-auth-session:
         specifier: ~5.4.0
         version: 5.4.0(expo@50.0.14)
+      expo-calendar:
+        specifier: ^12.2.1
+        version: 12.2.1(expo@50.0.14)
       expo-constants:
         specifier: ~15.4.5
         version: 15.4.5(expo@50.0.14)
@@ -9652,6 +9658,14 @@ packages:
       - typescript
     dev: false
 
+  /apollo3-cache-persist@0.15.0(@apollo/client@3.9.9):
+    resolution: {integrity: sha512-asxhPOHGddgXYvY4/Wa+XLODYpjci/kPB4zdy82D0tVGzVmvO4lqp3k06NtzHvd//gd9kCnTaG8iziwAcXZYjw==}
+    peerDependencies:
+      '@apollo/client': ^3.7.17
+    dependencies:
+      '@apollo/client': 3.9.9(@types/react@18.2.73)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)
+    dev: false
+
   /app-root-path@3.1.0:
     resolution: {integrity: sha512-biN3PwB2gUtjaYy/isrU3aNWI5w+fAfvHkSvCKeQGxhmYpwKFUxudR3Yya+KqVRHBmEDYh+/lTozYCFbmzX4nA==}
     engines: {node: '>= 6.0.0'}
@@ -12880,6 +12894,14 @@ packages:
     transitivePeerDependencies:
       - expo
       - supports-color
+    dev: false
+
+  /expo-calendar@12.2.1(expo@50.0.14):
+    resolution: {integrity: sha512-lVE0Hcz2DuDIwg6mqUAEgu/WEW6JHCbcA+utgcNsCi/TzyuUV0UUhJMllvESPZu3LE5Stm75yDPQfeL31MLMxw==}
+    peerDependencies:
+      expo: '*'
+    dependencies:
+      expo: 50.0.14(@babel/core@7.24.3)(@react-native/babel-preset@0.73.21)
     dev: false
 
   /expo-constants@15.4.5(expo@50.0.14):

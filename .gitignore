@@ -43,3 +43,5 @@ apps/api/_data.json
 
 schema.gql
 _active.uusver
+google-services.json
+apps/mobile/google-services.json
