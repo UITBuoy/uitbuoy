@@ -22,7 +22,6 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "bundler": "metro",
       "package": "com.uitbuoy.uitbuoy",
       "googleServicesFile": "./google-services.json"
     },
