@@ -350,6 +350,9 @@ importers:
       '@gluestack-ui/themed':
         specifier: ^1.1.9
         version: 1.1.18(@gluestack-style/react@1.0.52)(@types/react-native@0.73.0)(nativewind@4.0.36)(react-dom@18.2.0)(react-native-svg@14.1.0)(react-native-web@0.19.10)(react-native@0.73.6)(react@18.2.0)
+      '@notifee/react-native':
+        specifier: ^7.8.2
+        version: 7.8.2(react-native@0.73.6)
       '@react-native-async-storage/async-storage':
         specifier: 1.21.0
         version: 1.21.0(react-native@0.73.6)
@@ -6104,6 +6107,14 @@ packages:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.1
+
+  /@notifee/react-native@7.8.2(react-native@0.73.6):
+    resolution: {integrity: sha512-VG4IkWJIlOKqXwa3aExC3WFCVCGCC9BA55Ivg0SMRfEs+ruvYy/zlLANcrVGiPtgkUEryXDhA8SXx9+JcO8oLA==}
+    peerDependencies:
+      react-native: '*'
+    dependencies:
+      react-native: 0.73.6(@babel/core@7.24.3)(@babel/preset-env@7.24.3)(react@18.2.0)
+    dev: false
 
   /@npmcli/fs@1.1.1:
     resolution: {integrity: sha512-8KG5RD0GVP4ydEzRn/I4BNDuxDtqVbOdm8675T49OIG/NGhaK0pjPX7ZcDlvKYbA+ulvVK3ztfcF4uBdOxuJbQ==}
