@@ -469,7 +469,9 @@ export type UserCoursesQueryVariables = Exact<{
 
 export type UserCoursesQuery = { __typename?: 'Query', userCourses: Array<{ __typename?: 'Course', categoryid?: number | null, categoryname?: string | null, display_name?: string | null, coursecategory?: string | null, courseimage?: string | null, enddate?: number | null, fullname?: string | null, id?: number | null, idnumber?: string | null, name?: string | null, shortname?: string | null, startdate?: number | null }> };
 
-export type UserEventsQueryVariables = Exact<{ [key: string]: never; }>;
+export type UserEventsQueryVariables = Exact<{
+  isNew?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
 
 
 export type UserEventsQuery = { __typename?: 'Query', userEvents: Array<{ __typename?: 'EventEntity', activityname?: string | null, purpose?: string | null, overdue?: boolean | null, timeduration?: number | null, timeusermidnight?: number | null, timestart?: number | null, timesort?: number | null, timemodified?: number | null, name: string, id: number, instance?: number | null, course: { __typename?: 'Course', categoryid?: number | null, categoryname?: string | null, coursecategory?: string | null, courseimage?: string | null, display_name?: string | null, enddate?: number | null, fullname?: string | null, hiddenbynumsections?: number | null, id?: number | null, idnumber?: string | null, name?: string | null, pdfexportfont?: string | null, section?: number | null, shortname?: string | null, showactivitydates?: boolean | null, showcompletionconditions?: string | null, sortorder?: number | null, startdate?: number | null, uservisible?: boolean | null, viewurl?: string | null, visible?: boolean | null } }> };
@@ -928,8 +930,8 @@ export function refetchUserCoursesQuery(variables?: UserCoursesQueryVariables) {
       return { query: UserCoursesDocument, variables: variables }
     }
 export const UserEventsDocument = gql`
-    query UserEvents {
-  userEvents {
+    query UserEvents($isNew: Boolean) {
+  userEvents(isNew: $isNew) {
     activityname
     purpose
     overdue
@@ -980,6 +982,7 @@ export const UserEventsDocument = gql`
  * @example
  * const { data, loading, error } = useUserEventsQuery({
  *   variables: {
+ *      isNew: // value for 'isNew'
  *   },
  * });
  */
