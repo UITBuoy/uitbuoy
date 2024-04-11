@@ -87,7 +87,6 @@ export default function ActitivitiesPage({ id }: Props) {
                         ) : null}
                         {dueAssignments.length ? (
                             <>
-                                {' '}
                                 <Animated.View
                                     entering={FadeInLeft.delay(
                                         (inComingAssignments.length + 2) * 100,
@@ -131,7 +130,9 @@ export default function ActitivitiesPage({ id }: Props) {
                         transition={1000}
                         source={EMPTY_REMAINING_ACTIVITIES}
                     />
-                    <Text className=' text-center text-lg font-medium'>Không có bài tập nào</Text>
+                    <Text className=" text-center text-lg font-medium">
+                        Không có bài tập nào
+                    </Text>
                 </View>
             ) : null}
         </ScrollView>

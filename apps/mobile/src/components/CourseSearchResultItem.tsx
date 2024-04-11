@@ -1,16 +1,20 @@
 import { Text, TouchableNativeFeedback, View } from 'react-native';
-import { Course } from '../../gql/graphql';
-import SearchIcon from '../../icons/search';
+import { Course } from '../gql/graphql';
+import SearchIcon from '../icons/search';
 import { router } from 'expo-router';
 
 export default function CourseSearchResultItem({
     display_name,
     shortname,
     id,
-}: Pick<Course, 'display_name' | 'shortname' | 'id'>) {
+    onPress,
+}: Pick<Course, 'display_name' | 'shortname' | 'id'> & {
+    onPress?: () => any;
+}) {
     return (
         <TouchableNativeFeedback
             onPress={() => {
+                onPress?.();
                 router.push({
                     pathname: `/modals/courseDetail`,
                     params: { display_name, shortname, id },

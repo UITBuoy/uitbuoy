@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
-import { AuthEntity, Course } from '../gql/graphql';
+import { Course } from '../gql/graphql';
 
 export type IRecentCourse = {
     recentCourses: Partial<Course>[];
@@ -20,7 +20,7 @@ export const useRecentCourse = create<
                 const newCourseList = [
                     course,
                     ...get().recentCourses.filter(({ id }) => id !== course.id),
-                ].slice(0, 3);
+                ].slice(0, MAX_ITEM);
                 set((state) => {
                     state.recentCourses = newCourseList;
                 });
@@ -33,3 +33,5 @@ export const useRecentCourse = create<
         },
     ),
 );
+
+const MAX_ITEM = 3;
