@@ -25,8 +25,8 @@ export default function Page() {
     return (
         <View className=" flex-1 bg-white">
             <SafeAreaView>
+                <PageHeader />
                 <ScrollView>
-                    <PageHeader />
                     <View className=" flex flex-col gap-10 pb-[100px]">
                         <CourseSearch />
                         <NewFeatures />
