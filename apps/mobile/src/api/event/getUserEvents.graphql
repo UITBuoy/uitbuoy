@@ -1,5 +1,5 @@
-query UserEvents {
-    userEvents {
+query UserEvents($isNew: Boolean) {
+    userEvents(isNew: $isNew) {
         activityname
         purpose
         overdue

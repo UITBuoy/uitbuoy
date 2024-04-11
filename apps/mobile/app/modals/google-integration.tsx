@@ -2,53 +2,23 @@ import { Spinner } from '@gluestack-ui/themed';
 import {
     GoogleSignin,
     GoogleSigninButton,
-    statusCodes,
 } from '@react-native-google-signin/google-signin';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Image, Text, View } from 'react-native';
 import GOOGLE_TASK_ICON from '../../assets/task-icon.png';
 import NativeButton from '../../src/components/NativeButton/NativeButton';
-import {
-    useAddGoogleUserMutation,
-    useSyncEventMutation,
-} from '../../src/gql/graphql';
+import { useSyncEventMutation } from '../../src/gql/graphql';
+import { useGoogleSignin } from '../../src/hooks/google/useGoogleSignin';
 import { useAuth } from '../../src/stores/auth.store';
 import { timeDiffString } from '../../src/utils/timeDiff';
 
 export default function GoogleIntegration() {
     const { isIntegrateWithGoogle, googleData, setGoogleData, signOutGoogle } =
         useAuth();
-    console.log({ googleData });
 
-    const [addGoogleAccount] = useAddGoogleUserMutation();
+    const { signIn } = useGoogleSignin();
+
     const [syncEvent, { data, loading, error }] = useSyncEventMutation();
-
-    async function signIn() {
-        try {
-            await GoogleSignin.hasPlayServices();
-            const userInfo = await GoogleSignin.signIn();
-            const token = await GoogleSignin.getTokens();
-            addGoogleAccount({
-                variables: {
-                    accessToken: token.accessToken,
-                    googleUser: userInfo.user,
-                },
-            });
-            setGoogleData({ ...userInfo.user, accessToken: token.accessToken });
-            console.log({ userInfo, token });
-        } catch (error) {
-            console.log({ error });
-            if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-                // user cancelled the login flow
-            } else if (error.code === statusCodes.IN_PROGRESS) {
-                // operation (e.g. sign in) is in progress already
-            } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-                // play services not available or outdated
-            } else {
-                // some other error happened
-            }
-        }
-    }
 
     return (
         <View className=" flex-1 w-full items-center bg-white pt-2 px-6">

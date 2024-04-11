@@ -1,32 +1,21 @@
 import { router } from 'expo-router';
-import {
-    Text,
-    TouchableOpacity,
-    Image,
-    View,
-    ScrollView,
-    RefreshControl,
-} from 'react-native';
-import { useAuth } from '../../src/stores/auth.store';
+import { useEffect } from 'react';
+import { Image, RefreshControl, ScrollView, Text, View } from 'react-native';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import NativeButton from '../../src/components/NativeButton/NativeButton';
 import {
     useProfileLazyQuery,
     useSyncEventMutation,
 } from '../../src/gql/graphql';
-import { useEffect } from 'react';
+import { useGoogleSignin } from '../../src/hooks/google/useGoogleSignin';
 import ProfileScreenSkeleton from '../../src/skeletons/ProfileScreenSkeleton';
-import Animated, {
-    FadeIn,
-    FadeInUp,
-    FadeOut,
-    FadeOutUp,
-} from 'react-native-reanimated';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { useAuth } from '../../src/stores/auth.store';
 
 export default function Page() {
-    const { isIntegrateWithGoogle, setGoogleData, googleData, authLogout } =
-        useAuth();
+    const { isIntegrateWithGoogle, googleData, authLogout } = useAuth();
+
+    const { signIn } = useGoogleSignin();
 
     const [refetch, { data, loading, error }] = useProfileLazyQuery();
     const [syncEvent] = useSyncEventMutation();
@@ -138,17 +127,20 @@ export default function Page() {
                                 </View>
                                 <View className=" ml-auto">
                                     <NativeButton
-                                        onPress={async () => {
-                                            await GoogleSignin.hasPlayServices();
-                                            const userInfo =
-                                                await GoogleSignin.signIn();
-                                            const token =
-                                                await GoogleSignin.getTokens();
-                                            setGoogleData({
-                                                ...userInfo.user,
-                                                ...token,
-                                                lastSync: new Date().getTime(),
-                                            });
+                                        onPress={() => {
+                                            signIn(
+                                                ({
+                                                    user: { id },
+                                                    token: { accessToken },
+                                                }) => {
+                                                    syncEvent({
+                                                        variables: {
+                                                            googleUserId: id,
+                                                            accessToken,
+                                                        },
+                                                    });
+                                                },
+                                            );
                                         }}
                                     >
                                         <View className=" bg-white p-4">
