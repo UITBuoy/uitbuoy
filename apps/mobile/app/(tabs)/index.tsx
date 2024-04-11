@@ -8,7 +8,7 @@ import MANAGE_COURSE_ANIMATION from '../../assets/animations/new-features/manage
 import CourseSearch from '../../src/components/CourseSearch/CourseSearch';
 import PageHeader from '../../src/components/PageHeader/PageHeader';
 import RemainingActivities from '../../src/components/RemainingActivities/RemainingActivities';
-import SyncCalendar from '../../src/components/ui/SyncCalendar/SyncCalendar';
+import SyncCalendar from '../../src/components/SyncCalendar';
 import { useAuth } from '../../src/stores/auth.store';
 
 export default function Page() {
@@ -30,8 +30,10 @@ export default function Page() {
                     <View className=" flex flex-col gap-10 pb-[100px]">
                         <CourseSearch />
                         <NewFeatures />
-                        <RemainingActivities />
-                        <SyncCalendar />
+                        <View className=' flex flex-col gap-2'>
+                            <RemainingActivities />
+                            <SyncCalendar />
+                        </View>
                     </View>
                 </ScrollView>
             </SafeAreaView>
