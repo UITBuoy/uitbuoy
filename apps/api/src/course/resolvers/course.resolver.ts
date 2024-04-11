@@ -33,7 +33,7 @@ export class CourseResolver {
         private readonly assignmentApiService: AssignmentApiService,
     ) {}
 
-    @Query(() => [Course])
+    @Query(() => [Course], { description: 'Return all course of current user' })
     @UseGuards(JwtAuthGuard)
     async userCourses(@CurrentUser() user: User, @Args() queryArgs: QueryArgs) {
         if (queryArgs.isNew) {
@@ -64,7 +64,9 @@ export class CourseResolver {
         return courses;
     }
 
-    @Query(() => Course)
+    @Query(() => Course, {
+        description: 'Get detail information about a specific course',
+    })
     @UseGuards(JwtAuthGuard)
     async course(
         @CurrentUser() user: User,
@@ -90,17 +92,25 @@ export class CourseResolver {
         return course;
     }
 
-    @ResolveField(() => [CourseSectionEntity])
+    @ResolveField(() => [CourseSectionEntity], {
+        description:
+            'Get all content section (i.e. "Giới thiệu chung", "Chương 1")',
+    })
     async contentSections(@CurrentUser() user: User, @Parent() course: Course) {
         return this.courseService.findAllSections(user.token, course.id);
     }
 
-    @ResolveField(() => [Lecturer])
+    @ResolveField(() => [Lecturer], {
+        description: 'Information of the lecturer',
+    })
     async contacts(@CurrentUser() user: User, @Parent() course: Course) {
         return this.lecturerService.findByCourseId(course.id);
     }
 
-    @ResolveField(() => Assignment)
+    @ResolveField(() => Assignment, {
+        description:
+            'Find detail information of a specific assignment of the course',
+    })
     async assignment(
         @CurrentUser() user: User,
         @Parent() course: Course,
@@ -113,7 +123,9 @@ export class CourseResolver {
         return assignments.find((assignment) => assignment.cmid === cmid);
     }
 
-    @ResolveField(() => [Assignment])
+    @ResolveField(() => [Assignment], {
+        description: 'All assignments of the current course',
+    })
     async assignments(@CurrentUser() user: User, @Parent() course: Course) {
         return this.assignmentApiService.getAssigmentList({
             ...user,
@@ -121,7 +133,9 @@ export class CourseResolver {
         });
     }
 
-    @ResolveField(() => [EventEntity])
+    @ResolveField(() => [EventEntity], {
+        description: 'All events of the current course',
+    })
     async events(
         @CurrentUser() user: User,
         @Parent() course: Course,

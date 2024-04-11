@@ -18,21 +18,32 @@ export class CourseModuleEntity {
     @PrimaryColumn()
     id: number;
 
-    @Field(() => String)
+    @Field(() => String, { description: 'Name of the module' })
     @Column()
-    name: string; //name of course of module
+    name: string;
 
-    @Field(() => String, { nullable: true })
+    @Field(() => String, {
+        nullable: true,
+        description:
+            'Summary of the module or the description about a deadline',
+    })
     @Column({ nullable: true })
-    description: string; //name of course of module
+    description: string;
 
-    @Field(() => String)
+    @Field(() => String, {
+        description:
+            'Type of the module (i.e. "forum" for notification, "url" for link, "assign" for assignment, "label" for text, "resource" for document)',
+    })
     @Column()
-    modname: string; //name module in english
+    modname: string;
 
-    @Field(() => String, { nullable: true })
+    @Field(() => String, {
+        nullable: true,
+        description:
+            'Type of the module in Vietnamese, used to display in the UI',
+    })
     @Column({ nullable: true })
-    modplural: string; //name module in VN
+    modplural: string;
 
     @Field(() => Int, { nullable: true })
     @Column()
@@ -42,7 +53,10 @@ export class CourseModuleEntity {
     @Column({ nullable: true })
     contextid: number;
 
-    @Field(() => String, { nullable: true })
+    @Field(() => String, {
+        nullable: true,
+        description: 'Url to link to the Moodle Web',
+    })
     @Column({ nullable: true })
     url: string;
 

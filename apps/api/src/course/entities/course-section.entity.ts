@@ -18,11 +18,16 @@ export class CourseSectionEntity {
     @PrimaryColumn()
     id: number;
 
-    @Field(() => String)
+    @Field(() => String, {
+        description: 'Name of the section (i.e. "General", "Chương 1")',
+    })
     @Column()
-    name: string; //name of course of content
+    name: string;
 
-    @Field(() => String, { nullable: true })
+    @Field(() => String, {
+        nullable: true,
+        description: 'Basic summary about the section',
+    })
     @Column({ nullable: true })
     summary: string;
 
@@ -34,7 +39,7 @@ export class CourseSectionEntity {
     @Column({ nullable: true })
     summaryformat: number;
 
-    @Field(() => Int, { nullable: true })
+    @Field(() => Int, { nullable: true, description: 'Section order' })
     @Column({ nullable: true })
     section: number;
 

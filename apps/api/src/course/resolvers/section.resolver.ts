@@ -6,7 +6,9 @@ import { CourseModuleEntity } from '../entities/course-module.entity';
 export class SectionResolver {
     constructor() {}
 
-    @ResolveField(() => [CourseModuleEntity])
+    @ResolveField(() => [CourseModuleEntity], {
+        description: 'Subitems of the course section',
+    })
     courseModules(@Parent() section: CourseSectionEntity) {
         return section.modules;
     }
