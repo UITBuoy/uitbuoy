@@ -1,23 +1,29 @@
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Text, TouchableNativeFeedback, View } from 'react-native';
 import Animated, { FadeInLeft, FadeOutLeft } from 'react-native-reanimated';
 import EMPTY_REMAINING_ACTIVITIES from '../../../assets/empty-remaining-activities.png';
 import REFRESH_ICON from '../../../assets/white-refresh.png';
 import { useUserEventsLazyQuery } from '../../gql/graphql';
+import { useSyncEvent } from '../../hooks/events/useSyncEvent';
 import EventListSkeleton from '../../skeletons/EventListSkeleton';
 import { timeDiff } from '../../utils/timeDiff';
 import NativeButton from '../NativeButton/NativeButton';
 
 export default function RemainingActivities() {
-    const [refetch, { data, loading, error }] = useUserEventsLazyQuery();
+    const [refetch, { data, loading, error }] = useUserEventsLazyQuery({
+        fetchPolicy: 'no-cache',
+        refetchWritePolicy: 'overwrite',
+    });
+    const { syncEvent } = useSyncEvent();
 
     useEffect(() => {
         refetch({
             variables: { isNew: true },
             fetchPolicy: 'no-cache',
         });
+        syncEvent();
     }, []);
 
     return (
@@ -32,6 +38,7 @@ export default function RemainingActivities() {
                             variables: { isNew: true },
                             fetchPolicy: 'no-cache',
                         });
+                        syncEvent();
                     }}
                 >
                     <View className=" flex-row gap-2 p-2 px-3 bg-primary-70 ">
