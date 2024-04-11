@@ -114,10 +114,10 @@ export default function Layout() {
         async function init() {
             const cache = new InMemoryCache();
 
-            // await persistCache({
-            //     cache,
-            //     storage: new AsyncStorageWrapper(AsyncStorage),
-            // });
+            await persistCache({
+                cache,
+                storage: new AsyncStorageWrapper(AsyncStorage),
+            });
 
             setClient(new ApolloClient({ link, cache }));
         }
