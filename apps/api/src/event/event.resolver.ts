@@ -29,7 +29,7 @@ export class EventResolver {
         private readonly eventReminderService: EventReminderService,
     ) {}
 
-    @Query(() => [EventEntity])
+    @Query(() => [EventEntity], { description: 'All events of current user' })
     @UseGuards(JwtAuthGuard)
     async userEvents(
         @CurrentUser() user: User,
@@ -55,12 +55,14 @@ export class EventResolver {
         return this.eventService.findAll(user.id, isComing);
     }
 
-    @ResolveField(() => Course)
+    @ResolveField(() => Course, {
+        description: 'Information of the course of the current event',
+    })
     course(@Parent() event: EventEntity) {
         return event.course;
     }
 
-    @Mutation(() => EventReminder)
+    @Mutation(() => EventReminder, { description: 'Add new event reminder' })
     @UseGuards(JwtAuthGuard)
     async addEventReminder(
         @CurrentUser() user: User,
@@ -74,6 +76,7 @@ export class EventResolver {
         );
         const event = await this.eventService.findById(event_id);
         reminder.event = event;
+        reminder.user = user;
         const result = await this.eventReminderService.create([reminder]);
         return result[0];
     }

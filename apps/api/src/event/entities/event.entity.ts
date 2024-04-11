@@ -19,15 +19,23 @@ export class EventEntity {
     @PrimaryColumn()
     id: number;
 
-    @Field(() => String)
+    @Field(() => String, {
+        description: 'Title of the event (Displayed in the calendar)',
+    })
     @Column()
     name: string;
 
-    @Field(() => String, { nullable: true })
+    @Field(() => String, {
+        nullable: true,
+        description: 'Description of the event (Often in HTML format)',
+    })
     @Column({ nullable: true })
     description: string;
 
-    @Field(() => String, { nullable: true })
+    @Field(() => String, {
+        nullable: true,
+        description: 'Location of the event',
+    })
     @Column({ nullable: true })
     location: string;
 
@@ -55,15 +63,24 @@ export class EventEntity {
     @Column({ nullable: true })
     component: string;
 
-    @Field(() => String, { nullable: true })
+    @Field(() => String, {
+        nullable: true,
+        description: 'Type of the event (i.e. "assign" for a assignment)',
+    })
     @Column({ nullable: true })
     modulename: string;
 
-    @Field(() => String, { nullable: true })
+    @Field(() => String, {
+        nullable: true,
+        description: 'Title of the event (the main title)',
+    })
     @Column({ nullable: true })
     activityname: string;
 
-    @Field(() => String, { nullable: true })
+    @Field(() => String, {
+        nullable: true,
+        description: 'Short summary about the title (i.e. "Bài tập tới hạn")',
+    })
     @Column({ nullable: true })
     activitystr: string;
 
@@ -75,7 +92,11 @@ export class EventEntity {
     @Column({ nullable: true })
     eventtype: string;
 
-    @Field(() => Int, { nullable: true })
+    @Field(() => Int, {
+        nullable: true,
+        description:
+            'Exact deadline time date (Must multiply by 1000 to convert to date)',
+    })
     @Column()
     timestart: number;
 
@@ -83,11 +104,19 @@ export class EventEntity {
     @Column()
     timeduration: number;
 
-    @Field(() => Int, { nullable: true })
+    @Field(() => Int, {
+        nullable: true,
+        description:
+            'Exact deadline time date (Must multiply by 1000 to convert to date)',
+    })
     @Column()
     timesort: number;
 
-    @Field(() => Int, { nullable: true })
+    @Field(() => Int, {
+        nullable: true,
+        description:
+            'Deadline time date (Midnight value, not the exact time) (Must multiply by 1000 to convert to date)',
+    })
     @Column()
     timeusermidnight: number;
 
@@ -99,23 +128,22 @@ export class EventEntity {
     @Column(() => Int32)
     timemodified: number;
 
-    @Field(() => Boolean, { nullable: true })
+    @Field(() => Boolean, { nullable: true, description: 'Is pass the due' })
     @Column({ nullable: true })
     overdue: boolean;
 
-    // @Field(() => String, { nullable: true })
-    // @Column({ nullable: true })
-    // icon: string;
-
-    @Field(() => String, { nullable: true })
+    @Field(() => String, { nullable: true, description: 'i.e. "course"' })
     @Column({ nullable: true })
     normalisedeventtype: string;
 
-    @Field(() => String, { nullable: true })
+    @Field(() => String, {
+        nullable: true,
+        description: 'i.e. "Sự kiện khoá học"',
+    })
     @Column({ nullable: true })
     normalisedeventtypetext: string;
 
-    @Field(() => String, { nullable: true })
+    @Field(() => String, { nullable: true, description: 'i.e. "assessment"' })
     @Column({ nullable: true })
     purpose: string;
 
@@ -123,13 +151,12 @@ export class EventEntity {
     // @Column({ nullable: true })
     // action: string; //class action
 
-    @Field(() => String, { nullable: true })
+    @Field(() => String, {
+        nullable: true,
+        description: 'Link to the Moodle web',
+    })
     @Column({ nullable: true })
     url: string;
-
-    // @Field(() => String, { nullable: true })
-    // @Column({ nullable: true })
-    // subscription: string;
 
     @Field(() => Boolean, { nullable: true })
     @Column({ nullable: true })

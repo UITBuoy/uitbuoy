@@ -25,11 +25,19 @@ export class EventReminder {
     @JoinColumn({ name: 'user_id' })
     user: Relation<User>;
 
-    @Field(() => Boolean, { nullable: true, defaultValue: false })
+    @Field(() => Boolean, {
+        nullable: true,
+        defaultValue: false,
+        description: 'If true, notify user in mute mode',
+    })
     @Column()
     isMute: boolean;
 
-    @Field(() => Int, { nullable: true, defaultValue: 30 })
+    @Field(() => Int, {
+        nullable: true,
+        defaultValue: 30,
+        description: 'Notify user before <minutes> minutes before the due date',
+    })
     @Column()
     minutes: number;
 
