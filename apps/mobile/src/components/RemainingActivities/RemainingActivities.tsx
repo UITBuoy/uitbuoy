@@ -1,15 +1,14 @@
 import { Image } from 'expo-image';
-import { Text, TouchableNativeFeedback, View } from 'react-native';
-import EMPTY_REMAINING_ACTIVITIES from '../../../assets/empty-remaining-activities.png';
-import { useUserEventsLazyQuery, useUserEventsQuery } from '../../gql/graphql';
-import moment from 'moment';
 import { router } from 'expo-router';
+import { useEffect } from 'react';
+import { Text, TouchableNativeFeedback, View } from 'react-native';
 import Animated, { FadeInLeft, FadeOutLeft } from 'react-native-reanimated';
+import EMPTY_REMAINING_ACTIVITIES from '../../../assets/empty-remaining-activities.png';
+import REFRESH_ICON from '../../../assets/white-refresh.png';
+import { useUserEventsLazyQuery } from '../../gql/graphql';
+import EventListSkeleton from '../../skeletons/EventListSkeleton';
 import { timeDiff } from '../../utils/timeDiff';
 import NativeButton from '../NativeButton/NativeButton';
-import REFRESH_ICON from '../../../assets/white-refresh.png';
-import EventListSkeleton from '../../skeletons/EventListSkeleton';
-import { useEffect } from 'react';
 
 export default function RemainingActivities() {
     const [refetch, { data, loading, error }] = useUserEventsLazyQuery();

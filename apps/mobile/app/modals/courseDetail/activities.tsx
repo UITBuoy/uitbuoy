@@ -1,13 +1,11 @@
-import { Spinner } from '@gluestack-ui/themed';
+import { Image as ExpoImage } from 'expo-image';
 import { router } from 'expo-router';
 import { useEffect } from 'react';
 import { Image, RefreshControl, ScrollView, Text, View } from 'react-native';
-import Animated, {
-    FadeInLeft,
-    FadeInUp,
-    FadeOutRight,
-    FadeOutUp,
-} from 'react-native-reanimated';
+import Animated, { FadeInLeft, FadeOutRight } from 'react-native-reanimated';
+import EMPTY_REMAINING_ACTIVITIES from '../../../assets/empty-remaining-activities.png';
+import GREEN_CALENDAR from '../../../assets/green-calendar.png';
+import RED_CALENDAR from '../../../assets/red-calendar.png';
 import NativeButton from '../../../src/components/NativeButton/NativeButton';
 import {
     Assignment,
@@ -15,8 +13,6 @@ import {
 } from '../../../src/gql/graphql';
 import AssignIcon from '../../../src/icons/assign';
 import ActivitiesDetailCourseSkeleton from '../../../src/skeletons/ActivitiesDetailCourseSkeleton';
-import GREEN_CALENDAR from '../../../assets/green-calendar.png';
-import RED_CALENDAR from '../../../assets/red-calendar.png';
 
 type Props = {
     id: number;
@@ -60,52 +56,84 @@ export default function ActitivitiesPage({ id }: Props) {
                     <ActivitiesDetailCourseSkeleton />
                 ) : (
                     <>
-                        <Animated.View
-                            entering={FadeInLeft}
-                            exiting={FadeOutRight}
-                            className=" mx-4 mt-4 mb-2 flex flex-row gap-3"
-                        >
-                            <Image source={GREEN_CALENDAR} />
-                            <Text className=" font-bold text-lg">
-                                Bài tập sắp tới hạn
-                            </Text>
-                        </Animated.View>
-                        {inComingAssignments.map((assignment, index) => (
-                            <Animated.View
-                                key={assignment.name}
-                                entering={FadeInLeft.delay((index + 1) * 100)}
-                                exiting={FadeOutRight}
-                            >
-                                <ActivityItem assignment={assignment} />
-                            </Animated.View>
-                        ))}
-                        <Animated.View
-                            entering={FadeInLeft.delay(
-                                (inComingAssignments.length + 2) * 100,
-                            )}
-                            exiting={FadeOutRight}
-                            className=" mx-4 mt-4 mb-2 flex flex-row gap-3"
-                        >
-                            <Image source={RED_CALENDAR} />
-                            <Text className=" font-bold text-lg">
-                                Bài tập quá hạn nộp
-                            </Text>
-                        </Animated.View>
-                        {dueAssignments.map((assignment, index) => (
-                            <Animated.View
-                                key={assignment.name}
-                                entering={FadeInLeft.delay(
-                                    (index + inComingAssignments.length + 3) *
-                                        100,
+                        {inComingAssignments.length ? (
+                            <>
+                                <Animated.View
+                                    entering={FadeInLeft}
+                                    exiting={FadeOutRight}
+                                    className=" mx-4 mt-4 mb-2 flex flex-row gap-3"
+                                >
+                                    <Image source={GREEN_CALENDAR} />
+                                    <Text className=" font-bold text-lg">
+                                        Bài tập sắp tới hạn
+                                    </Text>
+                                </Animated.View>
+                                {inComingAssignments.map(
+                                    (assignment, index) => (
+                                        <Animated.View
+                                            key={assignment.name}
+                                            entering={FadeInLeft.delay(
+                                                (index + 1) * 100,
+                                            )}
+                                            exiting={FadeOutRight}
+                                        >
+                                            <ActivityItem
+                                                assignment={assignment}
+                                            />
+                                        </Animated.View>
+                                    ),
                                 )}
-                                exiting={FadeOutRight}
-                            >
-                                <ActivityItem assignment={assignment} />
-                            </Animated.View>
-                        ))}
+                            </>
+                        ) : null}
+                        {dueAssignments.length ? (
+                            <>
+                                {' '}
+                                <Animated.View
+                                    entering={FadeInLeft.delay(
+                                        (inComingAssignments.length + 2) * 100,
+                                    )}
+                                    exiting={FadeOutRight}
+                                    className=" mx-4 mt-4 mb-2 flex flex-row gap-3"
+                                >
+                                    <Image source={RED_CALENDAR} />
+                                    <Text className=" font-bold text-lg">
+                                        Bài tập quá hạn nộp
+                                    </Text>
+                                </Animated.View>
+                                {dueAssignments.map((assignment, index) => (
+                                    <Animated.View
+                                        key={assignment.name}
+                                        entering={FadeInLeft.delay(
+                                            (index +
+                                                inComingAssignments.length +
+                                                3) *
+                                                100,
+                                        )}
+                                        exiting={FadeOutRight}
+                                    >
+                                        <ActivityItem assignment={assignment} />
+                                    </Animated.View>
+                                ))}
+                            </>
+                        ) : null}
                     </>
                 )}
             </View>
+            {assignments.length === 0 ? (
+                <View>
+                    <ExpoImage
+                        style={{
+                            flex: 1,
+                            width: '100%',
+                            height: 230,
+                            marginTop: 20,
+                        }}
+                        transition={1000}
+                        source={EMPTY_REMAINING_ACTIVITIES}
+                    />
+                    <Text className=' text-center text-lg font-medium'>Không có bài tập nào</Text>
+                </View>
+            ) : null}
         </ScrollView>
     );
 }
