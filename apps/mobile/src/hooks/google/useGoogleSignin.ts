@@ -42,6 +42,7 @@ export function useGoogleSignin() {
     );
 
     const getToken = useCallback(async () => {
+        if (!isIntegrateWithGoogle) return;
         await GoogleSignin.hasPlayServices();
         const userInfo = await GoogleSignin.signInSilently();
         const token = await GoogleSignin.getTokens();
@@ -59,5 +60,25 @@ export function useGoogleSignin() {
         return token;
     }, []);
 
-    return { signIn, getToken };
+    const getProfile = useCallback(async () => {
+        if (!isIntegrateWithGoogle) return;
+        await GoogleSignin.hasPlayServices();
+        const userInfo = await GoogleSignin.signInSilently();
+        const token = await GoogleSignin.getTokens();
+        addGoogleAccount({
+            variables: {
+                accessToken: token.accessToken,
+                googleUser: userInfo.user,
+            },
+        });
+        setGoogleData({
+            ...userInfo.user,
+            accessToken: token.accessToken,
+            lastSync: new Date().getTime(),
+        });
+
+        return { token, user: userInfo.user };
+    }, []);
+
+    return { signIn, getToken, getProfile };
 }
