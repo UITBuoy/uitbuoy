@@ -8,10 +8,14 @@ import PageHeader from '../../src/components/PageHeader/PageHeader';
 import { useUserCoursesLazyQuery } from '../../src/gql/graphql';
 import CourseListSkeleton from '../../src/skeletons/CourseListSkeleton';
 import Animated, { FadeInLeft, FadeOutLeft } from 'react-native-reanimated';
+import { useRecentCourse } from '../../src/stores/recent-course.store';
+import RecentCourseItem from '../../src/components/RecentCourseItem';
 
 export default function Page() {
-    const [fetchCourses, { data: recentCourses, loading, error }] =
+    const [fetchCourses, { data: courses, loading, error }] =
         useUserCoursesLazyQuery();
+
+    const { recentCourses } = useRecentCourse();
 
     useEffect(() => {
         fetchCourses({
@@ -39,12 +43,26 @@ export default function Page() {
                     }
                 >
                     <View className=" flex pb-[120px]">
+                        {recentCourses.length ? (
+                            <View className=" mb-4">
+                                <ScrollView horizontal className="">
+                                    <View className=" px-4 py-2 flex-row gap-4">
+                                        {recentCourses.map((course) => (
+                                            <RecentCourseItem
+                                                key={course.id}
+                                                {...course}
+                                            />
+                                        ))}
+                                    </View>
+                                </ScrollView>
+                            </View>
+                        ) : null}
                         {loading ? (
                             <>
                                 <CourseListSkeleton />
                             </>
                         ) : (
-                            recentCourses?.userCourses.map((course, index) => (
+                            courses?.userCourses.map((course, index) => (
                                 <Animated.View
                                     key={course.id}
                                     entering={FadeInLeft.delay(
