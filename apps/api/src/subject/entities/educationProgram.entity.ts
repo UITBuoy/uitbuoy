@@ -1,5 +1,6 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn, PrimaryGeneratedColumn, Relation } from 'typeorm';
+import { Section } from './section.entity';
 
 @ObjectType()
 @Entity()
@@ -8,9 +9,9 @@ export class EducationProgram {
     @PrimaryGeneratedColumn()
     id: string;
 
-    @Field(() => Number)
+    @Field(() => String)
     @Column({ nullable: true })
-    course: number;
+    year: string;
 
     @Field(() => String)
     @Column()
@@ -20,8 +21,6 @@ export class EducationProgram {
     @Column()
     trainingSystem: string; //enum
 
-    @Field(() => String)
-    @Column()
-    title: string;
-
+    @OneToMany('section', 'educationProgram')
+    sections: Relation<Section>[];
 }
