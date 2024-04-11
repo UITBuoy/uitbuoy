@@ -1,24 +1,24 @@
-import { Spinner } from '@gluestack-ui/themed';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import {
-    ScrollView,
-    StatusBar,
-    Text,
-    TouchableOpacity,
-    View,
-} from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import Animated, { FadeInLeft, FadeOutLeft } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDebounceValue } from 'usehooks-ts';
-import CourseSearchResultItem from '../../src/components/CourseSearchResultItem/CourseSearchResultItem';
+import CourseSearchResultItem from '../../src/components/CourseSearchResultItem';
 import TextField from '../../src/components/TextField/TextField';
 import { useSearchCoursesQuery } from '../../src/gql/graphql';
 import CourseSearchListSkeleton from '../../src/skeletons/CourseSearchListSkeleton';
-import Animated, { FadeInLeft, FadeOutLeft } from 'react-native-reanimated';
+import {
+    MAX_RECENT_SEARCH_ITEM,
+    useRecentSearch,
+} from '../../src/stores/recent-search.store';
+import CourseSearchRecentItem from '../../src/components/CourseSearchRecentItem';
 
 export default function Modal() {
     const [text, setText] = useState('');
     const [keyword] = useDebounceValue<string>(text || '', 300);
+
+    const { recentSearchStrings, addSearchString } = useRecentSearch();
 
     const { data, loading, error } = useSearchCoursesQuery({
         variables: { keyword },
@@ -51,6 +51,19 @@ export default function Modal() {
                 </View>
                 <View className=" flex-1 mt-4">
                     <ScrollView className=" flex-1">
+                        {recentSearchStrings
+                            .filter(
+                                (value) =>
+                                    value.includes(text) && value != text,
+                            )
+                            .slice(0, MAX_RECENT_SEARCH_ITEM)
+                            .map((recentText) => (
+                                <CourseSearchRecentItem
+                                    onPress={() => setText(recentText)}
+                                    key={recentText}
+                                    text={recentText}
+                                />
+                            ))}
                         {loading ? (
                             <CourseSearchListSkeleton />
                         ) : (
@@ -62,7 +75,12 @@ export default function Modal() {
                                     )}
                                     exiting={FadeOutLeft}
                                 >
-                                    <CourseSearchResultItem {...course} />
+                                    <CourseSearchResultItem
+                                        {...course}
+                                        onPress={() => {
+                                            addSearchString(text);
+                                        }}
+                                    />
                                 </Animated.View>
                             ))
                         )}
