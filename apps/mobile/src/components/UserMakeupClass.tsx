@@ -33,16 +33,19 @@ export default function UserMakeupClass({
                     <Text className=" mt-1 font-medium text-lg">
                         {makeupClass.title}
                     </Text>
-                    <View className=" mt-4 flex-row gap-4">
+                    <View style={{ marginTop: 30 }} className=" flex-row gap-4">
                         {makeupClass.classroom ? (
                             <Text
-                                style={{ backgroundColor: '#44E187' }}
+                                style={{ backgroundColor: '#73F2A9' }}
                                 className=" p-2 rounded-lg text-sm font-medium"
                             >
                                 {`Phòng ${makeupClass.classroom}`}
                             </Text>
                         ) : null}
-                        <Text className=" bg-primary-70 text-white p-2 rounded-lg text-sm font-medium">
+                        <Text
+                            style={{ backgroundColor: '#73F2A9' }}
+                            className=" p-2 rounded-lg text-sm font-medium"
+                        >
                             {`Từ tiết ${makeupClass.start} đến tiết ${makeupClass.end}`}
                         </Text>
                     </View>
