@@ -1,35 +1,20 @@
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Text, TouchableNativeFeedback, View } from 'react-native';
 import Animated, { FadeInLeft, FadeOutLeft } from 'react-native-reanimated';
 import EMPTY_REMAINING_ACTIVITIES from '../../assets/empty-remaining-activities.png';
 import REFRESH_ICON from '../../assets/white-refresh.png';
-import { useUserEventsLazyQuery } from '../gql/graphql';
-import { useSyncEvent } from '../hooks/events/useSyncEvent';
+import { useEventList } from '../hooks/events/useEventList';
 import EventListSkeleton from '../skeletons/EventListSkeleton';
 import { timeDiff } from '../utils/timeDiff';
 import NativeButton from './NativeButton/NativeButton';
-import { useEventStore } from '../stores/events.store';
 
 export default function RemainingActivities() {
-    const [loading, setLoading] = useState(false);
-
-    const { setEvents } = useEventStore();
-    const [refetch, { data, error }] = useUserEventsLazyQuery();
-    const { syncEvent } = useSyncEvent();
+    const { refetch, data, loading, error } = useEventList();
 
     useEffect(() => {
-        setLoading(true);
-        refetch({
-            variables: { isNew: true },
-            fetchPolicy: 'cache-first',
-            onCompleted(data) {
-                setLoading((prev) => false);
-                setEvents(data.userEvents);
-            },
-        });
-        syncEvent();
+        refetch();
     }, []);
 
     return (
@@ -38,20 +23,7 @@ export default function RemainingActivities() {
                 <Text className=" text-base font-semibold">
                     Các bài tập sắp đến hạn
                 </Text>
-                <NativeButton
-                    onPress={() => {
-                        setLoading(true);
-                        refetch({
-                            variables: { isNew: true },
-                            fetchPolicy: 'no-cache',
-                            onCompleted(data) {
-                                setLoading((prev) => false);
-                                setEvents(data.userEvents);
-                            },
-                        });
-                        syncEvent();
-                    }}
-                >
+                <NativeButton onPress={refetch}>
                     <View className=" flex-row gap-2 p-2 px-3 bg-primary-70 ">
                         <Image
                             style={{ width: 20, height: 20 }}

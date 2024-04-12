@@ -11,7 +11,9 @@ export const useEventStore = create<IEventStore, [['zustand/immer', never]]>(
     immer<IEventStore>((set, get) => ({
         events: [],
         setEvents(events) {
-            set((state) => (state.events = events));
+            set((state) => {
+                state.events = events;
+            });
         },
     })),
 );
