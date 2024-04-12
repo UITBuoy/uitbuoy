@@ -89,18 +89,12 @@ import { UserModule } from './user/user.module';
                     configService.get<EnvironmentType>('ENVIRONMENT') ==
                     'development',
                 autoLoadEntities: true,
-                ssl:
-                    configService.get<EnvironmentType>('ENVIRONMENT') ===
-                    'production',
-                extra:
-                    configService.get<EnvironmentType>('ENVIRONMENT') ===
-                    'production'
-                        ? {
-                              ssl: {
-                                  rejectUnauthorized: false,
-                              },
-                          }
-                        : undefined,
+                ssl: true,
+                extra: {
+                    ssl: {
+                        rejectUnauthorized: false,
+                    },
+                },
             }),
         }),
         WinstonModule.forRootAsync({

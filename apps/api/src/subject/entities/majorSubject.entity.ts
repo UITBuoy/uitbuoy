@@ -1,6 +1,6 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
-import { Section } from './section.entity';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, Relation } from 'typeorm';
+import type { Section } from './section.entity';
 
 @ObjectType()
 @Entity()
@@ -33,8 +33,7 @@ export class MajorSubject {
     @Column()
     minimumOptionalCredit: number;
 
-    @Field(() => Section, { nullable: true })
-    @ManyToOne(() => Section)
+    @ManyToOne('Section', 'subjects')
     @JoinColumn({ name: 'section_id' })
-    section: Section;
+    section: Relation<Section>;
 }

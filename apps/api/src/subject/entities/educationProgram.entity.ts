@@ -1,6 +1,13 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, OneToMany, PrimaryColumn, PrimaryGeneratedColumn, Relation } from 'typeorm';
-import { Section } from './section.entity';
+import {
+    Column,
+    Entity,
+    OneToMany,
+    PrimaryColumn,
+    PrimaryGeneratedColumn,
+    Relation,
+} from 'typeorm';
+import type { Section } from './section.entity';
 
 @ObjectType()
 @Entity()
@@ -21,6 +28,6 @@ export class EducationProgram {
     @Column()
     trainingSystem: string; //enum
 
-    @OneToMany('section', 'educationProgram')
+    @OneToMany('Section', 'educationProgram')
     sections: Relation<Section>[];
 }
