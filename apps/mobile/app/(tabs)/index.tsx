@@ -10,6 +10,7 @@ import PageHeader from '../../src/components/PageHeader/PageHeader';
 import RemainingActivities from '../../src/components/RemainingActivities';
 import SyncCalendar from '../../src/components/SyncCalendar';
 import { useAuth } from '../../src/stores/auth.store';
+import PreviewMakeupClass from '../../src/components/PreviewMakeupClass';
 
 export default function Page() {
     const { isLogin, authLogout } = useAuth();
@@ -30,6 +31,7 @@ export default function Page() {
                     <View className=" flex flex-col gap-10 pb-[100px]">
                         <CourseSearch />
                         <NewFeatures />
+                        <PreviewMakeupClass />
                         <View className=" flex flex-col gap-2">
                             <RemainingActivities />
                             <SyncCalendar />

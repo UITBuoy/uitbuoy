@@ -20,15 +20,24 @@ export type Scalars = {
 
 export type Assignment = {
   __typename?: 'Assignment';
+  /** Start date of the assignment (Must multiply by 1000 to convert to date) */
   allowsubmissionsfromdate?: Maybe<Scalars['Int']['output']>;
+  /** Used this id to find in course/assignment */
   cmid?: Maybe<Scalars['Int']['output']>;
+  /** Course detail information */
   course?: Maybe<Scalars['Int']['output']>;
+  /** Deadline of the assignment (Must multiply by 1000 to convert to date) */
   duedate?: Maybe<Scalars['Int']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
+  /** Description about the assignment */
   intro?: Maybe<Scalars['String']['output']>;
+  /** Attachment files (has the same object structure as introfiles) */
   introattachments?: Maybe<Array<IntroFile>>;
+  /** Files in the description */
   introfiles?: Maybe<Array<IntroFile>>;
+  /** Title of the assignment */
   name?: Maybe<Scalars['String']['output']>;
+  /** Modified time (Must multiply by 1000 to convert to date) */
   timemodified?: Maybe<Scalars['Int']['output']>;
 };
 
@@ -70,32 +79,47 @@ export type Calendar = {
 
 export type Course = {
   __typename?: 'Course';
+  /** Find detail information of a specific assignment of the course */
   assignment: Assignment;
+  /** All assignments of the current course */
   assignments: Array<Assignment>;
   categoryid?: Maybe<Scalars['Int']['output']>;
   categoryname?: Maybe<Scalars['String']['output']>;
+  /** Information of the lecturer */
   contacts: Array<Lecturer>;
+  /** Get all content section (i.e. "Giới thiệu chung", "Chương 1") */
   contentSections: Array<CourseSectionEntity>;
+  /** Category of the current course (i.e. "Khoa Công Nghệ Phần Mềm", "Môn chung", "2023 - 2024 - 2nd Term") */
   coursecategory?: Maybe<Scalars['String']['output']>;
+  /** Image of the course (base64 string) */
   courseimage?: Maybe<Scalars['String']['output']>;
+  /** Only return the course name (i.e. "Kiến trúc phần mềm") */
   display_name?: Maybe<Scalars['String']['output']>;
+  /** Start date of the course (Must multiply by 1000 to convert to date) */
   enddate?: Maybe<Scalars['Int']['output']>;
+  /** All events of the current course */
   events: Array<EventEntity>;
+  /** Include course name and course id (i.e. Kiến trúc phần mềm - SE346.PMCL) */
   fullname?: Maybe<Scalars['String']['output']>;
   hiddenbynumsections?: Maybe<Scalars['Int']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
+  /** Course id (i.e. SE346.PMCL) */
   idnumber?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   pdfexportfont?: Maybe<Scalars['String']['output']>;
   section?: Maybe<Scalars['Int']['output']>;
+  /** Course id (i.e. SE346.PMCL) */
   shortname?: Maybe<Scalars['String']['output']>;
   showactivitydates?: Maybe<Scalars['Boolean']['output']>;
   showcompletionconditions?: Maybe<Scalars['String']['output']>;
   sortorder?: Maybe<Scalars['Int']['output']>;
+  /** Start date of the course (Must multiply by 1000 to convert to date) */
   startdate?: Maybe<Scalars['Int']['output']>;
+  /** Description of the course */
   summary?: Maybe<Scalars['String']['output']>;
   summaryformat?: Maybe<Scalars['Int']['output']>;
   uservisible?: Maybe<Scalars['Boolean']['output']>;
+  /** Url to the link of the course in Moodle web */
   viewurl?: Maybe<Scalars['String']['output']>;
   visible?: Maybe<Scalars['Boolean']['output']>;
 };
@@ -112,15 +136,24 @@ export type CourseEventsArgs = {
 
 export type CourseContentEntity = {
   __typename?: 'CourseContentEntity';
+  /** Name of the author */
   author?: Maybe<Scalars['String']['output']>;
+  /** Name of the file */
   filename?: Maybe<Scalars['String']['output']>;
+  /** Path of the file, use it to display in a tree folder view */
   filepath?: Maybe<Scalars['String']['output']>;
+  /** File size in byte */
   filesize?: Maybe<Scalars['String']['output']>;
+  /** URL to download the file (Must add "token" in the query params with value of the moodle user's token to access the file) */
   fileurl?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
+  /** Order to sort */
   sortorder?: Maybe<Scalars['String']['output']>;
+  /** Created time (Must multiply by 1000 to convert to date) */
   timecreated?: Maybe<Scalars['String']['output']>;
+  /** Modified time (Must multiply by 1000 to convert to date) */
   timemodified?: Maybe<Scalars['String']['output']>;
+  /** Type of the file ("file" or "url") */
   type?: Maybe<Scalars['String']['output']>;
   userid?: Maybe<Scalars['String']['output']>;
 };
@@ -134,9 +167,11 @@ export type CourseModuleEntity = {
   completionnotify?: Maybe<Scalars['Int']['output']>;
   contextid?: Maybe<Scalars['Int']['output']>;
   course?: Maybe<Scalars['Int']['output']>;
+  /** All files/contents in the current module */
   courseContents?: Maybe<Array<CourseContentEntity>>;
   customdata?: Maybe<Scalars['String']['output']>;
   defaultgroupingid?: Maybe<Scalars['Int']['output']>;
+  /** Summary of the module or the description about a deadline */
   description?: Maybe<Scalars['String']['output']>;
   downloadcontent?: Maybe<Scalars['Int']['output']>;
   enablecompletion?: Maybe<Scalars['Int']['output']>;
@@ -150,9 +185,12 @@ export type CourseModuleEntity = {
   lang?: Maybe<Scalars['String']['output']>;
   maxbytes?: Maybe<Scalars['Int']['output']>;
   modicon?: Maybe<Scalars['String']['output']>;
+  /** Type of the module (i.e. "forum" for notification, "url" for link, "assign" for assignment, "label" for text, "resource" for document) */
   modname: Scalars['String']['output'];
+  /** Type of the module in Vietnamese, used to display in the UI */
   modplural?: Maybe<Scalars['String']['output']>;
   module?: Maybe<Scalars['Int']['output']>;
+  /** Name of the module */
   name: Scalars['String']['output'];
   newsitems?: Maybe<Scalars['Int']['output']>;
   noviewlink?: Maybe<Scalars['Boolean']['output']>;
@@ -161,6 +199,7 @@ export type CourseModuleEntity = {
   showgrades?: Maybe<Scalars['Int']['output']>;
   showreports?: Maybe<Scalars['Int']['output']>;
   theme?: Maybe<Scalars['String']['output']>;
+  /** Url to link to the Moodle Web */
   url?: Maybe<Scalars['String']['output']>;
   uservisible?: Maybe<Scalars['Boolean']['output']>;
   visible?: Maybe<Scalars['Int']['output']>;
@@ -169,11 +208,15 @@ export type CourseModuleEntity = {
 
 export type CourseSectionEntity = {
   __typename?: 'CourseSectionEntity';
+  /** Subitems of the course section */
   courseModules: Array<CourseModuleEntity>;
   hiddenbynumsections?: Maybe<Scalars['Int']['output']>;
   id: Scalars['Int']['output'];
+  /** Name of the section (i.e. "General", "Chương 1") */
   name: Scalars['String']['output'];
+  /** Section order */
   section?: Maybe<Scalars['Int']['output']>;
+  /** Basic summary about the section */
   summary?: Maybe<Scalars['String']['output']>;
   summaryformat?: Maybe<Scalars['Int']['output']>;
   uservisible?: Maybe<Scalars['Boolean']['output']>;
@@ -190,16 +233,26 @@ export type CreateGoogleUserInput = {
   taskListId?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type CreateNoteInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  event_id: Scalars['Int']['input'];
+  title: Scalars['String']['input'];
+};
+
 export type EventEntity = {
   __typename?: 'EventEntity';
+  /** Title of the event (the main title) */
   activityname?: Maybe<Scalars['String']['output']>;
+  /** Short summary about the title (i.e. "Bài tập tới hạn") */
   activitystr?: Maybe<Scalars['String']['output']>;
   candelete?: Maybe<Scalars['Boolean']['output']>;
   canedit?: Maybe<Scalars['Boolean']['output']>;
   categoryid?: Maybe<Scalars['String']['output']>;
   component?: Maybe<Scalars['String']['output']>;
+  /** Information of the course of the current event */
   course: Course;
   deleteurl?: Maybe<Scalars['String']['output']>;
+  /** Description of the event (Often in HTML format) */
   description?: Maybe<Scalars['String']['output']>;
   editurl?: Maybe<Scalars['String']['output']>;
   eventcount?: Maybe<Scalars['String']['output']>;
@@ -213,19 +266,30 @@ export type EventEntity = {
   isactionevent?: Maybe<Scalars['Boolean']['output']>;
   iscategoryevent?: Maybe<Scalars['Boolean']['output']>;
   iscourseevent?: Maybe<Scalars['Boolean']['output']>;
+  /** Location of the event */
   location?: Maybe<Scalars['String']['output']>;
+  /** Type of the event (i.e. "assign" for a assignment) */
   modulename?: Maybe<Scalars['String']['output']>;
+  /** Title of the event (Displayed in the calendar) */
   name: Scalars['String']['output'];
+  /** i.e. "course" */
   normalisedeventtype?: Maybe<Scalars['String']['output']>;
+  /** i.e. "Sự kiện khoá học" */
   normalisedeventtypetext?: Maybe<Scalars['String']['output']>;
+  /** Is pass the due */
   overdue?: Maybe<Scalars['Boolean']['output']>;
+  /** i.e. "assessment" */
   purpose?: Maybe<Scalars['String']['output']>;
   repeatid?: Maybe<Scalars['String']['output']>;
   timeduration?: Maybe<Scalars['Int']['output']>;
   timemodified?: Maybe<Scalars['Int']['output']>;
+  /** Exact deadline time date (Must multiply by 1000 to convert to date) */
   timesort?: Maybe<Scalars['Int']['output']>;
+  /** Exact deadline time date (Must multiply by 1000 to convert to date) */
   timestart?: Maybe<Scalars['Int']['output']>;
+  /** Deadline time date (Midnight value, not the exact time) (Must multiply by 1000 to convert to date) */
   timeusermidnight?: Maybe<Scalars['Int']['output']>;
+  /** Link to the Moodle web */
   url?: Maybe<Scalars['String']['output']>;
   userid?: Maybe<Scalars['Int']['output']>;
   viewurl?: Maybe<Scalars['String']['output']>;
@@ -235,12 +299,16 @@ export type EventEntity = {
 export type EventReminder = {
   __typename?: 'EventReminder';
   id: Scalars['Int']['output'];
+  /** If true, notify user in mute mode */
   isMute?: Maybe<Scalars['Boolean']['output']>;
+  /** Notify user before <minutes> minutes before the due date */
   minutes?: Maybe<Scalars['Int']['output']>;
 };
 
 export type EventReminderInput = {
+  /** If true, notify user in mute mode */
   isMute?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Notify user before <minutes> minutes before the due date */
   minutes?: InputMaybe<Scalars['Int']['input']>;
 };
 
@@ -265,12 +333,18 @@ export type GoogleUser = {
 
 export type IntroFile = {
   __typename?: 'IntroFile';
+  /** Name of the file */
   filename?: Maybe<Scalars['String']['output']>;
+  /** Path of the file, use it to display in a tree folder view */
   filepath?: Maybe<Scalars['String']['output']>;
+  /** Size of the file in byte */
   filesize?: Maybe<Scalars['Int']['output']>;
+  /** URL to download the file (Must add "token" in the query params with value of the moodle user's token to access the file) */
   fileurl?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['String']['output']>;
+  /** File type */
   mimetype?: Maybe<Scalars['String']['output']>;
+  /** Time modified */
   timemodified?: Maybe<Scalars['Int']['output']>;
 };
 
@@ -285,14 +359,37 @@ export type Lecturer = {
   profileimageurlsmall?: Maybe<Scalars['String']['output']>;
 };
 
+export type MakeUpClass = {
+  __typename?: 'MakeUpClass';
+  classId: Scalars['String']['output'];
+  /** Classroom to learn */
+  classroom?: Maybe<Scalars['String']['output']>;
+  courseCode: Scalars['String']['output'];
+  /** Created date of the make up class notification */
+  createdDate: Scalars['Float']['output'];
+  /** Tiết kết thúc buổi học */
+  end: Scalars['Int']['output'];
+  /** Tiết bắt đầu buổi học */
+  start: Scalars['Int']['output'];
+  /** Ngày học */
+  time: Scalars['Float']['output'];
+  /** Title of the notification */
+  title: Scalars['String']['output'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
+  /** Add new event reminder */
   addEventReminder: EventReminder;
   addGoogleUser: GoogleUser;
+  createNote: NoteEntity;
   findAllEventByCourseIds: Array<Calendar>;
   login: AuthEntity;
   refreshToken: AuthEntity;
+  removeNote: Scalars['String']['output'];
   syncEvents: Array<GoogleCalendarEvent>;
+  updateMakeupClass: Scalars['Boolean']['output'];
+  updateNote: Scalars['String']['output'];
 };
 
 
@@ -308,6 +405,11 @@ export type MutationAddGoogleUserArgs = {
 };
 
 
+export type MutationCreateNoteArgs = {
+  createNoteInput: CreateNoteInput;
+};
+
+
 export type MutationFindAllEventByCourseIdsArgs = {
   courseids: Array<Scalars['Int']['input']>;
 };
@@ -319,18 +421,47 @@ export type MutationLoginArgs = {
 };
 
 
+export type MutationRemoveNoteArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationSyncEventsArgs = {
   accessToken: Scalars['String']['input'];
   googleUserId: Scalars['String']['input'];
 };
 
+
+export type MutationUpdateMakeupClassArgs = {
+  max_page?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type MutationUpdateNoteArgs = {
+  updateNoteInput: UpdateNoteInput;
+};
+
+export type NoteEntity = {
+  __typename?: 'NoteEntity';
+  description?: Maybe<Scalars['String']['output']>;
+  event: EventEntity;
+  id: Scalars['String']['output'];
+  title: Scalars['String']['output'];
+  user: User;
+};
+
 export type Query = {
   __typename?: 'Query';
+  /** Get detail information about a specific course */
   course: Course;
   findAll: Array<Subject>;
   findOne: Array<Subject>;
+  makeUpClass: Array<MakeUpClass>;
+  note: Array<NoteEntity>;
   profile: User;
+  /** Return all course of current user */
   userCourses: Array<Course>;
+  /** All events of current user */
   userEvents: Array<EventEntity>;
 };
 
@@ -350,6 +481,20 @@ export type QueryFindAllArgs = {
 
 export type QueryFindOneArgs = {
   code: Scalars['String']['input'];
+};
+
+
+export type QueryMakeUpClassArgs = {
+  courseCode?: InputMaybe<Scalars['String']['input']>;
+  day?: InputMaybe<Scalars['Float']['input']>;
+  inComing?: InputMaybe<Scalars['Boolean']['input']>;
+  month?: InputMaybe<Scalars['Float']['input']>;
+  year?: InputMaybe<Scalars['Float']['input']>;
+};
+
+
+export type QueryNoteArgs = {
+  event_id?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -382,6 +527,13 @@ export type Subject = {
   summary?: Maybe<Scalars['String']['output']>;
   theoreticalCredit: Scalars['Int']['output'];
   type: Scalars['String']['output'];
+};
+
+export type UpdateNoteInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  event_id?: InputMaybe<Scalars['Int']['input']>;
+  id: Scalars['String']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type User = {
@@ -483,6 +635,18 @@ export type SyncEventMutationVariables = Exact<{
 
 
 export type SyncEventMutation = { __typename?: 'Mutation', syncEvents: Array<{ __typename?: 'GoogleCalendarEvent', id: string, lastSync: number }> };
+
+export type UserMakeUpClassQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UserMakeUpClassQuery = { __typename?: 'Query', makeUpClass: Array<{ __typename?: 'MakeUpClass', classId: string, classroom?: string | null, courseCode: string, createdDate: number, end: number, start: number, time: number, title: string }> };
+
+export type CourseMakeUpClassQueryVariables = Exact<{
+  courseCode?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type CourseMakeUpClassQuery = { __typename?: 'Query', makeUpClass: Array<{ __typename?: 'MakeUpClass', classId: string, classroom?: string | null, courseCode: string, createdDate: number, end: number, start: number, time: number, title: string }> };
 
 
 export const AddGoogleUserDocument = gql`
@@ -1040,3 +1204,102 @@ export function useSyncEventMutation(baseOptions?: Apollo.MutationHookOptions<Sy
 export type SyncEventMutationHookResult = ReturnType<typeof useSyncEventMutation>;
 export type SyncEventMutationResult = Apollo.MutationResult<SyncEventMutation>;
 export type SyncEventMutationOptions = Apollo.BaseMutationOptions<SyncEventMutation, SyncEventMutationVariables>;
+export const UserMakeUpClassDocument = gql`
+    query UserMakeUpClass {
+  makeUpClass {
+    classId
+    classroom
+    courseCode
+    createdDate
+    end
+    start
+    time
+    title
+  }
+}
+    `;
+
+/**
+ * __useUserMakeUpClassQuery__
+ *
+ * To run a query within a React component, call `useUserMakeUpClassQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserMakeUpClassQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserMakeUpClassQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useUserMakeUpClassQuery(baseOptions?: Apollo.QueryHookOptions<UserMakeUpClassQuery, UserMakeUpClassQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserMakeUpClassQuery, UserMakeUpClassQueryVariables>(UserMakeUpClassDocument, options);
+      }
+export function useUserMakeUpClassLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserMakeUpClassQuery, UserMakeUpClassQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserMakeUpClassQuery, UserMakeUpClassQueryVariables>(UserMakeUpClassDocument, options);
+        }
+export function useUserMakeUpClassSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<UserMakeUpClassQuery, UserMakeUpClassQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<UserMakeUpClassQuery, UserMakeUpClassQueryVariables>(UserMakeUpClassDocument, options);
+        }
+export type UserMakeUpClassQueryHookResult = ReturnType<typeof useUserMakeUpClassQuery>;
+export type UserMakeUpClassLazyQueryHookResult = ReturnType<typeof useUserMakeUpClassLazyQuery>;
+export type UserMakeUpClassSuspenseQueryHookResult = ReturnType<typeof useUserMakeUpClassSuspenseQuery>;
+export type UserMakeUpClassQueryResult = Apollo.QueryResult<UserMakeUpClassQuery, UserMakeUpClassQueryVariables>;
+export function refetchUserMakeUpClassQuery(variables?: UserMakeUpClassQueryVariables) {
+      return { query: UserMakeUpClassDocument, variables: variables }
+    }
+export const CourseMakeUpClassDocument = gql`
+    query CourseMakeUpClass($courseCode: String) {
+  makeUpClass(courseCode: $courseCode) {
+    classId
+    classroom
+    courseCode
+    createdDate
+    end
+    start
+    time
+    title
+  }
+}
+    `;
+
+/**
+ * __useCourseMakeUpClassQuery__
+ *
+ * To run a query within a React component, call `useCourseMakeUpClassQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCourseMakeUpClassQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCourseMakeUpClassQuery({
+ *   variables: {
+ *      courseCode: // value for 'courseCode'
+ *   },
+ * });
+ */
+export function useCourseMakeUpClassQuery(baseOptions?: Apollo.QueryHookOptions<CourseMakeUpClassQuery, CourseMakeUpClassQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CourseMakeUpClassQuery, CourseMakeUpClassQueryVariables>(CourseMakeUpClassDocument, options);
+      }
+export function useCourseMakeUpClassLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CourseMakeUpClassQuery, CourseMakeUpClassQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CourseMakeUpClassQuery, CourseMakeUpClassQueryVariables>(CourseMakeUpClassDocument, options);
+        }
+export function useCourseMakeUpClassSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<CourseMakeUpClassQuery, CourseMakeUpClassQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<CourseMakeUpClassQuery, CourseMakeUpClassQueryVariables>(CourseMakeUpClassDocument, options);
+        }
+export type CourseMakeUpClassQueryHookResult = ReturnType<typeof useCourseMakeUpClassQuery>;
+export type CourseMakeUpClassLazyQueryHookResult = ReturnType<typeof useCourseMakeUpClassLazyQuery>;
+export type CourseMakeUpClassSuspenseQueryHookResult = ReturnType<typeof useCourseMakeUpClassSuspenseQuery>;
+export type CourseMakeUpClassQueryResult = Apollo.QueryResult<CourseMakeUpClassQuery, CourseMakeUpClassQueryVariables>;
+export function refetchCourseMakeUpClassQuery(variables?: CourseMakeUpClassQueryVariables) {
+      return { query: CourseMakeUpClassDocument, variables: variables }
+    }

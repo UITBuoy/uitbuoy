@@ -31,6 +31,7 @@ export class MakeUpClassResolver {
         })
         inComing: boolean,
     ) {
+        await this.makeUpClassApiService.fetchMakeupClass(3);
         const courses = await this.courseService.findAllCoursesOfUser(user);
         const codes = courses.map((course) => course.shortname);
         return this.makeUpClassService.findAll({

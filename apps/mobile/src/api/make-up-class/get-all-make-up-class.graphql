@@ -1,0 +1,12 @@
+query UserMakeUpClass {
+    makeUpClass {
+        classId
+        classroom
+        courseCode
+        createdDate
+        end
+        start
+        time
+        title
+    }
+}

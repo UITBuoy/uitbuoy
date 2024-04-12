@@ -1,0 +1,12 @@
+query CourseMakeUpClass($courseCode: String) {
+    makeUpClass(courseCode: $courseCode) {
+        classId
+        classroom
+        courseCode
+        createdDate
+        end
+        start
+        time
+        title
+    }
+}
