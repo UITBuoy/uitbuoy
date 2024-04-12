@@ -4,6 +4,7 @@ import { useUserMakeUpClassQuery } from '../gql/graphql';
 import UserMakeupClass from './UserMakeupClass';
 import PreviewMakeupClassSkeleton from '../skeletons/PreviewMakeupClassSkeleton';
 import NativeButton from './NativeButton/NativeButton';
+import { router } from 'expo-router';
 
 export default function PreviewMakeupClass() {
     const { data, loading, error, refetch } = useUserMakeUpClassQuery();
@@ -32,7 +33,11 @@ export default function PreviewMakeupClass() {
                         keyExtractor={(item) => item.title}
                     />
                     <View className=" mt-4 flex-col items-center">
-                        <NativeButton>
+                        <NativeButton
+                            onPress={() =>
+                                router.push('/modals/makeup-classes')
+                            }
+                        >
                             <View className=" flex p-2 px-10">
                                 <Text className=" font-medium">Xem thêm</Text>
                             </View>

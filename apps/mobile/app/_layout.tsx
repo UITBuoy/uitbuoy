@@ -264,6 +264,19 @@ export default function Layout() {
                                 headerTitleAlign: 'center',
                             }}
                         />
+                        <Stack.Screen
+                            name="modals/makeup-classes"
+                            options={{
+                                title: 'Các lớp học bù',
+                                presentation: 'modal',
+                                animation: 'slide_from_left',
+                                headerShadowVisible: true,
+                                headerStyle: { backgroundColor: 'white' },
+                                headerTintColor: 'black',
+                                headerTitleStyle: { fontSize: 16 },
+                                headerTitleAlign: 'center',
+                            }}
+                        />
                     </Stack>
                 </ThemeProvider>
             </ApolloProvider>
