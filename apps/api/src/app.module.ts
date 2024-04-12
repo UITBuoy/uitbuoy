@@ -28,6 +28,7 @@ import { UserModule } from './user/user.module';
 import { DateScalar } from './common/scalars/date.scalar';
 import { CommonModule } from './common/common.module';
 import { GoogleCalendarModule } from './google-calendar/google-calendar.module';
+import { MakeUpClassModule } from './make-up-class/make-up-class.module';
 
 @Module({
     imports: [
@@ -173,6 +174,7 @@ import { GoogleCalendarModule } from './google-calendar/google-calendar.module';
         LecturerModule,
         CommonModule,
         GoogleCalendarModule,
+        MakeUpClassModule,
     ],
     controllers: [AppController],
     providers: [

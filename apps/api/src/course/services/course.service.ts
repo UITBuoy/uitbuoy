@@ -20,7 +20,7 @@ export class CourseService {
 
     async findAllCoursesOfUser(
         user: User,
-        queryArgs: QueryArgs,
+        queryArgs: QueryArgs = {},
     ): Promise<Course[]> {
         const keyword = queryArgs.keyword?.trim();
 
