@@ -1,13 +1,15 @@
-import { router } from 'expo-router';
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
-import { CourseModuleEntity } from '../gql/graphql';
 
 export type INotificationConfig = {
     isVibration: boolean;
-    isDimissable: boolean;
+    isDimissible: boolean;
     isNotifyAtTheBeginingOfDay: boolean;
     timeBefore: number;
+    setVibration: (value: boolean) => any;
+    setDismissible: (value: boolean) => any;
+    setTimeBefore: (value: number) => any;
+    setIsNotifyAtTheBeginingOfDay: (value: boolean) => any;
 };
 
 export const useNotificationConfig = create<
@@ -16,7 +18,7 @@ export const useNotificationConfig = create<
 >(
     immer<INotificationConfig>((set, get) => ({
         isVibration: false,
-        isDimissable: false,
+        isDimissible: false,
         isNotifyAtTheBeginingOfDay: true,
         timeBefore: 12,
         setVibration: (isVibration) => {
@@ -24,9 +26,9 @@ export const useNotificationConfig = create<
                 state.isVibration = isVibration;
             });
         },
-        setDismissable: (isDimissable) => {
+        setDismissible: (isDimissable) => {
             set((state) => {
-                state.isDimissable = isDimissable;
+                state.isDimissible = isDimissable;
             });
         },
         setTimeBefore: (timeBefore) => {
