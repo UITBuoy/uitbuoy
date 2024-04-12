@@ -10,9 +10,12 @@ import { useSyncEvent } from '../hooks/events/useSyncEvent';
 import EventListSkeleton from '../skeletons/EventListSkeleton';
 import { timeDiff } from '../utils/timeDiff';
 import NativeButton from './NativeButton/NativeButton';
+import { useEventStore } from '../stores/events.store';
 
 export default function RemainingActivities() {
     const [loading, setLoading] = useState(false);
+
+    const { setEvents } = useEventStore();
     const [refetch, { data, error }] = useUserEventsLazyQuery();
     const { syncEvent } = useSyncEvent();
 
@@ -23,6 +26,7 @@ export default function RemainingActivities() {
             fetchPolicy: 'cache-first',
             onCompleted(data) {
                 setLoading((prev) => false);
+                setEvents(data.userEvents);
             },
         });
         syncEvent();
@@ -42,6 +46,7 @@ export default function RemainingActivities() {
                             fetchPolicy: 'no-cache',
                             onCompleted(data) {
                                 setLoading((prev) => false);
+                                setEvents(data.userEvents);
                             },
                         });
                         syncEvent();
