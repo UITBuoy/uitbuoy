@@ -21,4 +21,13 @@ export class SubjectResolver {
     findAll(@CurrentUser() user: User, @Args('nameVN') nameVN: string) {
         return this.subjecService.findSubjectData(user.token, nameVN);
     }
+
+    @Query(() => [Subject])
+    @UseGuards(JwtAuthGuard)
+    findAllEducationProgram(
+        @CurrentUser() user: User,
+        @Args('major') major: string,
+    ) {
+        return this.subjecService.findEducationProgram(user.token, major);
+    }
 }

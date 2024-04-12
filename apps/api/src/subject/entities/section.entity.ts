@@ -1,7 +1,16 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn, Relation } from 'typeorm';
-import { MajorSubject } from './majorSubject.entity';
-import { EducationProgram } from './educationProgram.entity';
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    OneToMany,
+    PrimaryColumn,
+    PrimaryGeneratedColumn,
+    Relation,
+} from 'typeorm';
+import type { MajorSubject } from './majorSubject.entity';
+import type { EducationProgram } from './educationProgram.entity';
 
 @ObjectType()
 @Entity()
@@ -22,11 +31,10 @@ export class Section {
     @Column()
     title: string; //enum
 
-    @OneToMany('majorSubject', 'section')
+    @OneToMany('MajorSubject', 'section')
     subjects: Relation<MajorSubject>[];
 
-    @Field(() => EducationProgram, { nullable: true })
-    @ManyToOne(() => EducationProgram)
-    @JoinColumn({ name: 'educationProgram_id' })
+    @ManyToOne('EducationProgram', 'sections')
+    @JoinColumn({ name: 'education_program_id' })
     educationProgram: EducationProgram;
 }
