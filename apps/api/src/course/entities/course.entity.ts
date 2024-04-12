@@ -1,4 +1,5 @@
 import type { Lecturer } from '@/lecturer/lecturer.entity';
+import type { MakeUpClass } from '@/make-up-class/entities/make-up-class.entity';
 import type { User } from '@/user/entities/user.entity';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import {
@@ -126,6 +127,9 @@ export class Course {
 
     @ManyToMany('User', 'courses')
     users: Relation<User[]>;
+
+    @OneToMany('MakeUpClass', 'course')
+    makeUpClasses: Relation<MakeUpClass>[];
 
     @AfterLoad()
     loadFullName?() {
