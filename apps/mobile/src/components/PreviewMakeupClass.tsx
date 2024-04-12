@@ -7,15 +7,17 @@ import NativeButton from './NativeButton/NativeButton';
 import { router } from 'expo-router';
 
 export default function PreviewMakeupClass() {
-    const { data, loading, error, refetch } = useUserMakeUpClassQuery();
+    const { data, loading, error, refetch } = useUserMakeUpClassQuery({
+        fetchPolicy: 'no-cache',
+    });
 
     useEffect(() => {
         refetch();
     }, []);
 
     return (
-        <View>
-            <Text className=" mx-4 font-semibold mb-4">Các thông báo</Text>
+        <View className=" flex flex-col gap-2">
+            <Text className=" mx-4 mt-10 font-semibold mb-4">Các thông báo</Text>
             {loading ? (
                 <PreviewMakeupClassSkeleton />
             ) : (
@@ -26,7 +28,7 @@ export default function PreviewMakeupClass() {
                             gap: 8,
                         }}
                         scrollEnabled={false}
-                        data={data.makeUpClass.slice(0, 2)}
+                        data={data.makeUpClass}
                         renderItem={({ item }) => (
                             <UserMakeupClass makeupClass={item} />
                         )}

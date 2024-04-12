@@ -18,7 +18,7 @@ export default function RemainingActivities() {
     }, []);
 
     return (
-        <View className=" flex-1 mt-0">
+        <View className=" flex mt-0">
             <View className=" mx-4 flex-row justify-between items-center">
                 <Text className=" text-base font-semibold">
                     Các bài tập sắp đến hạn
@@ -35,7 +35,7 @@ export default function RemainingActivities() {
                     </View>
                 </NativeButton>
             </View>
-            <View className=" flex-1 py-5">
+            <View className=" flex py-5">
                 {loading ? (
                     <EventListSkeleton />
                 ) : (
@@ -45,7 +45,7 @@ export default function RemainingActivities() {
                                 key={id}
                                 entering={FadeInLeft.delay((i + 1) * 100)}
                                 exiting={FadeOutLeft}
-                                className=" flex-1"
+                                className=" flex"
                             >
                                 <TouchableNativeFeedback
                                     onPress={() => {
@@ -64,9 +64,9 @@ export default function RemainingActivities() {
                                 >
                                     <View
                                         style={{ borderColor: '#CFCFCF' }}
-                                        className=" flex-1 px-4 py-4 border-[0.5px]"
+                                        className=" flex px-4 py-4 border-[0.5px]"
                                     >
-                                        <View className="flex-1 flex flex-col justify-between items-start gap-4">
+                                        <View className=" flex flex-col justify-between items-start gap-4">
                                             <View className=" flex flex-row gap-2">
                                                 <Text
                                                     className={` px-3 py-1 flex justify-center items-center rounded-lg bg-primary-70 text-white text-center font-medium text-sm`}
