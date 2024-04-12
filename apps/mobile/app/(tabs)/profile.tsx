@@ -176,7 +176,7 @@ export default function Page() {
                                 {
                                     source: NOTIFICATION_ICON,
                                     title: 'Cài đặt thông báo',
-                                    link: '',
+                                    link: '/modals/notification-config',
                                 },
                                 {
                                     source: SETTING_ICON,
@@ -198,6 +198,7 @@ export default function Page() {
                                 <ProfileButton
                                     source={item.source}
                                     title={item.title}
+                                    onPress={() => router.push(item.link)}
                                 />
                             )}
                             keyExtractor={(data) => data.source}

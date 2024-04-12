@@ -12,7 +12,7 @@ export default function ProfileButton({
 }) {
     return (
         <View className=" mx-4 ">
-            <NativeButton className="">
+            <NativeButton className="" onPress={onPress}>
                 <View className="p-3 rounded-xl flex flex-row items-center gap-4">
                     <Image style={{ width: 35, height: 35 }} source={source} />
                     <Text className=" text-lg font-medium">{title}</Text>
