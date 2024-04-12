@@ -1,6 +1,13 @@
 import { router } from 'expo-router';
 import { useEffect } from 'react';
-import { Image, RefreshControl, ScrollView, Text, View } from 'react-native';
+import {
+    FlatList,
+    Image,
+    RefreshControl,
+    ScrollView,
+    Text,
+    View,
+} from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import NativeButton from '../../src/components/NativeButton/NativeButton';
@@ -11,6 +18,11 @@ import {
 import { useGoogleSignin } from '../../src/hooks/google/useGoogleSignin';
 import ProfileScreenSkeleton from '../../src/skeletons/ProfileScreenSkeleton';
 import { useAuth } from '../../src/stores/auth.store';
+import NOTIFICATION_ICON from '../../assets/settings/notification.png';
+import SETTING_ICON from '../../assets/settings/setting.png';
+import HELP_ICON from '../../assets/settings/help.png';
+import REPORT_ICON from '../../assets/settings/report.png';
+import ProfileButton from '../../src/components/ProfileButton';
 
 export default function Page() {
     const { isIntegrateWithGoogle, googleData, authLogout } = useAuth();
@@ -36,6 +48,7 @@ export default function Page() {
                             }
                         />
                     }
+                    style={{ paddingBottom: 100 }}
                 >
                     {loading || !data?.profile ? (
                         <ProfileScreenSkeleton />
@@ -156,6 +169,40 @@ export default function Page() {
                             </View>
                         </View>
                     )}
+                    <View className=" mt-5">
+                        <FlatList
+                            scrollEnabled={false}
+                            data={[
+                                {
+                                    source: NOTIFICATION_ICON,
+                                    title: 'Cài đặt thông báo',
+                                    link: '',
+                                },
+                                {
+                                    source: SETTING_ICON,
+                                    title: 'Cài đặt chung',
+                                    link: '',
+                                },
+                                {
+                                    source: HELP_ICON,
+                                    title: 'Hỗ trợ',
+                                    link: '',
+                                },
+                                {
+                                    source: REPORT_ICON,
+                                    title: 'Báo cáo lỗi',
+                                    link: '',
+                                },
+                            ]}
+                            renderItem={({ item }) => (
+                                <ProfileButton
+                                    source={item.source}
+                                    title={item.title}
+                                />
+                            )}
+                            keyExtractor={(data) => data.source}
+                        />
+                    </View>
                     <NativeButton
                         className=" mx-6 mt-10"
                         onPress={async () => {
@@ -169,6 +216,7 @@ export default function Page() {
                             </Text>
                         </View>
                     </NativeButton>
+                    <View style={{ height: 100 }}></View>
                 </ScrollView>
             </SafeAreaView>
         </View>
