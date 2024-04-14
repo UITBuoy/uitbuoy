@@ -19,7 +19,7 @@ export default function Page() {
 
     useEffect(() => {
         fetchCourses({
-            variables: { isNew: false, isRecent: true },
+            variables: { isNew: false },
         });
     }, []);
 
@@ -35,7 +35,7 @@ export default function Page() {
                             refreshing={loading}
                             onRefresh={() => {
                                 fetchCourses({
-                                    variables: { isNew: true, isRecent: true },
+                                    variables: { isNew: true },
                                     fetchPolicy: 'no-cache',
                                 });
                             }}
