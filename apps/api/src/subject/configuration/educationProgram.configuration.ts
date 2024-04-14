@@ -49,7 +49,7 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
         function pushCoursesItems(courseIndex: number) {}
 
         function pushTotalCredit(courseIndex: number, majorIndex: number) {
-            courses[0].majors[majorIndex].totalCredit = $data('table')
+            courses[courseIndex].majors[majorIndex].totalCredit = $data('table')
                 .eq(0)
                 .contents()
                 .children('tr')
@@ -60,34 +60,33 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
                 .text()
                 .trim();
         }
+        function getTextIndex(selectIndex: number, tableIndex: number) {
+            return $data('table')
+                .eq(1)
+                .find('tr')
+                .eq(tableIndex)
+                .find('td')
+                .eq(selectIndex)
+                .text()
+                .trim();
+        }
 
         function pushGeneralSubjects(courseIndex: number, majorIndex: number) {
             const tableLength = $data('table').eq(1).find('tr').length;
 
             for (let tableIndex = 1; tableIndex < tableLength; tableIndex++) {
-                let selectIndex = 0;
-                function getTextIndex(selectIndex) {
-                    return $data('table')
-                        .eq(1)
-                        .find('tr')
-                        .eq(tableIndex)
-                        .find('td')
-                        .eq(selectIndex)
-                        .text()
-                        .trim();
-                }
-                if (getTextIndex(selectIndex).match(RegEx.typeRegex)) {
-                    courses[0].majors[majorIndex].subjects.push({
-                        name: getTextIndex(selectIndex),
+                let textIndex = getTextIndex(0, tableIndex);
+                if (textIndex.match(RegEx.typeRegex)) {
+                    courses[courseIndex].majors[majorIndex].subjects.push({
+                        name: textIndex,
                         subjects: [],
                     });
                 } else {
-                    selectIndex = 1;
-
-                    if (getTextIndex(selectIndex).match(RegEx.subjectRegex)) {
-                        courses[0].majors[majorIndex].subjects
+                    textIndex = getTextIndex(1, tableIndex);
+                    if (textIndex.match(RegEx.subjectRegex)) {
+                        courses[courseIndex].majors[majorIndex].subjects
                             .at(-1)
-                            .subjects.push(getTextIndex(selectIndex));
+                            .subjects.push(textIndex);
                     }
                 }
             }
@@ -95,14 +94,17 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
 
         function pushSpecialMajor(courseIndex: number, majorIndex: number) {
             let typeTitles = '';
-            const titleLength = $data('*').filter('h3').length;
+            const typeNumbers = $data('*').filter('h3').length;
             let tableElement = null;
-            for (let t = 0; t < titleLength; t++) {
-                tableElement = $data('h3').eq(t).nextAll('table').first();
+            for (let typeIndex = 0; typeIndex < typeNumbers; typeIndex++) {
+                tableElement = $data('h3')
+                    .eq(typeIndex)
+                    .nextAll('table')
+                    .first();
 
-                const othertableLength = tableElement.find('tr').length;
+                const tableElementLength = tableElement.find('tr').length;
 
-                const title = $data('h3').eq(t).text();
+                const title = $data('h3').eq(typeIndex).text();
 
                 if (title) {
                     typeTitles = title
@@ -110,22 +112,26 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
                         ?.at(2)
                         .split(':')
                         .at(0);
-                    courses[0].majors[7].subjects.push({
+                    courses[courseIndex].majors[majorIndex].subjects.push({
                         name: typeTitles,
                         subjects: [],
                     });
 
-                    for (let m = 1; m < othertableLength; m++) {
+                    for (
+                        let tableElementIndex = 1;
+                        tableElementIndex < tableElementLength;
+                        tableElementIndex++
+                    ) {
                         const code = tableElement
                             .find('tr')
-                            .eq(m)
+                            .eq(tableElementIndex)
                             .find('td')
                             .eq(1)
                             .text()
                             .trim();
 
                         if (code.match(RegEx.subjectRegex)) {
-                            courses[0].majors[7].subjects
+                            courses[courseIndex].majors[majorIndex].subjects
                                 .at(-1)
                                 .subjects.push(code);
                         }
@@ -137,6 +143,7 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
         async function getEducationProgramMajorElement(
             majorIndex: number,
             element: string,
+            courseIndex: number,
         ) {
             const $fieldRoot = await getPayload(
                 `${API_URL.headLink}${courses[0].majors[majorIndex].link}`,
@@ -169,6 +176,7 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
                     $data = await getEducationProgramMajorElement(
                         majorIndex,
                         'dd:nth-child(6)',
+                        courseIndex
                     );
 
                     //get total credit
@@ -183,7 +191,7 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
             }
         }
 
-        console.log(JSON.stringify(courses[0].majors[7], null, 2));
+        console.log(JSON.stringify(courses[0].majors, null, 2));
 
         console.log('??k?');
     }
