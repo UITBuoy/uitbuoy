@@ -14,7 +14,7 @@ export default function MakeupClass() {
     return (
         <View className=" flex-1 bg-white">
             <ScrollView style={{ paddingTop: 20 }} className=" flex-1">
-                {loading ? (
+                {loading && !data?.makeUpClass ? (
                     <PreviewMakeupClassSkeleton />
                 ) : (
                     <>

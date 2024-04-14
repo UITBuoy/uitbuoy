@@ -17,8 +17,10 @@ export default function PreviewMakeupClass() {
 
     return (
         <View className=" flex flex-col gap-2">
-            <Text className=" mx-4 mt-10 font-semibold mb-4">Các thông báo</Text>
-            {loading ? (
+            <Text className=" mx-4 mt-10 font-semibold mb-4">
+                Các thông báo
+            </Text>
+            {loading || !data?.makeUpClass ? (
                 <PreviewMakeupClassSkeleton />
             ) : (
                 <>

@@ -37,7 +37,7 @@ export function useApolloLink() {
         uri:
             process.env.NODE_ENV === 'development'
                 ? `http://${Constants.expoConfig.hostUri.split(`:`).shift().concat(`:3001`)}/graphql`
-                : process.env.EXPO_PUBLIC_API_URL,
+                : `${process.env.EXPO_PUBLIC_API_URL}graphql`,
         credentials: 'same-origin',
     });
 
