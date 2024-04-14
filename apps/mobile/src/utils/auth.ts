@@ -12,6 +12,8 @@ import Constants from 'expo-constants';
 import { router } from 'expo-router';
 import { jwtDecode } from 'jwt-decode';
 import { useAuth } from '../stores/auth.store';
+//@ts-ignore
+import { EXPO_PUBLIC_ENVIRONMENT, EXPO_PUBLIC_API_URL } from '@env';
 
 const REFRESH_TOKEN = gql`
     mutation RefreshToken {
@@ -25,9 +27,16 @@ const REFRESH_TOKEN = gql`
 export function useApolloLink() {
     const { authData, refreshAccessToken } = useAuth();
 
+    console.log({
+        EXPO_PUBLIC_ENVIRONMENT,
+        EXPO_PUBLIC_API_URL,
+        env: process.env,
+    });
+
     const link = createHttpLink({
         uri:
-            process.env.EXPO_PUBLIC_ENVIRONMENT === 'development'
+            process.env.EXPO_PUBLIC_ENVIRONMENT === 'development' ||
+            EXPO_PUBLIC_ENVIRONMENT == 'development'
                 ? `http://${Constants.expoConfig.hostUri.split(`:`).shift().concat(`:3001`)}/graphql`
                 : process.env.EXPO_PUBLIC_API_URL,
         credentials: 'same-origin',
