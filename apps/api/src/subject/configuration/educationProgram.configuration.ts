@@ -36,6 +36,8 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
         writeFile('test.txt', text, () => {});
 
         const subjectRegex = /([a-zA-Z]+\d+)/g;
+        const typeRegex = /([a-zA-Z])/g;
+
         const subjectIds = Array.from(
             new Set<string>(
                 Array.from(text.matchAll(subjectRegex))
@@ -46,15 +48,18 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
         // console.log(subjectIds);
 
         const keywords = [
-            'đại cương',
-            'cơ sở ngành',
-            'chuyên ngành',
+            'Các môn lý luận chính trị',
+            'Toán - Tin học - Khoa học tự nhiên',
+            'Ngoại ngữ',
+            'Giáo dục thể chất - Giáo dục quốc phòng',
+            'khác',
             'cơ sở nhóm ngành',
-            'môn học khác',
-            'thực tập',
+            'cơ sở ngành',
+            'tự chọn chuyên ngành',
             'đồ án',
-            'khoá luận',
-            'chuyên đề',
+            'Thực tập doanh nghiệp',
+            'Khóa luận tốt nghiệp',
+            'chuyên đề tốt nghiệp',
         ];
 
         //push courses
@@ -84,6 +89,7 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
                     majorName,
                     link,
                     totalCredit: '',
+                    deepMajor: [],
                     subjects: [],
                 });
             }
@@ -111,92 +117,67 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
                         .trim();
                 }
             }
-        }
 
-        // for (let i = 0; i < courses.length; i++) {
-        //     const $fieldRoot = await getPayload(courses[0].majors[7].link);
-        //     const table = $fieldRoot('dd:nth-child(6)').html(); //gia tri nay truyen vao
-        //     const $getTotalCredit = cheerio.load(table);
-        //     courses[0].majors[7].totalCredit = $educationProgram('table')
-        //         .eq(0)
-        //         .contents()
-        //         .children('tr')
-        //         .last()
-        //         .children('td')
-        //         .last()
-        //         .prev()
-        //         .text();
-        // }
-        console.log('???');
-        console.log(JSON.stringify(courses[0].majors, null, 2));
+            //get subjects
+            // for (let j = 0; j < majorLength; j++) {
 
-        // console.log(JSON.stringify(courses, null, 2));
-
-        // console.log('?');
-        // const totalCredit = $data('table')
-        //     .eq(0)
-        //     .contents()
-        //     .children('tr')
-        //     .last()
-        //     .children('td')
-        //     .last()
-        //     .prev()
-        //     .text();
-        // console.log(totalCredit);
-        // console.log('?de');
-
-        // const title = $data('table').eq(0).html()
-        // console.log($data('h2').eq(0).nextAll('table').first().text());
-
-        for (let i = 0; i < subjectIds.length; i++) {
-            // .parentsUntil('table')
-            // .prevUntil('*')
-            // .filter(function (i, el) {
-            //     for (let j = 0; j < keywords.length; j++) {
-            //         if ($data(el).text().includes(keywords[j])) {
-            //             t = keywords[j];
-            //             condition = 'true';
-            //             return true;
-            //         }
-            //     }
-            // });
-            // if (condition == 'true') {
-            //     console.log('j');
-            //     courses[0].majors[7].subjects.push({
-            //         subjectCode: subjectIds[i],
-            //         type: t,
-            //     });
-            //     break;
             // }
         }
-        // console.log('working');
-        // console.log('done');
+        const tableLength = $data('table').eq(1).find('tr').length;
+        for (let j = 0; j < courses[0].majors.length; j++) {
+            for (let i = 1; i < tableLength; i++) {
+                let textIndex = $data('table')
+                    .eq(1)
+                    .find('tr')
+                    .eq(i)
+                    .find('td')
+                    .eq(0)
+                    .text()
+                    .trim();
+                const columnContent = $data('table')
+                    .eq(1)
+                    .find('tr')
+                    .eq(i)
+                    .find('td')
+                    .eq(0)
+                    .text();
+                if (columnContent.match(typeRegex)) {
+                    courses[0].majors[j].subjects.push({
+                        name: textIndex,
+                        subjects: [],
+                    });
+                } else {
+                    const code = $data('table')
+                        .eq(1)
+                        .find('tr')
+                        .eq(i)
+                        .find('td')
+                        .eq(1)
+                        .text()
+                        .trim();
+                    if (code.match(subjectRegex)) {
+                        courses[0].majors[j].subjects
+                            .at(-1)
+                            .subjects.push(code);
+                    }
+                }
+            }
+        }
 
-        // for (let i = 0; i < courses.length; i++) {
-        // //     for (let j = 0; j < courses[i].majors.length; j++) {
-        // let link = `https://daa.uit.edu.vn/${courses[0].majors[7].link}`;
-        // const $data = await getPayload(link);
-        // const text = $data('dd:nth-child(6)').text();
+        console.log(JSON.stringify(courses[0].majors[7], null, 2));
 
-        // const subjectIds = Array.from(text.matchAll(/[a-zA-Z]+\d+/g));
-        // console.log(subjectIds);
+        console.log('??k?');
 
-        // for (let k = 0; k < 4; k++)
-        // const partOfText = 'dục đại cương';
-        // for (let i = 0; i < 150; i++) {
-        // const text = $data('dd:nth-child(6)').text()
-        // writeFile('test.txt', text, () => {})
+        const textDaicuong = $data('table').eq(1).text();
 
-        // const trainingSystem = $data(':has(a[name=\'_Toc106488670\'])')
-        //     .nextUntil(':has(a[name=\'_Toc106488673\'])')
-        //     .filter('table')
-        //     .text();
-
-        // console.log(trainingSystem);
-        // }
-        // }
-        //     }
-        // }
+        const subjectIdDaiCuong = Array.from(
+            new Set<string>(
+                Array.from(textDaicuong.matchAll(subjectRegex))
+                    .map((v) => v[0])
+                    .filter((v) => v.length > 4),
+            ).values(),
+        );
+        // console.log(subjectIdDaiCuong);
     }
     //once per 6 months
     @Cron('0 0 0 1 6 *') // Remember to test later (13/3/24)
