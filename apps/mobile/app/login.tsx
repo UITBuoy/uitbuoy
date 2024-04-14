@@ -1,12 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { TextInput, View } from 'react-native';
+import { Image } from 'expo-image';
+import React, { useEffect, useState } from 'react';
+import { Text, View } from 'react-native';
 import TextField from '../src/components/TextField/TextField';
 import { Button, ButtonText } from '../src/components/ui/Button/Button';
-import { Image } from 'expo-image';
 
+import { router, useRootNavigationState } from 'expo-router';
 import LOGO from '../assets/app-logo.png';
 import { useLogin } from '../src/hooks/auth/useLogin';
-import { router, useRootNavigationState } from 'expo-router';
 import { useAuth } from '../src/stores/auth.store';
 
 export default function Page() {
@@ -26,6 +26,7 @@ export default function Page() {
 
     return (
         <View className=" flex flex-col w-full h-full bg-white">
+            <Text>V1</Text>
             <View className=" w-full h-1/2 bg-[#039CCA] flex items-center">
                 <Image
                     style={{
