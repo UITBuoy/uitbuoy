@@ -165,13 +165,12 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
         //get subjects by orther types
         let typeTitles = '';
         const titleLength = $data('*').filter('h3').length;
+        let tableElement = null
         for (let i = 0; i < titleLength; i++) {
-            console.log($data('h3').eq(1).next('table').html());
+            tableElement = $data('h3').eq(i).nextAll('table').first();
+            console.log(tableElement.html());
 
-            const orthertableLength = $data('h3')
-                .eq(i)
-                .next('table')
-                .find('tr').length;
+            const othertableLength = tableElement.find('tr').length;
 
             const title = $data('h3').eq(i).text();
 
@@ -182,10 +181,8 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
                     subjects: [],
                 });
 
-                for (let j = 1; j < orthertableLength; j++) {
-                    const code = $data('h3')
-                        .eq(i)
-                        .next('table')
+                for (let j = 1; j < othertableLength; j++) {
+                    const code = tableElement
                         .find('tr')
                         .eq(j)
                         .find('td')
@@ -209,7 +206,7 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
         // console.log(otherTypeStr);
         // console.log(otherType);
 
-        // console.log(JSON.stringify(courses[0].majors[7], null, 2));
+        console.log(JSON.stringify(courses[0].majors[7], null, 2));
 
         console.log('??k?');
 
