@@ -84,9 +84,9 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
                 } else {
                     textIndex = getTextIndex(1, tableIndex);
                     if (textIndex.match(RegEx.subjectRegex)) {
-                        courses[courseIndex].majors[majorIndex].subjects
-                            .at(-1)
-                            .subjects.push(textIndex);
+                        courses[courseIndex].majors[majorIndex].subjects.push(
+                            textIndex,
+                        );
                     }
                 }
             }
@@ -146,9 +146,9 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
             courseIndex: number,
         ) {
             const $fieldRoot = await getPayload(
-                `${API_URL.headLink}${courses[0].majors[majorIndex].link}`,
+                `${API_URL.headLink}${courses[courseIndex].majors[majorIndex].link}`,
             );
-            const html = $fieldRoot(element).html();
+            const html = await $fieldRoot(element).html() || "";
 
             return cheerio.load(html);
         }
@@ -169,21 +169,31 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
 
             for (let majorIndex = 0; majorIndex < majorLength; majorIndex++) {
                 if (
-                    courses[0] &&
-                    courses[0].majors[majorIndex] &&
-                    courses[0].majors[majorIndex].link
+                    courses &&
+                    courses[courseIndex] &&
+                    courses[courseIndex].majors &&
+                    courses[courseIndex].majors[majorIndex] &&
+                    courses[courseIndex].majors[majorIndex].link
                 ) {
                     $data = await getEducationProgramMajorElement(
                         majorIndex,
                         'dd:nth-child(6)',
-                        courseIndex
+                        courseIndex,
                     );
 
                     //get total credit
                     pushTotalCredit(courseIndex, majorIndex);
 
                     //get subjects by type (dai cuong)
-                    pushGeneralSubjects(courseIndex, majorIndex);
+                    if (
+                        courses &&
+                        courses[courseIndex] &&
+                        courses[courseIndex].majors &&
+                        courses[courseIndex].majors[majorIndex] &&
+                        courses[courseIndex].majors[majorIndex].link &&
+                        courses[courseIndex].majors[majorIndex].subjects
+                    )
+                        pushGeneralSubjects(courseIndex, majorIndex);
 
                     //get subjects by orther types
                     pushSpecialMajor(courseIndex, majorIndex);
