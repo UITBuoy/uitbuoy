@@ -26,7 +26,6 @@ export default function Page() {
 
     return (
         <View className=" flex flex-col w-full h-full bg-white">
-            <Text>V1</Text>
             <View className=" w-full h-1/2 bg-[#039CCA] flex items-center">
                 <Image
                     style={{
