@@ -18,7 +18,7 @@ export default function Page() {
     const rootNavigationState = useRootNavigationState();
 
     useEffect(() => {
-        if (!isLogin && rootNavigationState.key) {
+        if (!isLogin && rootNavigationState?.key) {
             router.replace('/login');
         }
     }, []);

@@ -4,6 +4,7 @@
     "slug": "uit-buoy",
     "version": "1.0.0",
     "orientation": "portrait",
+    "scheme": "uitbuoy",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
@@ -23,7 +24,24 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.uitbuoy.uitbuoy",
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "*.uitbuoy.com",
+              "pathPrefix": ""
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        }
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -31,8 +49,7 @@
     },
     "plugins": [
       "expo-router",
-      "@react-native-google-signin/google-signin",
-      "@notifee/react-native"
+      "@react-native-google-signin/google-signin"
     ],
     "extra": {
       "router": {

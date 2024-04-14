@@ -35,8 +35,7 @@ export function useApolloLink() {
 
     const link = createHttpLink({
         uri:
-            process.env.EXPO_PUBLIC_ENVIRONMENT === 'development' ||
-            EXPO_PUBLIC_ENVIRONMENT == 'development'
+            process.env.NODE_ENV === 'development'
                 ? `http://${Constants.expoConfig.hostUri.split(`:`).shift().concat(`:3001`)}/graphql`
                 : process.env.EXPO_PUBLIC_API_URL,
         credentials: 'same-origin',
