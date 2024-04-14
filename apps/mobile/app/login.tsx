@@ -25,7 +25,7 @@ export default function Page() {
     }, []);
 
     return (
-        <View className=" flex flex-col w-full h-full">
+        <View className=" flex flex-col w-full h-full bg-white">
             <View className=" w-full h-1/2 bg-[#039CCA] flex items-center">
                 <Image
                     style={{
@@ -62,7 +62,10 @@ export default function Page() {
                 variant="solid"
                 action="primary"
                 onPress={async () => {
-                    if (await login(username, password)) router.replace('/');
+                    console.log({ username, password });
+                    const data = await login(username, password);
+                    console.log({ data });
+                    if (data) router.replace('/');
                 }}
             >
                 <ButtonText className=" text-white">Đăng nhập</ButtonText>
