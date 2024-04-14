@@ -5,6 +5,7 @@ const API_URL = {
     subjects: 'https://student.uit.edu.vn/danh-muc-mon-hoc-dai-hoc',
     educationPrograms:
         'https://daa.uit.edu.vn/chuong-trinh-dao-tao-tu-khoa-7-tro-di',
+    headLink: 'https://daa.uit.edu.vn',
 };
 
 export default API_URL;

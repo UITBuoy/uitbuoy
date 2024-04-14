@@ -4,10 +4,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import API_URL from 'src/common/constants/url';
+import RegEx from 'src/common/constants/regex';
 import { Repository } from 'typeorm';
 import { EducationProgram } from '../entities/educationProgram.entity';
-import { writeFile } from 'fs';
-import { table } from 'console';
 
 @Injectable()
 export class EducationProgramConfiguration implements OnApplicationBootstrap {
@@ -21,72 +20,23 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
             return cheerio.load((await axios.get(url)).data);
         }
         const $educationProgram = await getPayload(API_URL.educationPrograms);
+
         const courses = [];
 
         const courseLength: number = $educationProgram('div.acc-item').length;
 
-        let link =
-            'https://daa.uit.edu.vn/content/cu-nhan-nganh-ky-thuat-phan-mem-ap-dung-tu-khoa-18-2023';
-        const $root = await getPayload(link);
-        const html = $root('dd:nth-child(6)').html();
-        const $data = cheerio.load(html);
+        let $data = null;
 
-        // get subject
-        const text = $data('td').text();
-        writeFile('test.txt', text, () => {});
-
-        const subjectRegex = /([a-zA-Z]+\d+)/g;
-        const typeRegex = /([a-zA-Z])/g;
-        const regEx = /(\d.)*(.*)/;
-
-        const subjectIds = Array.from(
-            new Set<string>(
-                Array.from(text.matchAll(subjectRegex))
-                    .map((v) => v[0])
-                    .filter((v) => v.length > 4),
-            ).values(),
-        );
-        // console.log(subjectIds);
-
-        const keywords = [
-            'Các môn lý luận chính trị',
-            'Toán - Tin học - Khoa học tự nhiên',
-            'Ngoại ngữ',
-            'Giáo dục thể chất - Giáo dục quốc phòng',
-            'khác',
-            'cơ sở nhóm ngành',
-            'cơ sở ngành',
-            'tự chọn chuyên ngành',
-            'đồ án',
-            'Thực tập doanh nghiệp',
-            'Khóa luận tốt nghiệp',
-            'chuyên đề tốt nghiệp',
-        ];
-
-        //push courses
-        for (let i = 0; i < courseLength; i++) {
-            const courseName = $educationProgram('div.accordion').eq(i).text();
-            courses.push({ course: courseName, majors: [] });
-
-            const majorLength: number = $educationProgram('div.acc-item')
-                .eq(i)
-                .children('div.panel')
-                .children('div.views-row').length;
-
+        function pushMajorItems(majorLength: number, courseIndex: number) {
             for (let j = 0; j < majorLength; j++) {
-                const majorName = $educationProgram('div.panel')
-                    .eq(i)
+                const educationProgramData = $educationProgram('div.panel')
+                    .eq(courseIndex)
                     .children('div')
                     .eq(j)
-                    .children('a')
-                    .text();
-                const link: string = $educationProgram('div.panel')
-                    .eq(i)
-                    .children('div')
-                    .eq(j)
-                    .children('a')
-                    .attr('href');
-                courses[i].majors.push({
+                    .children('a');
+                const majorName = educationProgramData.text();
+                const link: string = educationProgramData.attr('href');
+                courses[courseIndex].majors.push({
                     majorName,
                     link,
                     totalCredit: '',
@@ -94,123 +44,148 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
                     subjects: [],
                 });
             }
-            //get total credit
-            for (let j = 0; j < majorLength; j++) {
-                if (
-                    courses[0] &&
-                    courses[0].majors[j] &&
-                    courses[0].majors[j].link
-                ) {
-                    const $fieldRoot = await getPayload(
-                        `https://daa.uit.edu.vn${courses[0].majors[j].link}`,
-                    );
-                    const table = $fieldRoot('dd:nth-child(6)').html(); //gia tri nay truyen vao
-                    const $getTotalCredit = cheerio.load(table);
-                    courses[0].majors[j].totalCredit = $getTotalCredit('table')
-                        .eq(0)
-                        .contents()
-                        .children('tr')
-                        .last()
-                        .children('td')
-                        .last()
-                        .prev()
+        }
+
+        function pushCoursesItems(courseIndex: number) {}
+
+        function pushTotalCredit(courseIndex: number, majorIndex: number) {
+            courses[0].majors[majorIndex].totalCredit = $data('table')
+                .eq(0)
+                .contents()
+                .children('tr')
+                .last()
+                .children('td')
+                .last()
+                .prev()
+                .text()
+                .trim();
+        }
+
+        function pushGeneralSubjects(courseIndex: number, majorIndex: number) {
+            const tableLength = $data('table').eq(1).find('tr').length;
+
+            for (let tableIndex = 1; tableIndex < tableLength; tableIndex++) {
+                let selectIndex = 0;
+                function getTextIndex(selectIndex) {
+                    return $data('table')
+                        .eq(1)
+                        .find('tr')
+                        .eq(tableIndex)
+                        .find('td')
+                        .eq(selectIndex)
                         .text()
                         .trim();
                 }
-            }
-        }
-
-        //get subjects by type (dai cuong)
-        const tableLength = $data('table').eq(1).find('tr').length;
-        for (let j = 0; j < courses[0].majors.length; j++) {
-            for (let i = 1; i < tableLength; i++) {
-                let textIndex = $data('table')
-                    .eq(1)
-                    .find('tr')
-                    .eq(i)
-                    .find('td')
-                    .eq(0)
-                    .text()
-                    .trim();
-                const columnContent = $data('table')
-                    .eq(1)
-                    .find('tr')
-                    .eq(i)
-                    .find('td')
-                    .eq(0)
-                    .text();
-                if (columnContent.match(typeRegex)) {
-                    courses[0].majors[j].subjects.push({
-                        name: textIndex,
+                if (getTextIndex(selectIndex).match(RegEx.typeRegex)) {
+                    courses[0].majors[majorIndex].subjects.push({
+                        name: getTextIndex(selectIndex),
                         subjects: [],
                     });
                 } else {
-                    const code = $data('table')
-                        .eq(1)
-                        .find('tr')
-                        .eq(i)
-                        .find('td')
-                        .eq(1)
-                        .text()
-                        .trim();
-                    if (code.match(subjectRegex)) {
-                        courses[0].majors[j].subjects
+                    selectIndex = 1;
+
+                    if (getTextIndex(selectIndex).match(RegEx.subjectRegex)) {
+                        courses[0].majors[majorIndex].subjects
                             .at(-1)
-                            .subjects.push(code);
+                            .subjects.push(getTextIndex(selectIndex));
                     }
                 }
             }
         }
 
-        //get subjects by orther types
-        let typeTitles = '';
-        const titleLength = $data('*').filter('h3').length;
-        let tableElement = null
-        for (let i = 0; i < titleLength; i++) {
-            tableElement = $data('h3').eq(i).nextAll('table').first();
-            console.log(tableElement.html());
+        function pushSpecialMajor(courseIndex: number, majorIndex: number) {
+            let typeTitles = '';
+            const titleLength = $data('*').filter('h3').length;
+            let tableElement = null;
+            for (let t = 0; t < titleLength; t++) {
+                tableElement = $data('h3').eq(t).nextAll('table').first();
 
-            const othertableLength = tableElement.find('tr').length;
+                const othertableLength = tableElement.find('tr').length;
 
-            const title = $data('h3').eq(i).text();
+                const title = $data('h3').eq(t).text();
 
-            if (title) {
-                typeTitles = title.match(regEx)?.at(2).split(':').at(0);
-                courses[0].majors[7].subjects.push({
-                    name: typeTitles,
-                    subjects: [],
-                });
+                if (title) {
+                    typeTitles = title
+                        .match(RegEx.multitypeRegex)
+                        ?.at(2)
+                        .split(':')
+                        .at(0);
+                    courses[0].majors[7].subjects.push({
+                        name: typeTitles,
+                        subjects: [],
+                    });
 
-                for (let j = 1; j < othertableLength; j++) {
-                    const code = tableElement
-                        .find('tr')
-                        .eq(j)
-                        .find('td')
-                        .eq(1)
-                        .text()
-                        .trim();
+                    for (let m = 1; m < othertableLength; m++) {
+                        const code = tableElement
+                            .find('tr')
+                            .eq(m)
+                            .find('td')
+                            .eq(1)
+                            .text()
+                            .trim();
 
-                    if (code.match(subjectRegex)) {
-                        courses[0].majors[7].subjects
-                            .at(-1)
-                            .subjects.push(code);
+                        if (code.match(RegEx.subjectRegex)) {
+                            courses[0].majors[7].subjects
+                                .at(-1)
+                                .subjects.push(code);
+                        }
                     }
                 }
             }
         }
 
-        // const otherType = $data('h3').eq(0).text();
+        async function getEducationProgramMajorElement(
+            majorIndex: number,
+            element: string,
+        ) {
+            const $fieldRoot = await getPayload(
+                `${API_URL.headLink}${courses[0].majors[majorIndex].link}`,
+            );
+            const html = $fieldRoot(element).html();
 
-        // const otherTypeStr = otherType.match(regEx)?.at(2);
+            return cheerio.load(html);
+        }
 
-        // console.log(otherTypeStr);
-        // console.log(otherType);
+        //push courses
+        for (let courseIndex = 0; courseIndex < courseLength; courseIndex++) {
+            const courseName = $educationProgram('div.accordion')
+                .eq(courseIndex)
+                .text();
+            courses.push({ course: courseName, majors: [] });
+
+            const majorLength = $educationProgram('div.acc-item')
+                .eq(courseIndex)
+                .children('div.panel')
+                .children('div.views-row').length;
+
+            pushMajorItems(majorLength, courseIndex);
+
+            for (let majorIndex = 0; majorIndex < majorLength; majorIndex++) {
+                if (
+                    courses[0] &&
+                    courses[0].majors[majorIndex] &&
+                    courses[0].majors[majorIndex].link
+                ) {
+                    $data = await getEducationProgramMajorElement(
+                        majorIndex,
+                        'dd:nth-child(6)',
+                    );
+
+                    //get total credit
+                    pushTotalCredit(courseIndex, majorIndex);
+
+                    //get subjects by type (dai cuong)
+                    pushGeneralSubjects(courseIndex, majorIndex);
+
+                    //get subjects by orther types
+                    pushSpecialMajor(courseIndex, majorIndex);
+                }
+            }
+        }
 
         console.log(JSON.stringify(courses[0].majors[7], null, 2));
 
         console.log('??k?');
-
-        // console.log(subjectIdDaiCuong);
     }
     //once per 6 months
     @Cron('0 0 0 1 6 *') // Remember to test later (13/3/24)
