@@ -41,7 +41,7 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
                     link,
                     totalCredit: '',
                     deepMajor: [],
-                    subjects: [],
+                    sections: [],
                 });
             }
         }
@@ -49,16 +49,23 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
         function pushCoursesItems(courseIndex: number) {}
 
         function pushTotalCredit(courseIndex: number, majorIndex: number) {
-            courses[courseIndex].majors[majorIndex].totalCredit = $data('table')
-                .eq(0)
-                .contents()
-                .children('tr')
-                .last()
-                .children('td')
-                .last()
-                .prev()
-                .text()
-                .trim();
+            const totalCredit = parseInt(
+                $data('table')
+                    .eq(0)
+                    .contents()
+                    .children('tr')
+                    .last()
+                    .children('td')
+                    .last()
+                    .prev()
+                    .text()
+                    .trim(),
+            );
+            courses[courseIndex].majors[majorIndex].totalCredit = isNaN(
+                totalCredit,
+            )
+                ? 0
+                : totalCredit;
         }
         function getTextIndex(selectIndex: number, tableIndex: number) {
             return $data('table')
@@ -77,16 +84,18 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
             for (let tableIndex = 1; tableIndex < tableLength; tableIndex++) {
                 let textIndex = getTextIndex(0, tableIndex);
                 if (textIndex.match(RegEx.typeRegex)) {
-                    courses[courseIndex].majors[majorIndex].subjects.push({
+                    courses[courseIndex].majors[majorIndex].sections.push({
                         name: textIndex,
                         subjects: [],
                     });
                 } else {
                     textIndex = getTextIndex(1, tableIndex);
                     if (textIndex.match(RegEx.subjectRegex)) {
-                        courses[courseIndex].majors[majorIndex].subjects.push(
-                            textIndex,
-                        );
+                        courses[courseIndex].majors[majorIndex].sections
+                            .at(-1)
+                            ?.subjects.push({
+                                code: textIndex,
+                            });
                     }
                 }
             }
@@ -112,7 +121,7 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
                         ?.at(2)
                         .split(':')
                         .at(0);
-                    courses[courseIndex].majors[majorIndex].subjects.push({
+                    courses[courseIndex].majors[majorIndex].sections.push({
                         name: typeTitles,
                         subjects: [],
                     });
@@ -131,9 +140,9 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
                             .trim();
 
                         if (code.match(RegEx.subjectRegex)) {
-                            courses[courseIndex].majors[majorIndex].subjects
+                            courses[courseIndex].majors[majorIndex].sections
                                 .at(-1)
-                                .subjects.push(code);
+                                .subjects.push({ code });
                         }
                     }
                 }
@@ -148,7 +157,7 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
             const $fieldRoot = await getPayload(
                 `${API_URL.headLink}${courses[courseIndex].majors[majorIndex].link}`,
             );
-            const html = await $fieldRoot(element).html() || "";
+            const html = (await $fieldRoot(element).html()) || '';
 
             return cheerio.load(html);
         }
@@ -191,7 +200,7 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
                         courses[courseIndex].majors &&
                         courses[courseIndex].majors[majorIndex] &&
                         courses[courseIndex].majors[majorIndex].link &&
-                        courses[courseIndex].majors[majorIndex].subjects
+                        courses[courseIndex].majors[majorIndex].sections
                     )
                         pushGeneralSubjects(courseIndex, majorIndex);
 
@@ -202,6 +211,17 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
         }
 
         console.log(JSON.stringify(courses[0].majors, null, 2));
+
+        courses.forEach((course) => {
+            course.majors.forEach(async (major) => {
+                major.year = course.course;
+                try {
+                    await this.repo.save(major);
+                } catch (error) {
+                    console.log({ major });
+                }
+            });
+        });
 
         console.log('??k?');
     }
