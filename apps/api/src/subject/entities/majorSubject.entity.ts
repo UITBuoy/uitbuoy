@@ -1,5 +1,13 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, Relation } from 'typeorm';
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    ManyToMany,
+    ManyToOne,
+    PrimaryColumn,
+    Relation,
+} from 'typeorm';
 import type { Section } from './section.entity';
 
 @ObjectType()
@@ -9,31 +17,30 @@ export class MajorSubject {
     @PrimaryColumn()
     code: string;
 
-    @Field(() => Boolean)
-    @Column()
+    @Field(() => Boolean, { nullable: true })
+    @Column({ nullable: true })
     isRequired: boolean;
 
-    @Field(() => Boolean)
-    @Column()
+    @Field(() => Boolean, { nullable: true })
+    @Column({ nullable: true })
     isFree: boolean;
 
-    @Field(() => String)
-    @Column()
+    @Field(() => String, { nullable: true })
+    @Column({ nullable: true })
     type: string;
 
-    @Field(() => Int)
-    @Column()
+    @Field(() => Int, { nullable: true })
+    @Column({ nullable: true })
     theoreticalCredit: number;
 
-    @Field(() => Int)
-    @Column()
+    @Field(() => Int, { nullable: true })
+    @Column({ nullable: true })
     practicalCredit: number;
 
-    @Field(() => Int)
-    @Column()
+    @Field(() => Int, { nullable: true })
+    @Column({ nullable: true })
     minimumOptionalCredit: number;
 
-    @ManyToOne('Section', 'subjects')
-    @JoinColumn({ name: 'section_id' })
-    section: Relation<Section>;
+    @ManyToMany('Section', 'subjects')
+    sections: Relation<Section[]>;
 }

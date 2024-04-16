@@ -12,22 +12,30 @@ import type { Section } from './section.entity';
 @ObjectType()
 @Entity()
 export class EducationProgram {
-    @Field(() => String)
+    @Field()
     @PrimaryGeneratedColumn()
     id: string;
 
-    @Field(() => String)
+    @Field({ nullable: true })
     @Column({ nullable: true })
     year: string;
 
-    @Field(() => String)
-    @Column()
-    major: string; //enum
+    @Field({ nullable: true })
+    @Column({ nullable: true })
+    majorName: string;
 
-    @Field(() => String)
-    @Column()
+    @Field({ nullable: true })
+    @Column({ nullable: true })
+    link: string;
+
+    @Field(() => Int)
+    @Column({ nullable: true })
+    totalCredit: number;
+
+    @Field({ nullable: true })
+    @Column({ nullable: true })
     trainingSystem: string; //enum
 
-    @OneToMany('Section', 'educationProgram')
-    sections: Relation<Section>[];
+    @OneToMany('Section', 'educationProgram', { cascade: true })
+    sections: Relation<Section[]>;
 }

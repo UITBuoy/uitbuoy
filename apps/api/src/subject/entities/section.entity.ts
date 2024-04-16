@@ -3,6 +3,8 @@ import {
     Column,
     Entity,
     JoinColumn,
+    JoinTable,
+    ManyToMany,
     ManyToOne,
     OneToMany,
     PrimaryColumn,
@@ -19,22 +21,27 @@ export class Section {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Field(() => Number)
+    @Field({ nullable: true })
+    @Column({ nullable: true })
+    name: string;
+
+    @Field(() => Int, { nullable: true })
     @Column({ nullable: true })
     order: number;
 
-    @Field(() => Number)
+    @Field(() => Int, { nullable: true })
     @Column({ nullable: true })
     totalCredit: number;
 
-    @Field(() => String)
-    @Column()
+    @Field(() => String, { nullable: true })
+    @Column({ nullable: true })
     title: string; //enum
 
-    @OneToMany('MajorSubject', 'section')
-    subjects: Relation<MajorSubject>[];
+    @ManyToMany('MajorSubject', 'sections', { cascade: true })
+    @JoinTable()
+    subjects: Relation<MajorSubject[]>;
 
     @ManyToOne('EducationProgram', 'sections')
     @JoinColumn({ name: 'education_program_id' })
-    educationProgram: EducationProgram;
+    educationProgram: Relation<EducationProgram>;
 }

@@ -8,7 +8,8 @@ import { EducationProgram } from './entities/educationProgram.entity';
 export class SubjectService {
     constructor(
         @InjectRepository(Subject) private subjecRepo: Repository<Subject>,
-        @InjectRepository(EducationProgram) private educationProgramRepo: Repository<EducationProgram>,
+        @InjectRepository(EducationProgram)
+        private educationProgramRepo: Repository<EducationProgram>,
     ) {}
 
     async findSubjectDataByCode(token: String, code: string) {
@@ -19,7 +20,7 @@ export class SubjectService {
         return this.subjecRepo.findBy({ nameEN });
     }
 
-    async findEducationProgram(token: String, major: string) {
-        return this.educationProgramRepo.findBy({ major });
+    async findEducationProgram(token: String, majorName: string) {
+        return this.educationProgramRepo.findBy({ majorName });
     }
 }
