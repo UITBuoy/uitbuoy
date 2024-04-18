@@ -68,7 +68,7 @@ export default function SignInResolve() {
                     </View>
                 </Animated.View>
                 <View className=" flex-1 pt-0">
-                    <View className=" mx-4 flex-col gap-4">
+                    <View className=" flex-1 mx-4 flex-col gap-4">
                         <Animated.View
                             entering={FadeIn.delay(300)}
                             exiting={FadeOut}

@@ -31,10 +31,12 @@ export default function ProgressText({
                 style={{
                     opacity: loaded ? 1 : 0.4,
                 }}
-                className=" flex-col gap-2"
+                className=" flex flex-col gap-2"
             >
                 <Text className=" font-medium text-lg">{title}</Text>
-                <Text className=" font-light">{description}</Text>
+                <Text style={{ paddingRight: 20 }} className=" font-light">
+                    {description}
+                </Text>
             </View>
         </View>
     );
