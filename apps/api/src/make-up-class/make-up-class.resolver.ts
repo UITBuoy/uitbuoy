@@ -42,8 +42,13 @@ export class MakeUpClassResolver {
     }
 
     @Mutation(() => Boolean)
-    async updateMakeupClass(
-        @Args('max_page', { type: () => Int, nullable: true, defaultValue: 50 })
+    async crawlMakeupClass(
+        @Args('max_page', {
+            type: () => Int,
+            nullable: true,
+            defaultValue: 50,
+            description: 'Crawl make-up class from student.uit',
+        })
         maxPage: number,
     ) {
         await this.makeUpClassApiService.fetchMakeupClass(maxPage);
