@@ -12,8 +12,8 @@ import Constants from 'expo-constants';
 import { router } from 'expo-router';
 import { jwtDecode } from 'jwt-decode';
 import { useAuth } from '../stores/auth.store';
+import { useCallback, useMemo, useRef } from 'react';
 //@ts-ignore
-import { EXPO_PUBLIC_ENVIRONMENT, EXPO_PUBLIC_API_URL } from '@env';
 
 const REFRESH_TOKEN = gql`
     mutation RefreshToken {
@@ -27,29 +27,12 @@ const REFRESH_TOKEN = gql`
 export function useApolloLink() {
     const { authData, refreshAccessToken } = useAuth();
 
-    console.log({
-        EXPO_PUBLIC_ENVIRONMENT,
-        EXPO_PUBLIC_API_URL,
-        env: process.env,
-    });
-
     const link = createHttpLink({
         uri:
             process.env.NODE_ENV === 'development'
                 ? `http://${Constants.expoConfig.hostUri.split(`:`).shift().concat(`:3001`)}/graphql`
                 : `${process.env.EXPO_PUBLIC_API_URL}graphql`,
         credentials: 'same-origin',
-    });
-
-    const authLink = setContext((_, { headers }) => {
-        return {
-            headers: {
-                ...headers,
-                authorization: authData?.access_token
-                    ? `Bearer ${authData?.access_token}`
-                    : '',
-            },
-        };
     });
 
     const refreshAuthLink = setContext((_, { headers }) => {
@@ -68,54 +51,78 @@ export function useApolloLink() {
         cache: new InMemoryCache(),
     });
 
-    const apolloLink = ApolloLink.from([
-        new TokenRefreshLink({
-            isTokenValidOrUndefined: async () => {
-                if (!authData?.access_token) return false;
+    console.log('Auth data', { authData });
 
-                try {
-                    const decodedAccessToken = jwtDecode(
-                        authData?.access_token,
-                    );
-                    const now = new Date().getTime() / 1000;
+    const tokenRefreshLink = useMemo(
+        () =>
+            new TokenRefreshLink({
+                isTokenValidOrUndefined: async () => {
+                    console.log('Recreated apollo link', authData);
+                    if (!authData?.access_token) return false;
 
-                    if (decodedAccessToken.exp <= now) {
-                        return false;
+                    try {
+                        const decodedAccessToken = jwtDecode(
+                            authData?.access_token,
+                        );
+                        const now = new Date().getTime() / 1000;
+
+                        if (decodedAccessToken.exp <= now) {
+                            return false;
+                        }
+
+                        return true;
+                    } catch (error) {
+                        console.log({ error });
                     }
+                },
+                fetchAccessToken: async () => {
+                    const token = await refreshClient.mutate({
+                        mutation: REFRESH_TOKEN,
+                    });
+                    return {
+                        ok: true,
+                        status: 200,
+                        statusText: 'OK',
+                        text: async () => token.data.refreshToken,
+                    } as unknown as Response;
+                },
+                handleFetch: (accessToken) => {
+                    refreshAccessToken(accessToken);
+                },
+                handleError: (err) => {
+                    if (
+                        err instanceof TypeError &&
+                        err.message === 'Network request failed'
+                    ) {
+                        alert('Network error');
+                    } else {
+                        router.replace('/login');
+                    }
+                },
+            }),
+        [authData, refreshClient],
+    );
 
-                    return true;
-                } catch (error) {
-                    console.log({ error });
-                }
-            },
-            fetchAccessToken: async () => {
-                const token = await refreshClient.mutate({
-                    mutation: REFRESH_TOKEN,
-                });
+    const authLink = useMemo(
+        () =>
+            setContext((_, { headers }) => {
                 return {
-                    ok: true,
-                    status: 200,
-                    statusText: 'OK',
-                    text: async () => token.data.refreshToken,
-                } as unknown as Response;
-            },
-            handleFetch: (accessToken) => {
-                refreshAccessToken(accessToken);
-            },
-            handleError: (err) => {
-                if (
-                    err instanceof TypeError &&
-                    err.message === 'Network request failed'
-                ) {
-                    alert('Network error');
-                } else {
-                    router.replace('/login');
-                }
-            },
-        }),
-        authLink,
-        link,
-    ]);
+                    headers: {
+                        ...headers,
+                        authorization: authData?.access_token
+                            ? `Bearer ${authData?.access_token}`
+                            : '',
+                    },
+                };
+            }),
+        [authData],
+    );
+
+    const apolloLink = useMemo(() => {
+        console.log('Outer scope', authData);
+
+        return ApolloLink.from([tokenRefreshLink, authLink, link]);
+    }, [authData, tokenRefreshLink, authLink, link]);
 
     return apolloLink;
 }

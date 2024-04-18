@@ -55,7 +55,8 @@ export type AuthEntity = {
   fullname: Scalars['String']['output'];
   googleUsers: Array<GoogleUser>;
   id?: Maybe<Scalars['Int']['output']>;
-  isIntegrateWithGoogle: Scalars['Boolean']['output'];
+  isFirstTimeLogin?: Maybe<Scalars['Boolean']['output']>;
+  isIntegrateWithGoogle?: Maybe<Scalars['Boolean']['output']>;
   lang?: Maybe<Scalars['String']['output']>;
   lastaccess?: Maybe<Scalars['Int']['output']>;
   mailformat?: Maybe<Scalars['String']['output']>;
@@ -548,7 +549,7 @@ export type User = {
   fullname: Scalars['String']['output'];
   googleUsers: Array<GoogleUser>;
   id?: Maybe<Scalars['Int']['output']>;
-  isIntegrateWithGoogle: Scalars['Boolean']['output'];
+  isIntegrateWithGoogle?: Maybe<Scalars['Boolean']['output']>;
   lang?: Maybe<Scalars['String']['output']>;
   lastaccess?: Maybe<Scalars['Int']['output']>;
   mailformat?: Maybe<Scalars['String']['output']>;
@@ -587,7 +588,7 @@ export type LoginApiMutation = { __typename?: 'Mutation', login: { __typename?: 
 export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', auth?: string | null, city?: string | null, confirmed?: string | null, country?: string | null, department?: string | null, email: string, firstaccess?: number | null, fullname: string, id?: number | null, isIntegrateWithGoogle: boolean, lang?: string | null, lastaccess?: number | null, mailformat?: string | null, profileimageurl?: string | null, profileimageurlsmall?: string | null, suspended?: string | null, theme?: string | null, timezone?: string | null, token: string, username: string } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', auth?: string | null, city?: string | null, confirmed?: string | null, country?: string | null, department?: string | null, email: string, firstaccess?: number | null, fullname: string, id?: number | null, isIntegrateWithGoogle?: boolean | null, lang?: string | null, lastaccess?: number | null, mailformat?: string | null, profileimageurl?: string | null, profileimageurlsmall?: string | null, suspended?: string | null, theme?: string | null, timezone?: string | null, token: string, username: string } };
 
 export type DetailAssignmentCourseQueryVariables = Exact<{
   id: Scalars['Int']['input'];

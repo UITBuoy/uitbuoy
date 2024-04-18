@@ -1,19 +1,19 @@
 import { Image } from 'expo-image';
 import React, { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+import { Alert, Text, ToastAndroid, View } from 'react-native';
 import TextField from '../src/components/TextField/TextField';
-import { Button, ButtonText } from '../src/components/ui/Button/Button';
 
 import { router, useRootNavigationState } from 'expo-router';
 import LOGO from '../assets/app-logo.png';
+import NativeButton from '../src/components/NativeButton/NativeButton';
 import { useLogin } from '../src/hooks/auth/useLogin';
 import { useAuth } from '../src/stores/auth.store';
+import { Spinner } from '@gluestack-ui/themed';
 
 export default function Page() {
-    const [username, setUsername] = useState<string>();
-    const [password, setPassword] = useState<string>();
+    const [username, setUsername] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
 
-    const { login } = useLogin();
     const { isLogin } = useAuth();
 
     const rootNavigationState = useRootNavigationState();
@@ -45,6 +45,7 @@ export default function Page() {
                     onChangeText={(value) => setUsername(value)}
                     title="Username"
                     type="text"
+                    keyboardType="number-pad"
                     placeholder="MSSV"
                 />
                 <TextField
@@ -56,18 +57,52 @@ export default function Page() {
                     placeholder="Mật khẩu"
                 />
             </View>
-            <Button
-                className=" bg-sky-500 h-fit p-3 mt-5 mx-5"
-                size="md"
-                variant="solid"
-                action="primary"
+            <SignInButton username={username} password={password} />
+        </View>
+    );
+}
+
+function SignInButton({
+    username,
+    password,
+}: {
+    username: string;
+    password: string;
+}) {
+    const { login, loading } = useLogin();
+
+    return (
+        <View className="mt-5">
+            <NativeButton
+                disabled={loading}
                 onPress={async () => {
-                    const data = await login(username, password);
-                    if (data) router.replace('/');
+                    if (username.length !== 8)
+                        Alert.alert(
+                            'Lỗi đăng nhập',
+                            'Mã số sinh viên phải có đủ 8 ký tự',
+                        );
+                    else if (!password)
+                        Alert.alert('Lỗi đăng nhập', 'Bạn phải nhập mật khẩu');
+                    else {
+                        const data = await login(username, password);
+                        if (data) {
+                            router.replace('/modals/sign-in-resolve');
+                        } else {
+                            Alert.alert(
+                                'Lỗi đăng nhập',
+                                'Mã số sinh viên hoặc mật khẩu không đúng',
+                            );
+                        }
+                    }
                 }}
             >
-                <ButtonText className=" text-white">Đăng nhập</ButtonText>
-            </Button>
+                <View className=" flex flex-row justify-center gap-2 rounded-2xl bg-sky-500 h-fit p-3 mx-5">
+                    {loading ? <Spinner color="white" /> : null}
+                    <Text className=" text-white text-center font-medium">
+                        Đăng nhập
+                    </Text>
+                </View>
+            </NativeButton>
         </View>
     );
 }
