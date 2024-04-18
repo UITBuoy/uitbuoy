@@ -13,22 +13,28 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import MANAGE_COURSE_ANIMATION from '../../assets/animations/new-features/manage-courses.json';
 import CourseSearch from '../../src/components/CourseSearch/CourseSearch';
 import PageHeader from '../../src/components/PageHeader/PageHeader';
+import PreviewMakeupClass from '../../src/components/PreviewMakeupClass';
 import RemainingActivities from '../../src/components/RemainingActivities';
 import SyncCalendar from '../../src/components/SyncCalendar';
-import { useAuth } from '../../src/stores/auth.store';
-import PreviewMakeupClass from '../../src/components/PreviewMakeupClass';
 import {
     useUserEventsLazyQuery,
     useUserMakeUpClassLazyQuery,
 } from '../../src/gql/graphql';
+import { useNotificationCalendar } from '../../src/hooks/notifications/useNotificationCalendar';
+import { useAuth } from '../../src/stores/auth.store';
+import { useUpdateEventNotification } from '../../src/hooks/notifications/useUpdateEventNotification';
 
 export default function Page() {
     const { isLogin } = useAuth();
 
-    const [refetchUserEvents, { loading: userEventsLoading }] =
-        useUserEventsLazyQuery();
+    const [
+        refetchUserEvents,
+        { data: userEvents, loading: userEventsLoading },
+    ] = useUserEventsLazyQuery();
     const [refetchUserMakeupClasses, { loading: userMakeupClassesLoading }] =
         useUserMakeUpClassLazyQuery();
+
+    useUpdateEventNotification(userEvents?.userEvents);
 
     function refetch() {
         refetchUserEvents({
@@ -48,6 +54,12 @@ export default function Page() {
             router.replace('/modals/login');
         }
     }, []);
+
+    useEffect(() => {
+        // userEvents?.userEvents.forEach((event) =>
+        //     updateEventNotification(event),
+        // );
+    }, [JSON.stringify(userEvents)]);
 
     return (
         <View className=" flex-1 bg-white">

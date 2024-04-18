@@ -22,9 +22,9 @@ export const useNotificationConfig = create<
     persist(
         immer<INotificationConfig>((set, get) => ({
             isVibration: false,
-            isDimissible: false,
+            isDimissible: true,
             isNotifyAtTheBeginingOfDay: true,
-            timeBefore: 12,
+            timeBefore: 1,
             setVibration: (isVibration) => {
                 set((state) => {
                     state.isVibration = isVibration;

@@ -10,7 +10,9 @@ import { EventEntity } from '../../gql/graphql';
 import { useNotificationConfig } from '../../stores/notification-config';
 import { timeDiff } from '../../utils/timeDiff';
 
-export function useUpdateEventNotification() {
+export function useUpdateEventNotification(
+    events?: DeepPartial<EventEntity>[],
+) {
     const {
         isDimissible,
         isVibration,
@@ -31,9 +33,15 @@ export function useUpdateEventNotification() {
                     : {}),
             });
 
+            const timestamp = event.timestart * 1000 - timeBefore * 86_400_000;
+
             const trigger: TimestampTrigger = {
                 type: TriggerType.TIMESTAMP,
-                timestamp: event.timestart * 1000 - timeBefore * 3_600_000,
+                timestamp:
+                    timestamp < new Date().getTime() &&
+                    event.timestart * 1000 > new Date().getTime()
+                        ? new Date().getTime() + 2000
+                        : timestamp,
             };
 
             const { time, type } = timeDiff(new Date(event.timestart * 1000));
@@ -91,6 +99,32 @@ export function useUpdateEventNotification() {
             }
         });
     }, []);
+
+    useEffect(() => {
+        (async () => {
+            const notifications = await notifee.getDisplayedNotifications();
+
+            if (events) {
+                events
+                    .reverse()
+                    .filter((event) =>
+                        notifications.every(
+                            (noti) => noti.id !== event.id.toString(),
+                        ),
+                    )
+                    .forEach((event) => updateNotification(event));
+            }
+        })();
+    }, [JSON.stringify(events || [])]);
+
+    useEffect(() => {
+        (async () => {
+            await notifee.cancelAllNotifications();
+            if (events) {
+                events.reverse().forEach((event) => updateNotification(event));
+            }
+        })();
+    }, [isDimissible, isVibration, isNotifyAtTheBeginingOfDay, timeBefore]);
 
     return updateNotification;
 }
