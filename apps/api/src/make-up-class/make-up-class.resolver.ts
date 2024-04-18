@@ -42,15 +42,22 @@ export class MakeUpClassResolver {
 
     @Mutation(() => Boolean)
     async crawlMakeupClass(
-        @Args('max_page', {
-            type: () => Int,
+        @Args('startPage', {
             nullable: true,
-            defaultValue: 50,
-            description: 'Crawl make-up class from student.uit',
+            defaultValue: 0,
+            type: () => Int,
+            description: 'Default page to crawl data',
         })
-        maxPage: number,
+        startPage: number,
+        @Args('pageNum', {
+            nullable: true,
+            defaultValue: 5,
+            type: () => Int,
+            description: 'Max page to crawl data, each page is 4 item',
+        })
+        pageNum: number,
     ) {
-        await this.makeUpClassApiService.fetchMakeupClass(maxPage);
+        await this.makeUpClassApiService.fetchMakeupClass(startPage, pageNum);
         return true;
     }
 }

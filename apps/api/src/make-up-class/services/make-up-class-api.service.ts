@@ -14,8 +14,8 @@ export class MakeUpClassApiService {
         private readonly repo: Repository<MakeUpClass>,
     ) {}
 
-    async fetchMakeupClass(maxPage = this.MAX_PAGE) {
-        for (let i = 0; i < maxPage; i++) {
+    async fetchMakeupClass(startPage: number = 0, pageNum = this.MAX_PAGE) {
+        for (let i = startPage; i < pageNum; i++) {
             const url = `https://student.uit.edu.vn/thong-bao-nghi-bu?page=${i}`;
 
             const $data = await getPayload(url);
