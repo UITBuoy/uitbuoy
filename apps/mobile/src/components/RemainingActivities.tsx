@@ -1,20 +1,21 @@
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Text, TouchableNativeFeedback, View } from 'react-native';
 import Animated, { FadeInLeft, FadeOutLeft } from 'react-native-reanimated';
 import EMPTY_REMAINING_ACTIVITIES from '../../assets/empty-remaining-activities.png';
 import REFRESH_ICON from '../../assets/white-refresh.png';
-import { useEventList } from '../hooks/events/useEventList';
+import { useUserEventsQuery } from '../gql/graphql';
 import EventListSkeleton from '../skeletons/EventListSkeleton';
 import { timeDiff } from '../utils/timeDiff';
 import NativeButton from './NativeButton/NativeButton';
 
 export default function RemainingActivities() {
-    const { refetch, data, loading, error } = useEventList();
+    const { data, loading, error, refetch } = useUserEventsQuery();
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        refetch();
+        refetch({ isNew: true });
     }, []);
 
     return (
@@ -23,7 +24,13 @@ export default function RemainingActivities() {
                 <Text className=" text-base font-semibold">
                     Các bài tập sắp đến hạn
                 </Text>
-                <NativeButton onPress={refetch}>
+                <NativeButton
+                    onPress={async () => {
+                        setIsLoading(true);
+                        await refetch({ isNew: true });
+                        setIsLoading(false);
+                    }}
+                >
                     <View className=" flex-row gap-2 p-2 px-3 bg-primary-70 ">
                         <Image
                             style={{ width: 20, height: 20 }}
@@ -36,7 +43,7 @@ export default function RemainingActivities() {
                 </NativeButton>
             </View>
             <View className=" flex py-5">
-                {loading ? (
+                {loading || isLoading ? (
                     <EventListSkeleton />
                 ) : (
                     data?.userEvents.map(
