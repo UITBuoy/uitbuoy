@@ -19,10 +19,10 @@ export default function Page() {
 
     useEffect(() => {
         fetchCourses({
-            variables: { isNew: false, isRecent: true },
+            variables: { isNew: true, isRecent: true },
+            fetchPolicy: 'no-cache',
         });
     }, []);
-    console.log({ courses });
 
     return (
         <View className=" flex-1 bg-white">
