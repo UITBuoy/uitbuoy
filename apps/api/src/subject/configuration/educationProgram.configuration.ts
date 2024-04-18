@@ -9,13 +9,13 @@ import { Repository } from 'typeorm';
 import { EducationProgram } from '../entities/educationProgram.entity';
 
 @Injectable()
-export class EducationProgramConfiguration implements OnApplicationBootstrap {
+export class EducationProgramConfiguration {
     // export class EducationProgramConfiguration {
     constructor(
         @InjectRepository(EducationProgram)
         private repo: Repository<EducationProgram>,
     ) {}
-    async onApplicationBootstrap() {
+    async crawlData() {
         async function getPayload(url: string) {
             return cheerio.load((await axios.get(url)).data);
         }
