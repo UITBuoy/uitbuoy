@@ -15,7 +15,7 @@ export class MakeUpClassApiService {
     ) {}
 
     async fetchMakeupClass(startPage: number = 0, pageNum = this.MAX_PAGE) {
-        for (let i = startPage; i < pageNum; i++) {
+        for (let i = startPage; i < pageNum + startPage; i++) {
             const url = `https://student.uit.edu.vn/thong-bao-nghi-bu?page=${i}`;
 
             const $data = await getPayload(url);
