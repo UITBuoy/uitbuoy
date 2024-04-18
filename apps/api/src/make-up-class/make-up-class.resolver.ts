@@ -1,12 +1,12 @@
+import { CurrentUser } from '@/auth/decorators/current-user.decorator';
+import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
+import { CourseService } from '@/course/services/course.service';
+import { User } from '@/user/entities/user.entity';
+import { UseGuards } from '@nestjs/common';
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { MakeUpClass } from './entities/make-up-class.entity';
-import { MakeUpClassService } from './services/make-up-class.service';
 import { MakeUpClassApiService } from './services/make-up-class-api.service';
-import { CurrentUser } from '@/auth/decorators/current-user.decorator';
-import { User } from '@/user/entities/user.entity';
-import { CourseService } from '@/course/services/course.service';
-import { UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
+import { MakeUpClassService } from './services/make-up-class.service';
 
 @Resolver(() => MakeUpClass)
 export class MakeUpClassResolver {
@@ -31,14 +31,12 @@ export class MakeUpClassResolver {
         })
         inComing: boolean,
     ) {
-        await this.makeUpClassApiService.fetchMakeupClass(3);
-        const courses = await this.courseService.findAllCoursesOfUser(user);
-        const codes = courses.map((course) => course.shortname);
+        await this.makeUpClassApiService.fetchMakeupClass(1);
         return this.makeUpClassService.findAll({
             year,
             month,
             day,
-            courseCodes: courseCode ? [courseCode] : codes,
+            userId: user.id,
             inComing,
         });
     }
