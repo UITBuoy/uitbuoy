@@ -22,6 +22,7 @@ import {
 } from '../../src/gql/graphql';
 import { useUpdateEventNotification } from '../../src/hooks/notifications/useUpdateEventNotification';
 import { useAuth } from '../../src/stores/auth.store';
+import { useSyncEvent } from '../../src/hooks/events/useSyncEvent';
 
 export default function Page() {
     const { isLogin } = useAuth();
@@ -34,6 +35,8 @@ export default function Page() {
         useUserMakeUpClassLazyQuery();
 
     useUpdateEventNotification(userEvents?.userEvents);
+
+    const { syncEvent } = useSyncEvent();
 
     function refetch() {
         refetchUserEvents({
@@ -55,9 +58,7 @@ export default function Page() {
     }, []);
 
     useEffect(() => {
-        // userEvents?.userEvents.forEach((event) =>
-        //     updateEventNotification(event),
-        // );
+        if (userEvents?.userEvents) syncEvent();
     }, [JSON.stringify(userEvents)]);
 
     return (
