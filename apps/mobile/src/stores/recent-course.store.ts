@@ -28,7 +28,9 @@ export const useRecentCourse = create<
                 return newCourseList;
             },
             removeAllRecentCourses() {
-                set((state) => (state.recentCourses = []));
+                set((state) => {
+                    state.recentCourses = [];
+                });
             },
         })),
         {

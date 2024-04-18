@@ -29,7 +29,9 @@ export const useRecentSearch = create<
                 return newSearchStringList;
             },
             removeSearch() {
-                set((state) => (state.recentSearchStrings = []));
+                set((state) => {
+                    state.recentSearchStrings = [];
+                });
             },
         })),
         {
