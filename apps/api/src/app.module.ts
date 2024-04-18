@@ -30,6 +30,7 @@ import { MakeUpClassModule } from './make-up-class/make-up-class.module';
 import { NoteModule } from './note/note.module';
 import { SubjectModule } from './subject/subject.module';
 import { UserModule } from './user/user.module';
+import { NewsFeedModule } from './news-feed/news-feed.module';
 
 @Module({
     imports: [
@@ -171,6 +172,7 @@ import { UserModule } from './user/user.module';
         GoogleCalendarModule,
         MakeUpClassModule,
         NoteModule,
+        NewsFeedModule,
     ],
     controllers: [AppController],
     providers: [
