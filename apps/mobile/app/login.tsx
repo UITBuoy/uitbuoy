@@ -62,9 +62,7 @@ export default function Page() {
                 variant="solid"
                 action="primary"
                 onPress={async () => {
-                    console.log({ username, password });
                     const data = await login(username, password);
-                    console.log({ data });
                     if (data) router.replace('/');
                 }}
             >
