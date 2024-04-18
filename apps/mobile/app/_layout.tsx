@@ -70,7 +70,7 @@ export default function Layout() {
                         <Stack.Screen
                             name="modals/detail-activity"
                             options={{
-                                title: 'Activity',
+                                title: 'Bài tập',
                                 presentation: 'modal',
                                 animation: 'fade_from_bottom',
                                 headerShadowVisible: false,
