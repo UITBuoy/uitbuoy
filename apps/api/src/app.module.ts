@@ -90,12 +90,18 @@ import { NewsFeedModule } from './news-feed/news-feed.module';
                     configService.get<EnvironmentType>('ENVIRONMENT') ==
                     'development',
                 autoLoadEntities: true,
-                ssl: true,
-                extra: {
-                    ssl: {
-                        rejectUnauthorized: false,
-                    },
-                },
+                ssl:
+                    configService.get<EnvironmentType>('ENVIRONMENT') ===
+                    'production',
+                extra:
+                    configService.get<EnvironmentType>('ENVIRONMENT') ===
+                    'production'
+                        ? {
+                              ssl: {
+                                  rejectUnauthorized: false,
+                              },
+                          }
+                        : undefined,
             }),
         }),
         WinstonModule.forRootAsync({
