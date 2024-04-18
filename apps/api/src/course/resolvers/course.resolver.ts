@@ -46,14 +46,19 @@ export class CourseResolver {
             await this.courseService.save(apiCourses);
 
             if (queryArgs.isRecent) {
-                return apiCourses.filter(
-                    ({ startdate }) =>
-                        moment().diff(
-                            moment(new Date(startdate * 1000)),
-                            'months',
-                            true,
-                        ) < 5,
-                );
+                return apiCourses
+                    .filter(
+                        ({ startdate }) =>
+                            moment().diff(
+                                moment(new Date(startdate * 1000)),
+                                'months',
+                                true,
+                            ) < 5,
+                    )
+                    .map((course) => ({
+                        ...course,
+                        display_name: course.fullname.split(' - ').at(0),
+                    }));
             }
             return apiCourses;
         }

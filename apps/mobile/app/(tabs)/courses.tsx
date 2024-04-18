@@ -22,6 +22,7 @@ export default function Page() {
             variables: { isNew: false, isRecent: true },
         });
     }, []);
+    console.log({ courses });
 
     return (
         <View className=" flex-1 bg-white">
