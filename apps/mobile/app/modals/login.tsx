@@ -91,7 +91,7 @@ function SignInButton({
                     else {
                         const data = await login(username, password);
                         if (data) {
-                            // router.replace('/modals/sign-in-resolve');
+                            router.replace('/modals/sign-in-resolve');
                         } else {
                             Alert.alert(
                                 'Lỗi đăng nhập',

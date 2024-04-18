@@ -11,7 +11,7 @@ import 'core-js/stable/atob';
 import Constants from 'expo-constants';
 import { router } from 'expo-router';
 import { jwtDecode } from 'jwt-decode';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useAuth } from '../stores/auth.store';
 
 const REFRESH_TOKEN = gql`
@@ -25,6 +25,19 @@ const REFRESH_TOKEN = gql`
 
 export function useApolloLink() {
     const { authData, refreshAccessToken } = useAuth();
+
+    useEffect(() => {
+        try {
+            const decodedAccessToken = jwtDecode(authData?.access_token);
+            const now = new Date().getTime() / 1000;
+
+            if (decodedAccessToken.exp <= now) {
+                router.replace('/modals/login');
+            }
+        } catch (error) {
+            console.log({ error });
+        }
+    }, [authData]);
 
     const link = createHttpLink({
         uri:
@@ -79,7 +92,7 @@ export function useApolloLink() {
                         ok: true,
                         status: 200,
                         statusText: 'OK',
-                        text: async () => token.data.refreshToken,
+                        text: async () => token.data.access_token,
                     } as unknown as Response;
                 },
                 handleFetch: (accessToken) => {
