@@ -11,9 +11,8 @@ import 'core-js/stable/atob';
 import Constants from 'expo-constants';
 import { router } from 'expo-router';
 import { jwtDecode } from 'jwt-decode';
+import { useMemo } from 'react';
 import { useAuth } from '../stores/auth.store';
-import { useCallback, useMemo, useRef } from 'react';
-//@ts-ignore
 
 const REFRESH_TOKEN = gql`
     mutation RefreshToken {
@@ -51,13 +50,10 @@ export function useApolloLink() {
         cache: new InMemoryCache(),
     });
 
-    console.log('Auth data', { authData });
-
     const tokenRefreshLink = useMemo(
         () =>
             new TokenRefreshLink({
                 isTokenValidOrUndefined: async () => {
-                    console.log('Recreated apollo link', authData);
                     if (!authData?.access_token) return false;
 
                     try {
@@ -119,8 +115,6 @@ export function useApolloLink() {
     );
 
     const apolloLink = useMemo(() => {
-        console.log('Outer scope', authData);
-
         return ApolloLink.from([tokenRefreshLink, authLink, link]);
     }, [authData, tokenRefreshLink, authLink, link]);
 

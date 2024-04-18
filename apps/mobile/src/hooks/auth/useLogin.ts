@@ -12,7 +12,6 @@ export function useLogin() {
                 const authEntityResponse = await loginFunction({
                     variables: { username, password },
                 });
-                console.log('Login data', { authEntityResponse });
                 if (authEntityResponse.data.login)
                     //@ts-ignore
                     return authLogin(authEntityResponse.data.login);
