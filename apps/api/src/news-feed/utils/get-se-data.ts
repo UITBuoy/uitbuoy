@@ -4,14 +4,15 @@ import { extractSeNotification as extractSeNews } from './extract-se-notificatio
 import { NewsFeed } from '../entities/news-feed.entity';
 
 export async function getSeData(
-    maxPage: number = 10,
+    startPage: number = 0,
+    pageNum: number = 1,
     tagNames: string[],
     url: (index: number) => string,
     baseUrl = 'https://se.uit.edu.vn',
 ): Promise<NewsFeed[]> {
     const newsList = [];
 
-    for (let i = 0; i < maxPage; i++) {
+    for (let i = startPage; i < startPage + pageNum; i++) {
         try {
             const response = await axios.get(url(i));
             const data = response.data as {

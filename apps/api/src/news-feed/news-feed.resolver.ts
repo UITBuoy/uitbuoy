@@ -10,15 +10,22 @@ export class NewsFeedResolver {
         description: 'Crawl data for serving news feed',
     })
     async crawlAllNewsFeed(
-        @Args('maxPage', {
+        @Args('startPage', {
+            nullable: true,
+            defaultValue: 0,
+            type: () => Int,
+            description: 'Default page to crawl data',
+        })
+        startPage: number,
+        @Args('pageNum', {
             nullable: true,
             defaultValue: 5,
             type: () => Int,
             description: 'Max page to crawl data, each page is 4 item',
         })
-        maxPage: number,
+        pageNum: number,
     ) {
-        await this.newsFeedService.crawlData(maxPage);
+        await this.newsFeedService.crawlData(startPage, pageNum);
         return true;
     }
 
@@ -26,7 +33,7 @@ export class NewsFeedResolver {
         description: 'Crawl the most recent news',
     })
     async dailyCrawlNewsFeed() {
-        await this.newsFeedService.crawlData(3);
+        await this.newsFeedService.crawlData(0, 2);
         return true;
     }
 }

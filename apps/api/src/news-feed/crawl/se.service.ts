@@ -35,13 +35,14 @@ export class SeService {
         @InjectRepository(NewsFeed) private readonly repo: Repository<NewsFeed>,
     ) {}
 
-    async crawlData(maxPage: number) {
+    async crawlData(startPage: number = 0, pageNum: number = 1) {
         const news = [];
         await Promise.all(
             this.url.map(async ({ tags, url }) => {
                 news.push(
                     ...(await getSeData(
-                        maxPage,
+                        startPage,
+                        pageNum,
                         [...tags, this.defaultTag],
                         url,
                         this.baseUrl,

@@ -3,6 +3,7 @@ import {
     Column,
     Entity,
     ManyToMany,
+    PrimaryColumn,
     PrimaryGeneratedColumn,
     Relation,
 } from 'typeorm';
@@ -11,12 +12,12 @@ import type { NewsFeed } from './news-feed.entity';
 @ObjectType()
 @Entity()
 export class NewsFeedTag {
-    @Field()
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+    // @Field()
+    // @PrimaryGeneratedColumn('uuid')
+    // id: string;
 
     @Field()
-    @Column()
+    @PrimaryColumn()
     name: string;
 
     @Field({ nullable: true })

@@ -50,7 +50,7 @@ export class NewsFeed {
     @Column({ nullable: true })
     imageUrl?: string;
 
-    @ManyToMany('NewsFeedTag', 'newsFeeds')
+    @ManyToMany('NewsFeedTag', 'newsFeeds', { cascade: true })
     @JoinTable()
     tags: Relation<NewsFeedTag>;
 

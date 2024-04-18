@@ -15,10 +15,10 @@ export class UITNewsService {
         @InjectRepository(NewsFeed) private readonly repo: Repository<NewsFeed>,
     ) {}
 
-    async crawlData(maxPage: number = 1) {
+    async crawlData(startPage: number = 0, pageNum: number = 1) {
         const news = [];
 
-        for (let i = 0; i < maxPage; i++) {
+        for (let i = startPage; i < startPage + pageNum; i++) {
             const url = `https://student.uit.edu.vn/thong-bao-chung?page=${i}`;
 
             const $ = load((await axios.get(url)).data);
@@ -46,6 +46,7 @@ export class UITNewsService {
                         plainContent,
                         link,
                         files,
+                        tags: [{ name: 'Thông báo chung' }],
                     });
                 }),
             );

@@ -9,8 +9,8 @@ export class NewsFeedService {
         private readonly uitNewsService: UITNewsService,
     ) {}
 
-    async crawlData(maxPage: number) {
-        await this.seService.crawlData(maxPage);
-        await this.uitNewsService.crawlData(maxPage);
+    async crawlData(startPage: number = 0, pageNum: number = 1) {
+        await this.seService.crawlData(startPage, pageNum);
+        await this.uitNewsService.crawlData(startPage, pageNum);
     }
 }
