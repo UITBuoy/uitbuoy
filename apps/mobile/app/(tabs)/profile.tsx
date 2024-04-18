@@ -23,9 +23,13 @@ import {
 import { useGoogleSignin } from '../../src/hooks/google/useGoogleSignin';
 import ProfileScreenSkeleton from '../../src/skeletons/ProfileScreenSkeleton';
 import { useAuth } from '../../src/stores/auth.store';
+import { useRecentCourse } from '../../src/stores/recent-course.store';
+import { useRecentSearch } from '../../src/stores/recent-search.store';
 
 export default function Page() {
     const { isIntegrateWithGoogle, googleData, authLogout } = useAuth();
+    const { removeAllRecentCourses } = useRecentCourse();
+    const { removeSearch } = useRecentSearch();
 
     const { signIn } = useGoogleSignin();
 
@@ -209,6 +213,8 @@ export default function Page() {
                         onPress={async () => {
                             router.replace('/modals/login');
                             authLogout();
+                            removeAllRecentCourses();
+                            removeSearch();
                         }}
                     >
                         <View className=" p-4 px-10 rounded-2xl bg-[#FE5050] flex-row justify-center gap-2">

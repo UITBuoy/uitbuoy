@@ -12,6 +12,7 @@ export type INotificationConfig = {
     setDismissible: (value: boolean) => any;
     setTimeBefore: (value: number) => any;
     setIsNotifyAtTheBeginingOfDay: (value: boolean) => any;
+    setNotitificationConfig: (config: Partial<INotificationConfig>) => any;
 };
 
 export const useNotificationConfig = create<
@@ -43,6 +44,11 @@ export const useNotificationConfig = create<
                 set((state) => {
                     state.isNotifyAtTheBeginingOfDay =
                         isNotifyAtTheBeginingOfDay;
+                });
+            },
+            setNotitificationConfig(config) {
+                set((state) => {
+                    state = { ...state, ...config };
                 });
             },
         })),

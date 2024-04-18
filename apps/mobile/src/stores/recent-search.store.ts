@@ -6,6 +6,7 @@ import { immer } from 'zustand/middleware/immer';
 export type IRecentSearch = {
     recentSearchStrings: string[];
     addSearchString: (value: string) => string[];
+    removeSearch: () => any;
 };
 
 export const useRecentSearch = create<
@@ -26,6 +27,9 @@ export const useRecentSearch = create<
                     state.recentSearchStrings = newSearchStringList;
                 });
                 return newSearchStringList;
+            },
+            removeSearch() {
+                set((state) => (state.recentSearchStrings = []));
             },
         })),
         {
