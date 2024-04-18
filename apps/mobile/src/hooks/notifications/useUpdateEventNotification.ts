@@ -9,10 +9,13 @@ import { useCallback, useEffect } from 'react';
 import { EventEntity } from '../../gql/graphql';
 import { useNotificationConfig } from '../../stores/notification-config';
 import { timeDiff } from '../../utils/timeDiff';
+import { useSentEvents } from '../../stores/sentEvents.store';
 
 export function useUpdateEventNotification(
     events?: DeepPartial<EventEntity>[],
 ) {
+    const { eventIds, addEventIds, removeAll } = useSentEvents();
+
     const {
         isDimissible,
         isVibration,
@@ -22,6 +25,8 @@ export function useUpdateEventNotification(
 
     const updateNotification = useCallback(
         async (event: DeepPartial<EventEntity>) => {
+            addEventIds([event.id.toString()]);
+
             const channelId = await notifee.createChannel({
                 id: 'assignment_due',
                 name: 'Thông báo hạn nộp bài tập',
@@ -112,19 +117,29 @@ export function useUpdateEventNotification(
                             (noti) => noti.id !== event.id.toString(),
                         ),
                     )
-                    .forEach((event) => updateNotification(event));
+                    .forEach((event) => {
+                        if (eventIds.every((id) => id !== event.id.toString()))
+                            updateNotification(event);
+                    });
             }
         })();
     }, [JSON.stringify(events || [])]);
 
     useEffect(() => {
         (async () => {
-            await notifee.cancelAllNotifications();
             if (events) {
-                events.reverse().forEach((event) => updateNotification(event));
+                events.reverse().forEach((event) => {
+                    if (eventIds.every((id) => id !== event.id.toString()))
+                        updateNotification(event);
+                });
             }
         })();
     }, [isDimissible, isVibration, isNotifyAtTheBeginingOfDay, timeBefore]);
+
+    // Round once each day
+    useEffect(() => {
+        if (isNotifyAtTheBeginingOfDay) removeAll();
+    }, [Math.round(new Date().getTime() / (1000 * 60 * 60 * 24))]);
 
     return updateNotification;
 }

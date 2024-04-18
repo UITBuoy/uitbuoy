@@ -20,9 +20,8 @@ import {
     useUserEventsLazyQuery,
     useUserMakeUpClassLazyQuery,
 } from '../../src/gql/graphql';
-import { useNotificationCalendar } from '../../src/hooks/notifications/useNotificationCalendar';
-import { useAuth } from '../../src/stores/auth.store';
 import { useUpdateEventNotification } from '../../src/hooks/notifications/useUpdateEventNotification';
+import { useAuth } from '../../src/stores/auth.store';
 
 export default function Page() {
     const { isLogin } = useAuth();
