@@ -8,7 +8,9 @@ import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 export default function SyncCalendar() {
     const { signIn } = useGoogleSignin();
     const { syncEvent } = useSyncEvent();
-    const { data, loading } = useProfileQuery({ fetchPolicy: 'no-cache' });
+    const { data, loading } = useProfileQuery({
+        fetchPolicy: 'cache-and-network',
+    });
 
     return data?.profile && !loading ? (
         <Animated.View

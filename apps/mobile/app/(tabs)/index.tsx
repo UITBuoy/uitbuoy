@@ -41,10 +41,10 @@ export default function Page() {
     function refetch() {
         refetchUserEvents({
             variables: { isNew: true },
-            fetchPolicy: 'no-cache',
+            fetchPolicy: 'network-only',
         });
         refetchUserMakeupClasses({
-            fetchPolicy: 'no-cache',
+            fetchPolicy: 'network-only',
         });
     }
 

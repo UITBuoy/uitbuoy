@@ -47,7 +47,7 @@ export default function ActitivitiesPage({ id }: Props) {
             refreshControl={
                 <RefreshControl
                     refreshing={loading}
-                    onRefresh={() => refetch({ fetchPolicy: 'no-cache' })}
+                    onRefresh={() => refetch({ fetchPolicy: 'network-only' })}
                 />
             }
         >

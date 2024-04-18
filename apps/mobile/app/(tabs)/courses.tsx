@@ -20,7 +20,7 @@ export default function Page() {
     useEffect(() => {
         fetchCourses({
             variables: { isNew: true, isRecent: true },
-            fetchPolicy: 'no-cache',
+            fetchPolicy: 'cache-and-network',
         });
     }, []);
 
@@ -37,7 +37,7 @@ export default function Page() {
                             onRefresh={() => {
                                 fetchCourses({
                                     variables: { isNew: true, isRecent: true },
-                                    fetchPolicy: 'no-cache',
+                                    fetchPolicy: 'network-only',
                                 });
                             }}
                         />

@@ -1,12 +1,12 @@
 import { router, useGlobalSearchParams } from 'expo-router';
 import React, { useEffect } from 'react';
 import {
+    Image,
     RefreshControl,
     ScrollView,
     Text,
     useWindowDimensions,
     View,
-    Image,
 } from 'react-native';
 import Animated, {
     BounceInUp,
@@ -21,7 +21,6 @@ import LIFE_BUOY from '../../assets/lifebuoy.png';
 import NativeButton from '../../src/components/NativeButton/NativeButton';
 import { useDetailAssignmentCourseLazyQuery } from '../../src/gql/graphql';
 import { useViewFile } from '../../src/hooks/file/useViewFile';
-import AssignIcon from '../../src/icons/assign';
 import ActivityScreenSkeleton from '../../src/skeletons/ActivityScreenSkeleton';
 import { useAuth } from '../../src/stores/auth.store';
 import { timeDiff } from '../../src/utils/timeDiff';
@@ -43,7 +42,7 @@ export default function DetailActivity() {
                 id: parseInt(params.course_id, 10),
                 assignment_id: parseInt(params.assignment_id, 10),
             },
-            fetchPolicy: 'cache-first',
+            fetchPolicy: 'cache-and-network',
         });
 
     const assignment = data?.assignmentCourse?.assignment;
@@ -53,7 +52,7 @@ export default function DetailActivity() {
         : null;
 
     useEffect(() => {
-        refetch();
+        refetch({ fetchPolicy: 'network-only' });
     }, []);
 
     return (
@@ -97,15 +96,15 @@ export default function DetailActivity() {
                             </View>
                         </View>
                         <Animated.View
-                            className=" w-[150px] h-[150px] flex flex-row justify-center items-center"
+                            className=" w-[130px] h-[130px] flex flex-row justify-center items-center"
                             entering={BounceInUp}
                             exiting={BounceOutUp}
                         >
                             <Image
                                 source={LIFE_BUOY}
                                 style={{
-                                    width: 150,
-                                    height: 150,
+                                    width: '100%',
+                                    height: '100%',
                                     position: 'absolute',
                                     top: 0,
                                     right: 0,
@@ -125,7 +124,7 @@ export default function DetailActivity() {
                             <RefreshControl
                                 refreshing={loading}
                                 onRefresh={() =>
-                                    refetch({ fetchPolicy: 'no-cache' })
+                                    refetch({ fetchPolicy: 'network-only' })
                                 }
                             />
                         }

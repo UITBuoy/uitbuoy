@@ -21,11 +21,11 @@ export default function SignInResolve() {
     const { isLogin, authData } = useAuth();
     const [getCourses, { data: coursesData, loading: coursesLoading }] =
         useUserCoursesLazyQuery({
-            fetchPolicy: 'no-cache',
+            fetchPolicy: 'network-only',
         });
     const [getEvents, { data: eventsData, loading: eventsLoading }] =
         useUserEventsLazyQuery({
-            fetchPolicy: 'no-cache',
+            fetchPolicy: 'network-only',
         });
 
     useEffect(() => {
