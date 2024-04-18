@@ -2,7 +2,13 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router, useRootNavigationState } from 'expo-router';
 import LottieView from 'lottie-react-native';
 import React, { useEffect } from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import {
+    RefreshControl,
+    ScrollView,
+    Text,
+    TouchableOpacity,
+    View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MANAGE_COURSE_ANIMATION from '../../assets/animations/new-features/manage-courses.json';
 import CourseSearch from '../../src/components/CourseSearch/CourseSearch';
@@ -11,13 +17,33 @@ import RemainingActivities from '../../src/components/RemainingActivities';
 import SyncCalendar from '../../src/components/SyncCalendar';
 import { useAuth } from '../../src/stores/auth.store';
 import PreviewMakeupClass from '../../src/components/PreviewMakeupClass';
+import {
+    useUserEventsLazyQuery,
+    useUserMakeUpClassLazyQuery,
+} from '../../src/gql/graphql';
 
 export default function Page() {
     const { isLogin } = useAuth();
 
+    const [refetchUserEvents, { loading: userEventsLoading }] =
+        useUserEventsLazyQuery();
+    const [refetchUserMakeupClasses, { loading: userMakeupClassesLoading }] =
+        useUserMakeUpClassLazyQuery();
+
+    function refetch() {
+        refetchUserEvents({
+            variables: { isNew: true },
+            fetchPolicy: 'no-cache',
+        });
+        refetchUserMakeupClasses({
+            fetchPolicy: 'no-cache',
+        });
+    }
+
     const rootNavigationState = useRootNavigationState();
 
     useEffect(() => {
+        refetch();
         if (!isLogin && rootNavigationState?.key) {
             router.replace('/modals/login');
         }
@@ -30,6 +56,16 @@ export default function Page() {
                 <ScrollView
                     style={{ flex: 1 }}
                     className=" flex-1 flex-col gap-10"
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={
+                                userEventsLoading || userMakeupClassesLoading
+                            }
+                            onRefresh={() => {
+                                refetch();
+                            }}
+                        />
+                    }
                 >
                     <View style={{ paddingBottom: 100 }}>
                         <CourseSearch />

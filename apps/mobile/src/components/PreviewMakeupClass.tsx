@@ -7,9 +7,7 @@ import NativeButton from './NativeButton/NativeButton';
 import { router } from 'expo-router';
 
 export default function PreviewMakeupClass() {
-    const { data, loading, error, refetch } = useUserMakeUpClassQuery({
-        fetchPolicy: 'no-cache',
-    });
+    const { data, loading, error, refetch } = useUserMakeUpClassQuery();
 
     useEffect(() => {
         refetch();
