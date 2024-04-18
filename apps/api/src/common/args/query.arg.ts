@@ -4,7 +4,7 @@ import { ArgsType, Field } from '@nestjs/graphql';
 export class QueryArgs {
     @Field(() => Boolean, {
         nullable: true,
-        defaultValue: false,
+        defaultValue: true,
         description:
             'If true, fetch the new data from Moodle API, else query from the database',
     })
@@ -12,7 +12,7 @@ export class QueryArgs {
 
     @Field(() => Boolean, {
         nullable: true,
-        defaultValue: false,
+        defaultValue: true,
         description: 'If true, only query for courses in the current semester',
     })
     isRecent?: boolean;

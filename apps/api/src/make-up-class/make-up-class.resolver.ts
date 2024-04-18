@@ -31,7 +31,6 @@ export class MakeUpClassResolver {
         })
         inComing: boolean,
     ) {
-        await this.makeUpClassApiService.fetchMakeupClass(1);
         return this.makeUpClassService.findAll({
             year,
             month,
