@@ -102,6 +102,7 @@ export class CourseResolver {
                 apiCourse.contacts.map((contact) => contact.id),
             );
             await this.courseService.save(apiCourse);
+            apiCourse.display_name = apiCourse.fullname.split(' - ').at(0);
             return apiCourse;
         }
 
