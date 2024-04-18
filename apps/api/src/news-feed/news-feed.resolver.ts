@@ -1,4 +1,5 @@
-import { Args, Int, Mutation, Resolver } from '@nestjs/graphql';
+import { PaginationArgs } from '@/common/args/pagination.arg';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { NewsFeed } from './entities/news-feed.entity';
 import { NewsFeedService } from './news-feed.service';
 
@@ -35,5 +36,20 @@ export class NewsFeedResolver {
     async dailyCrawlNewsFeed() {
         await this.newsFeedService.crawlData(0, 2);
         return true;
+    }
+
+    @Query(() => [NewsFeed], { description: 'Retrieving news feed item' })
+    async newsFeed(
+        @Args() paginationArgs: PaginationArgs,
+        @Args('tags', {
+            nullable: true,
+            description: 'List of name of the tag to find',
+            type: () => [String],
+            defaultValue: [],
+        })
+        tags: string[],
+    ) {
+        const news = await this.newsFeedService.findAll(tags, paginationArgs);
+        return news;
     }
 }
