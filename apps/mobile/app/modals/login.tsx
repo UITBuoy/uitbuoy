@@ -1,13 +1,13 @@
 import { Image } from 'expo-image';
 import React, { useEffect, useState } from 'react';
-import { Alert, Text, ToastAndroid, View } from 'react-native';
-import TextField from '../src/components/TextField/TextField';
+import { Alert, Text, TextInput, ToastAndroid, View } from 'react-native';
+import TextField from '../../src/components/TextField/TextField';
 
 import { router, useRootNavigationState } from 'expo-router';
-import LOGO from '../assets/app-logo.png';
-import NativeButton from '../src/components/NativeButton/NativeButton';
-import { useLogin } from '../src/hooks/auth/useLogin';
-import { useAuth } from '../src/stores/auth.store';
+import LOGO from '../../assets/app-logo.png';
+import NativeButton from '../../src/components/NativeButton/NativeButton';
+import { useLogin } from '../../src/hooks/auth/useLogin';
+import { useAuth } from '../../src/stores/auth.store';
 import { Spinner } from '@gluestack-ui/themed';
 
 export default function Page() {
@@ -20,17 +20,17 @@ export default function Page() {
 
     useEffect(() => {
         if (isLogin && rootNavigationState?.key) {
-            router.replace('/');
+            // router.replace('/');
         }
     }, []);
 
     return (
         <View className=" flex flex-col w-full h-full bg-white">
-            <View className=" w-full h-1/2 bg-[#039CCA] flex items-center">
+            <View style={{ height: 300 }} className=" w-full flex items-center">
                 <Image
                     style={{
                         flex: 1,
-                        width: 300,
+                        width: 200,
                         backgroundColor: 'transparent',
                     }}
                     source={LOGO}
@@ -39,17 +39,22 @@ export default function Page() {
                 />
             </View>
             <View className=" mt-5 flex flex-col gap-5 w-full h-fit px-5">
+                <Text className=" font-medium py-4">
+                    Đăng nhập với tài khoản Courses
+                </Text>
                 <TextField
-                    className=" border-[1px] rounded-full py-2 px-4"
+                    className=" border-[0.5px] rounded-xl py-2 px-4"
+                    fieldClassName=""
                     value={username}
                     onChangeText={(value) => setUsername(value)}
                     title="Username"
-                    type="text"
+                    type="none"
                     keyboardType="number-pad"
                     placeholder="MSSV"
                 />
                 <TextField
-                    className=" border-[1px] rounded-full py-2 px-4"
+                    className=" border-[0.5px] rounded-xl py-2 px-4"
+                    fieldClassName=""
                     value={password}
                     onChangeText={(value) => setPassword(value)}
                     title="Password"
@@ -72,7 +77,7 @@ function SignInButton({
     const { login, loading } = useLogin();
 
     return (
-        <View className="mt-5">
+        <View className="mt-10">
             <NativeButton
                 disabled={loading}
                 onPress={async () => {
@@ -86,7 +91,7 @@ function SignInButton({
                     else {
                         const data = await login(username, password);
                         if (data) {
-                            router.replace('/modals/sign-in-resolve');
+                            // router.replace('/modals/sign-in-resolve');
                         } else {
                             Alert.alert(
                                 'Lỗi đăng nhập',
@@ -96,7 +101,10 @@ function SignInButton({
                     }
                 }}
             >
-                <View className=" flex flex-row justify-center gap-2 rounded-2xl bg-sky-500 h-fit p-3 mx-5">
+                <View
+                    style={{ opacity: loading ? 0.6 : 1 }}
+                    className=" flex flex-row justify-center gap-2 rounded-xl bg-sky-500 h-fit p-3 mx-5"
+                >
                     {loading ? <Spinner color="white" /> : null}
                     <Text className=" text-white text-center font-medium">
                         Đăng nhập

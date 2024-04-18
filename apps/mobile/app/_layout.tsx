@@ -40,7 +40,7 @@ export default function Layout() {
                             }}
                         />
                         <Stack.Screen
-                            name="login"
+                            name="modals/login"
                             options={{
                                 headerShown: false,
                                 presentation: 'modal',

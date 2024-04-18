@@ -207,7 +207,7 @@ export default function Page() {
                     <NativeButton
                         className=" mx-6 mt-10"
                         onPress={async () => {
-                            router.replace('/login');
+                            router.replace('/modals/login');
                             authLogout();
                         }}
                     >

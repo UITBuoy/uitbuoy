@@ -19,7 +19,7 @@ export default function Page() {
 
     useEffect(() => {
         if (!isLogin && rootNavigationState?.key) {
-            router.replace('/login');
+            router.replace('/modals/login');
         }
     }, []);
 

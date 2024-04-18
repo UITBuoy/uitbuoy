@@ -92,7 +92,7 @@ export function useApolloLink() {
                     ) {
                         alert('Network error');
                     } else {
-                        router.replace('/login');
+                        console.log({ refreshTokenError: err });
                     }
                 },
             }),
