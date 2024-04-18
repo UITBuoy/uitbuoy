@@ -38,7 +38,7 @@ export class UserResolver {
         return this.userService.createGoogleUser(googleUser, user);
     }
 
-    @ResolveField(() => Boolean)
+    @ResolveField(() => Boolean, { nullable: true })
     async isIntegrateWithGoogle(@CurrentUser() user: User) {
         const responseUser = await this.userService.findById(user.id);
         return responseUser.googleUsers.length;

@@ -1,14 +1,14 @@
 import { User } from '@/user/entities/user.entity';
+import { UserService } from '@/user/services/user.service';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import axios from 'axios';
+import moment from 'moment';
 import { MoodleException } from 'src/api/errors/moodle.error';
 import { UserApiService } from 'src/api/services/user-api.service';
 import API_URL from 'src/common/constants/url';
-import { UserService } from '@/user/services/user.service';
 import { AuthEntity } from './entities/auth.entity';
-import moment from 'moment';
 
 @Injectable()
 export class AuthService {
@@ -19,7 +19,10 @@ export class AuthService {
         private readonly jwtService: JwtService,
     ) {}
 
-    async validateUser(username: string, password: string) {
+    async validateUser(
+        username: string,
+        password: string,
+    ): Promise<AuthEntity> {
         const response = await axios.post(API_URL.authentication, null, {
             params: { username, password, service: 'moodle_mobile_app' },
         });
@@ -36,6 +39,7 @@ export class AuthService {
 
         if (userDataFromDB) {
             return {
+                isFirstTimeLogin: false,
                 token: response.data.token,
                 ...userDataFromDB,
             };
@@ -49,6 +53,7 @@ export class AuthService {
         await this.userService.create(userData);
 
         return {
+            isFirstTimeLogin: true,
             token: response.data.token,
             ...userData,
         };
