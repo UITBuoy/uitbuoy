@@ -5,11 +5,12 @@ import notifee, {
     TimestampTrigger,
     TriggerType,
 } from '@notifee/react-native';
+import { router } from 'expo-router';
 import { useCallback, useEffect } from 'react';
 import { EventEntity } from '../../gql/graphql';
 import { useNotificationConfig } from '../../stores/notification-config';
-import { timeDiff } from '../../utils/timeDiff';
 import { useSentEvents } from '../../stores/sentEvents.store';
+import { timeDiff } from '../../utils/timeDiff';
 
 export function useUpdateEventNotification(
     events?: DeepPartial<EventEntity>[],
@@ -56,6 +57,11 @@ export function useUpdateEventNotification(
                     id: event.id.toString(),
                     title: event.name,
                     body: `Còn <b>${-time} ${type}</b> nữa sẽ đến hạn nộp bài tâp<br /> `,
+                    data: {
+                        id: event.id,
+                        instance: event.instance,
+                        courseId: event.course.id,
+                    },
                     android: {
                         channelId,
                         ongoing: !isDimissible,
@@ -96,10 +102,15 @@ export function useUpdateEventNotification(
                     );
                     break;
                 case EventType.PRESS:
-                    console.log(
-                        'User pressed notification',
-                        detail.notification,
-                    );
+                    const event = detail.notification.data;
+                    router.push({
+                        pathname: '/modals/detail-activity',
+                        params: {
+                            id: event.id,
+                            assignment_id: event.instance,
+                            course_id: event.courseId,
+                        },
+                    });
                     break;
             }
         });
