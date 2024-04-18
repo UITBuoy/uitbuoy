@@ -8,7 +8,11 @@ export async function extractSeNotification(
     html: string,
     baseUrl: string,
     tagNames: string[],
-): Promise<Omit<NewsFeed, 'tags'> & { tags: Pick<NewsFeedTag, 'name'>[] }> {
+): Promise<
+    Omit<NewsFeed, 'id' | 'tags' | 'files'> & {
+        tags: Pick<NewsFeedTag, 'name'>[];
+    }
+> {
     const $element = load(html);
 
     const title = trimString($element('.g-item-title').text());
@@ -42,6 +46,7 @@ export async function extractSeNotification(
         description,
         htmlContent,
         plainContent,
+        link,
         imageUrl: imgSrc ? baseUrl + imgSrc : undefined,
         tags: [...tagNames.map((name) => ({ name }))],
     };

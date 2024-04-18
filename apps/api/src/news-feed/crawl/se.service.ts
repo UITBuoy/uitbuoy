@@ -50,7 +50,7 @@ export class SeService {
             }),
         );
 
-        this.repo.save(news);
+        await this.repo.save(news);
         return true;
     }
 }
