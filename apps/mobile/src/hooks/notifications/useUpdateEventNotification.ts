@@ -1,5 +1,6 @@
 import { DeepPartial } from '@apollo/client/utilities';
 import notifee, {
+    AndroidLaunchActivityFlag,
     AndroidStyle,
     EventType,
     TimestampTrigger,
@@ -63,6 +64,7 @@ export function useUpdateEventNotification(
                         courseId: event.course.id,
                     },
                     android: {
+                        autoCancel: false,
                         channelId,
                         ongoing: !isDimissible,
                         style: {
@@ -76,11 +78,12 @@ export function useUpdateEventNotification(
                                 new Date(event.timestart * 1000),
                             )}</b></p>`,
                         },
+                        pressAction: { id: 'default' },
                         actions: [
                             {
                                 title: 'Xem bài tập',
                                 pressAction: {
-                                    id: 'view',
+                                    id: 'default',
                                 },
                             },
                         ],
@@ -94,6 +97,30 @@ export function useUpdateEventNotification(
 
     useEffect(() => {
         return notifee.onForegroundEvent(({ type, detail }) => {
+            switch (type) {
+                case EventType.DISMISSED:
+                    console.log(
+                        'User dismissed notification',
+                        detail.notification,
+                    );
+                    break;
+                case EventType.PRESS:
+                    const event = detail.notification.data;
+                    router.push({
+                        pathname: '/modals/detail-activity',
+                        params: {
+                            id: event.id,
+                            assignment_id: event.instance,
+                            course_id: event.courseId,
+                        },
+                    });
+                    break;
+            }
+        });
+    }, []);
+
+    useEffect(() => {
+        return notifee.onBackgroundEvent(async ({ type, detail }) => {
             switch (type) {
                 case EventType.DISMISSED:
                     console.log(
