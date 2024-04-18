@@ -45,22 +45,21 @@ export class CourseResolver {
             ).map((course) => ({ ...course, users: [user] }));
             await this.courseService.save(apiCourses);
 
-            if (queryArgs.isRecent) {
-                return apiCourses
-                    .filter(
-                        ({ startdate }) =>
-                            moment().diff(
-                                moment(new Date(startdate * 1000)),
-                                'months',
-                                true,
-                            ) < 5,
-                    )
-                    .map((course) => ({
-                        ...course,
-                        display_name: course.fullname.split(' - ').at(0),
-                    }));
-            }
-            return apiCourses;
+            return (
+                queryArgs.isRecent
+                    ? apiCourses.filter(
+                          ({ startdate }) =>
+                              moment().diff(
+                                  moment(new Date(startdate * 1000)),
+                                  'months',
+                                  true,
+                              ) < 5,
+                      )
+                    : apiCourses
+            ).map((course) => ({
+                ...course,
+                display_name: course.fullname.split(' - ').at(0),
+            }));
         }
 
         const courses = await this.courseService.findAllCoursesOfUser(
