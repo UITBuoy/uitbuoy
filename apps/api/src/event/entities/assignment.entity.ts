@@ -1,4 +1,4 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @ObjectType()
@@ -29,27 +29,27 @@ export class Assignment {
     @Column({ nullable: true })
     name: string;
 
-    @Field(() => Int, {
+    @Field(() => Float, {
         nullable: true,
         description:
             'Start date of the assignment (Must multiply by 1000 to convert to date)',
     })
-    @Column({ nullable: true })
+    @Column({ nullable: true, type: 'bigint' })
     allowsubmissionsfromdate: number;
 
-    @Field(() => Int, {
+    @Field(() => Float, {
         nullable: true,
         description:
             'Deadline of the assignment (Must multiply by 1000 to convert to date)',
     })
-    @Column({ nullable: true })
+    @Column({ nullable: true, type: 'bigint' })
     duedate: number;
 
-    @Field(() => Int, {
+    @Field(() => Float, {
         nullable: true,
         description: 'Modified time (Must multiply by 1000 to convert to date)',
     })
-    @Column({ nullable: true })
+    @Column({ nullable: true, type: 'bigint' })
     timemodified: number;
 
     @Field(() => String, {

@@ -13,12 +13,12 @@ import {
     ResolveField,
     Resolver,
 } from '@nestjs/graphql';
-import { EventReminder } from './entities/event-reminder.entity';
-import { EventEntity } from './entities/event.entity';
-import { EventApiService } from './services/event-api.service';
-import { EventReminderService } from './services/event-reminder.service';
-import { EventService } from './services/event.service';
-import { EventReminderInput } from './dto/event-reminder.dto';
+import { EventReminder } from '../entities/event-reminder.entity';
+import { EventEntity } from '../entities/event.entity';
+import { EventApiService } from '../services/event-api.service';
+import { EventReminderService } from '../services/event-reminder.service';
+import { EventService } from '../services/event.service';
+import { EventReminderInput } from '../dto/event-reminder.dto';
 import { QueryArgs } from '@/common/args/query.arg';
 
 @Resolver(() => EventEntity)
