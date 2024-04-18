@@ -24,7 +24,7 @@ export function useEventList() {
         setLoading(true);
         refetch_({
             variables: { isNew: true },
-            fetchPolicy: 'cache-first',
+            fetchPolicy: 'no-cache',
             onCompleted(data) {
                 setLoading((prev) => false);
                 setEvents(data.userEvents);
