@@ -1,5 +1,5 @@
-query GeneralNewsFeed($limit: Int, $skip: Int) {
-    newsFeed(limit: $limit, skip: $skip) {
+query GeneralNewsFeed($limit: Int, $skip: Int, $tags: [String!]) {
+    newsFeed(limit: $limit, skip: $skip, tags: $tags) {
         date
         description
         htmlContent

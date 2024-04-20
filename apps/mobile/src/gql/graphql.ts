@@ -701,6 +701,7 @@ export type NewsFeedDetailQuery = { __typename?: 'Query', newsFeedDetail: { __ty
 export type GeneralNewsFeedQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']['input']>;
   skip?: InputMaybe<Scalars['Int']['input']>;
+  tags?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
 }>;
 
 
@@ -1307,8 +1308,8 @@ export function refetchNewsFeedDetailQuery(variables: NewsFeedDetailQueryVariabl
       return { query: NewsFeedDetailDocument, variables: variables }
     }
 export const GeneralNewsFeedDocument = gql`
-    query GeneralNewsFeed($limit: Int, $skip: Int) {
-  newsFeed(limit: $limit, skip: $skip) {
+    query GeneralNewsFeed($limit: Int, $skip: Int, $tags: [String!]) {
+  newsFeed(limit: $limit, skip: $skip, tags: $tags) {
     date
     description
     htmlContent
@@ -1343,6 +1344,7 @@ export const GeneralNewsFeedDocument = gql`
  *   variables: {
  *      limit: // value for 'limit'
  *      skip: // value for 'skip'
+ *      tags: // value for 'tags'
  *   },
  * });
  */
