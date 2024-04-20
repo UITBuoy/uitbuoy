@@ -1,4 +1,6 @@
+import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { PaginationArgs } from '@/common/args/pagination.arg';
+import { UseGuards } from '@nestjs/common';
 import {
     Args,
     Int,
@@ -8,12 +10,10 @@ import {
     ResolveField,
     Resolver,
 } from '@nestjs/graphql';
+import { NewsFeedFile } from './entities/news-feed-file';
+import { NewsFeedTag } from './entities/news-feed-tag.entity';
 import { NewsFeed } from './entities/news-feed.entity';
 import { NewsFeedService } from './news-feed.service';
-import { UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
-import { NewsFeedTag } from './entities/news-feed-tag.entity';
-import { NewsFeedFile } from './entities/news-feed-file';
 
 @Resolver(() => NewsFeed)
 export class NewsFeedResolver {
@@ -63,6 +63,18 @@ export class NewsFeedResolver {
         tags: string[],
     ) {
         const news = await this.newsFeedService.findAll(tags, paginationArgs);
+        return news;
+    }
+
+    @Query(() => NewsFeed, {
+        description: 'Retrieving news feed detail with title',
+    })
+    @UseGuards(JwtAuthGuard)
+    async newsFeedDetail(
+        @Args('title', { description: 'Title to find' })
+        title: string,
+    ) {
+        const news = await this.newsFeedService.findOne(title);
         return news;
     }
 

@@ -1,0 +1,20 @@
+query NewsFeedDetail($title: String!) {
+    newsFeedDetail(title: $title) {
+        date
+        description
+        htmlContent
+        imageUrl
+        link
+        plainContent
+        title
+        view
+        tags {
+            description
+            name
+        }
+        files {
+            title
+            url
+        }
+    }
+}
