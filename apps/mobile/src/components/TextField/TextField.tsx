@@ -3,7 +3,7 @@ import { TextInput, View } from 'react-native';
 
 type IProps = React.ComponentProps<typeof TextInput> & {
     title: string;
-    type: 'none' | 'password';
+    type: 'none' | 'text' | 'password';
     placeholder?: string;
     className?: string;
     fieldClassName?: string;

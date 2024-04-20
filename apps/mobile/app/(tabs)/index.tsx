@@ -16,33 +16,26 @@ import PageHeader from '../../src/components/PageHeader/PageHeader';
 import PreviewMakeupClass from '../../src/components/PreviewMakeupClass';
 import RemainingActivities from '../../src/components/RemainingActivities';
 import SyncCalendar from '../../src/components/SyncCalendar';
-import {
-    useUserEventsLazyQuery,
-    useUserMakeUpClassLazyQuery,
-} from '../../src/gql/graphql';
-import { useUpdateEventNotification } from '../../src/hooks/notifications/useUpdateEventNotification';
-import { useAuth } from '../../src/stores/auth.store';
+import { useUserMakeUpClassLazyQuery } from '../../src/gql/graphql';
 import { useSyncEvent } from '../../src/hooks/events/useSyncEvent';
+import { useAuth } from '../../src/stores/auth.store';
+import { useEvents } from '../../src/stores/event.store';
 
 export default function Page() {
     const { isLogin } = useAuth();
 
-    const [
-        refetchUserEvents,
-        { data: userEvents, loading: userEventsLoading },
-    ] = useUserEventsLazyQuery();
+    const {
+        events,
+        loading: eventsLoading,
+        refetch: refetchEvents,
+    } = useEvents();
     const [refetchUserMakeupClasses, { loading: userMakeupClassesLoading }] =
         useUserMakeUpClassLazyQuery();
-
-    useUpdateEventNotification(userEvents?.userEvents);
 
     const { syncEvent } = useSyncEvent();
 
     function refetch() {
-        refetchUserEvents({
-            variables: { isNew: true },
-            fetchPolicy: 'network-only',
-        });
+        refetchEvents({ variables: { isNew: true } });
         refetchUserMakeupClasses({
             fetchPolicy: 'network-only',
         });
@@ -58,8 +51,8 @@ export default function Page() {
     }, []);
 
     useEffect(() => {
-        if (userEvents?.userEvents) syncEvent();
-    }, [JSON.stringify(userEvents)]);
+        if (events) syncEvent();
+    }, [JSON.stringify(events)]);
 
     return (
         <View className=" flex-1 bg-white">
@@ -71,7 +64,7 @@ export default function Page() {
                     refreshControl={
                         <RefreshControl
                             refreshing={
-                                userEventsLoading || userMakeupClassesLoading
+                                eventsLoading || userMakeupClassesLoading
                             }
                             onRefresh={() => {
                                 refetch();

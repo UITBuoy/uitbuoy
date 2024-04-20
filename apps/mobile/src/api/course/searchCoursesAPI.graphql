@@ -1,5 +1,5 @@
-query SearchCourses($isNew: Boolean, $keyword: String) {
-    userCourses(isNew: $isNew, isRecent: false, keyword: $keyword) {
+query SearchCourses($isNew: Boolean, $keyword: String, $isRecent: Boolean) {
+    userCourses(isNew: $isNew, keyword: $keyword, isRecent: $isRecent) {
         coursecategory
         display_name
         enddate

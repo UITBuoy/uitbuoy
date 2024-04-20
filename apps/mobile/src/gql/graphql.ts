@@ -21,13 +21,13 @@ export type Scalars = {
 export type Assignment = {
   __typename?: 'Assignment';
   /** Start date of the assignment (Must multiply by 1000 to convert to date) */
-  allowsubmissionsfromdate?: Maybe<Scalars['Int']['output']>;
+  allowsubmissionsfromdate?: Maybe<Scalars['Float']['output']>;
   /** Used this id to find in course/assignment */
   cmid?: Maybe<Scalars['Int']['output']>;
   /** Course detail information */
   course?: Maybe<Scalars['Int']['output']>;
   /** Deadline of the assignment (Must multiply by 1000 to convert to date) */
-  duedate?: Maybe<Scalars['Int']['output']>;
+  duedate?: Maybe<Scalars['Float']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
   /** Description about the assignment */
   intro?: Maybe<Scalars['String']['output']>;
@@ -38,7 +38,7 @@ export type Assignment = {
   /** Title of the assignment */
   name?: Maybe<Scalars['String']['output']>;
   /** Modified time (Must multiply by 1000 to convert to date) */
-  timemodified?: Maybe<Scalars['Int']['output']>;
+  timemodified?: Maybe<Scalars['Float']['output']>;
 };
 
 export type AuthEntity = {
@@ -383,13 +383,17 @@ export type Mutation = {
   /** Add new event reminder */
   addEventReminder: EventReminder;
   addGoogleUser: GoogleUser;
+  /** Crawl data for serving news feed */
+  crawlAllNewsFeed: Scalars['Boolean']['output'];
+  crawlMakeupClass: Scalars['Boolean']['output'];
   createNote: NoteEntity;
+  /** Crawl the most recent news */
+  dailyCrawlNewsFeed: Scalars['Boolean']['output'];
   findAllEventByCourseIds: Array<Calendar>;
   login: AuthEntity;
   refreshToken: AuthEntity;
   removeNote: Scalars['String']['output'];
   syncEvents: Array<GoogleCalendarEvent>;
-  updateMakeupClass: Scalars['Boolean']['output'];
   updateNote: Scalars['String']['output'];
 };
 
@@ -403,6 +407,18 @@ export type MutationAddEventReminderArgs = {
 export type MutationAddGoogleUserArgs = {
   accessToken: Scalars['String']['input'];
   googleUser: CreateGoogleUserInput;
+};
+
+
+export type MutationCrawlAllNewsFeedArgs = {
+  pageNum?: InputMaybe<Scalars['Int']['input']>;
+  startPage?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type MutationCrawlMakeupClassArgs = {
+  pageNum?: InputMaybe<Scalars['Int']['input']>;
+  startPage?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -433,13 +449,35 @@ export type MutationSyncEventsArgs = {
 };
 
 
-export type MutationUpdateMakeupClassArgs = {
-  max_page?: InputMaybe<Scalars['Int']['input']>;
-};
-
-
 export type MutationUpdateNoteArgs = {
   updateNoteInput: UpdateNoteInput;
+};
+
+export type NewsFeed = {
+  __typename?: 'NewsFeed';
+  date: Scalars['Float']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  files: Array<NewsFeedFile>;
+  htmlContent: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  imageUrl?: Maybe<Scalars['String']['output']>;
+  link: Scalars['String']['output'];
+  plainContent: Scalars['String']['output'];
+  tags: Array<NewsFeedTag>;
+  title: Scalars['String']['output'];
+  view?: Maybe<Scalars['Int']['output']>;
+};
+
+export type NewsFeedFile = {
+  __typename?: 'NewsFeedFile';
+  title?: Maybe<Scalars['String']['output']>;
+  url: Scalars['String']['output'];
+};
+
+export type NewsFeedTag = {
+  __typename?: 'NewsFeedTag';
+  description?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
 };
 
 export type NoteEntity = {
@@ -453,11 +491,16 @@ export type NoteEntity = {
 
 export type Query = {
   __typename?: 'Query';
+  /** All assignments of current user */
+  assignments: Array<Assignment>;
   /** Get detail information about a specific course */
   course: Course;
   findAll: Array<Subject>;
+  findAllEducationProgram: Array<Subject>;
   findOne: Array<Subject>;
   makeUpClass: Array<MakeUpClass>;
+  /** Retrieving news feed item */
+  newsFeed: Array<NewsFeed>;
   note: Array<NoteEntity>;
   profile: User;
   /** Return all course of current user */
@@ -480,6 +523,11 @@ export type QueryFindAllArgs = {
 };
 
 
+export type QueryFindAllEducationProgramArgs = {
+  major: Scalars['String']['input'];
+};
+
+
 export type QueryFindOneArgs = {
   code: Scalars['String']['input'];
 };
@@ -491,6 +539,13 @@ export type QueryMakeUpClassArgs = {
   inComing?: InputMaybe<Scalars['Boolean']['input']>;
   month?: InputMaybe<Scalars['Float']['input']>;
   year?: InputMaybe<Scalars['Float']['input']>;
+};
+
+
+export type QueryNewsFeedArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  tags?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 
@@ -608,6 +663,7 @@ export type GeneralDetailCourseQuery = { __typename?: 'Query', course: { __typen
 export type SearchCoursesQueryVariables = Exact<{
   isNew?: InputMaybe<Scalars['Boolean']['input']>;
   keyword?: InputMaybe<Scalars['String']['input']>;
+  isRecent?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
@@ -990,8 +1046,8 @@ export function refetchGeneralDetailCourseQuery(variables: GeneralDetailCourseQu
       return { query: GeneralDetailCourseDocument, variables: variables }
     }
 export const SearchCoursesDocument = gql`
-    query SearchCourses($isNew: Boolean, $keyword: String) {
-  userCourses(isNew: $isNew, isRecent: false, keyword: $keyword) {
+    query SearchCourses($isNew: Boolean, $keyword: String, $isRecent: Boolean) {
+  userCourses(isNew: $isNew, keyword: $keyword, isRecent: $isRecent) {
     coursecategory
     display_name
     enddate
@@ -1016,6 +1072,7 @@ export const SearchCoursesDocument = gql`
  *   variables: {
  *      isNew: // value for 'isNew'
  *      keyword: // value for 'keyword'
+ *      isRecent: // value for 'isRecent'
  *   },
  * });
  */
