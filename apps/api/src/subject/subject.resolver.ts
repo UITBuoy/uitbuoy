@@ -4,7 +4,7 @@ import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { User } from 'src/user/entities/user.entity';
 import { Subject } from './entities/subject.entity';
-import { SubjectService } from './subject.service';
+import { SubjectService } from './services/subject.service';
 
 @Resolver(() => Subject)
 export class SubjectResolver {

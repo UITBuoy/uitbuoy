@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { SubjectService } from './subject.service';
+import { SubjectService } from './services/subject.service';
 import { SubjectResolver } from './subject.resolver';
 import { ApiModule } from 'src/api/api.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
