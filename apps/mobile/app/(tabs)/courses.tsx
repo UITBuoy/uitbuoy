@@ -4,7 +4,7 @@ import { RefreshControl, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CourseItem from '../../src/components/CourseItem/CourseItem';
 import CourseSearch from '../../src/components/CourseSearch/CourseSearch';
-import PageHeader from '../../src/components/PageHeader/PageHeader';
+import PageHeader from '../../src/components/PageHeader';
 import { useUserCoursesLazyQuery } from '../../src/gql/graphql';
 import CourseListSkeleton from '../../src/skeletons/CourseListSkeleton';
 import Animated, { FadeInLeft, FadeOutLeft } from 'react-native-reanimated';

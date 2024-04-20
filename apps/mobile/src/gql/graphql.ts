@@ -459,7 +459,6 @@ export type NewsFeed = {
   description?: Maybe<Scalars['String']['output']>;
   files: Array<NewsFeedFile>;
   htmlContent: Scalars['String']['output'];
-  id: Scalars['String']['output'];
   imageUrl?: Maybe<Scalars['String']['output']>;
   link: Scalars['String']['output'];
   plainContent: Scalars['String']['output'];
@@ -684,6 +683,14 @@ export type UserEventsQueryVariables = Exact<{
 
 
 export type UserEventsQuery = { __typename?: 'Query', userEvents: Array<{ __typename?: 'EventEntity', activityname?: string | null, purpose?: string | null, overdue?: boolean | null, timeduration?: number | null, timeusermidnight?: number | null, timestart?: number | null, timesort?: number | null, timemodified?: number | null, name: string, id: number, instance?: number | null, course: { __typename?: 'Course', categoryid?: number | null, categoryname?: string | null, coursecategory?: string | null, courseimage?: string | null, display_name?: string | null, enddate?: number | null, fullname?: string | null, hiddenbynumsections?: number | null, id?: number | null, idnumber?: string | null, name?: string | null, pdfexportfont?: string | null, section?: number | null, shortname?: string | null, showactivitydates?: boolean | null, showcompletionconditions?: string | null, sortorder?: number | null, startdate?: number | null, uservisible?: boolean | null, viewurl?: string | null, visible?: boolean | null } }> };
+
+export type GeneralNewsFeedQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GeneralNewsFeedQuery = { __typename?: 'Query', newsFeed: Array<{ __typename?: 'NewsFeed', date: number, description?: string | null, htmlContent: string, imageUrl?: string | null, link: string, plainContent: string, title: string, view?: number | null, tags: Array<{ __typename?: 'NewsFeedTag', description?: string | null, name: string }>, files: Array<{ __typename?: 'NewsFeedFile', title?: string | null, url: string }> }> };
 
 export type SyncEventMutationVariables = Exact<{
   accessToken: Scalars['String']['input'];
@@ -1226,6 +1233,65 @@ export type UserEventsSuspenseQueryHookResult = ReturnType<typeof useUserEventsS
 export type UserEventsQueryResult = Apollo.QueryResult<UserEventsQuery, UserEventsQueryVariables>;
 export function refetchUserEventsQuery(variables?: UserEventsQueryVariables) {
       return { query: UserEventsDocument, variables: variables }
+    }
+export const GeneralNewsFeedDocument = gql`
+    query GeneralNewsFeed($limit: Int, $skip: Int) {
+  newsFeed(limit: $limit, skip: $skip) {
+    date
+    description
+    htmlContent
+    imageUrl
+    link
+    plainContent
+    title
+    view
+    tags {
+      description
+      name
+    }
+    files {
+      title
+      url
+    }
+  }
+}
+    `;
+
+/**
+ * __useGeneralNewsFeedQuery__
+ *
+ * To run a query within a React component, call `useGeneralNewsFeedQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGeneralNewsFeedQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGeneralNewsFeedQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      skip: // value for 'skip'
+ *   },
+ * });
+ */
+export function useGeneralNewsFeedQuery(baseOptions?: Apollo.QueryHookOptions<GeneralNewsFeedQuery, GeneralNewsFeedQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GeneralNewsFeedQuery, GeneralNewsFeedQueryVariables>(GeneralNewsFeedDocument, options);
+      }
+export function useGeneralNewsFeedLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GeneralNewsFeedQuery, GeneralNewsFeedQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GeneralNewsFeedQuery, GeneralNewsFeedQueryVariables>(GeneralNewsFeedDocument, options);
+        }
+export function useGeneralNewsFeedSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GeneralNewsFeedQuery, GeneralNewsFeedQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GeneralNewsFeedQuery, GeneralNewsFeedQueryVariables>(GeneralNewsFeedDocument, options);
+        }
+export type GeneralNewsFeedQueryHookResult = ReturnType<typeof useGeneralNewsFeedQuery>;
+export type GeneralNewsFeedLazyQueryHookResult = ReturnType<typeof useGeneralNewsFeedLazyQuery>;
+export type GeneralNewsFeedSuspenseQueryHookResult = ReturnType<typeof useGeneralNewsFeedSuspenseQuery>;
+export type GeneralNewsFeedQueryResult = Apollo.QueryResult<GeneralNewsFeedQuery, GeneralNewsFeedQueryVariables>;
+export function refetchGeneralNewsFeedQuery(variables?: GeneralNewsFeedQueryVariables) {
+      return { query: GeneralNewsFeedDocument, variables: variables }
     }
 export const SyncEventDocument = gql`
     mutation SyncEvent($accessToken: String!, $googleUserId: String!) {

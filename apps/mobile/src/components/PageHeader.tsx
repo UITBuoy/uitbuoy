@@ -1,7 +1,8 @@
-import { TouchableOpacity, View } from "react-native";
-import MessageIcon from "../../icons/message";
-import NotificationIcon from "../../icons/notification";
-import DrawerIcon from "../../icons/drawer";
+import { router } from 'expo-router';
+import { TouchableOpacity, View } from 'react-native';
+import DrawerIcon from '../icons/drawer';
+import MessageIcon from '../icons/message';
+import NotificationIcon from '../icons/notification';
 
 export default function PageHeader() {
     return (
@@ -13,7 +14,12 @@ export default function PageHeader() {
                 <TouchableOpacity className=" p-1">
                     <MessageIcon />
                 </TouchableOpacity>
-                <TouchableOpacity className=" p-1">
+                <TouchableOpacity
+                    onPress={() => {
+                        router.push('/modals/news-feed');
+                    }}
+                    className=" p-1"
+                >
                     <NotificationIcon />
                 </TouchableOpacity>
             </View>

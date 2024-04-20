@@ -140,6 +140,14 @@ export default function Layout() {
                                 animation: 'slide_from_right',
                             }}
                         />
+                        <Stack.Screen
+                            name="modals/news-feed"
+                            options={{
+                                headerShown: false,
+                                presentation: 'modal',
+                                animation: 'slide_from_bottom',
+                            }}
+                        />
                     </Stack>
                 </ThemeProvider>
             </ApolloProvider>

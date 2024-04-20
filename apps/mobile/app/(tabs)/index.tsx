@@ -12,7 +12,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MANAGE_COURSE_ANIMATION from '../../assets/animations/new-features/manage-courses.json';
 import CourseSearch from '../../src/components/CourseSearch/CourseSearch';
-import PageHeader from '../../src/components/PageHeader/PageHeader';
+import PageHeader from '../../src/components/PageHeader';
 import PreviewMakeupClass from '../../src/components/PreviewMakeupClass';
 import RemainingActivities from '../../src/components/RemainingActivities';
 import SyncCalendar from '../../src/components/SyncCalendar';
