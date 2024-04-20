@@ -21,16 +21,21 @@ export default function NewsFeedItem({
                         <Text className=" px-3 py-1 rounded-lg bg-neutral-95 text-black text-center font-medium text-xs">{`${time} ${type} trước`}</Text>
                         <Text className=" px-3 py-1 rounded-lg bg-neutral-95 text-black text-center font-medium text-xs">{`${view} lượt xem`}</Text>
                     </View>
+                    {imageUrl ? (
+                        <Image
+                            source={{ uri: imageUrl }}
+                            style={{
+                                width: '100%',
+                                height: 200,
+                                objectFit: 'cover',
+                            }}
+                            className=" mt-4 rounded-2xl"
+                        />
+                    ) : null}
                     {description ? (
                         <Text className=" mt-4 text-neutral-40">
                             {description}
                         </Text>
-                    ) : null}
-                    {imageUrl ? (
-                        <Image
-                            source={{ uri: imageUrl }}
-                            style={{ width: 200, height: 200 }}
-                        />
                     ) : null}
                 </View>
             </NativeButton>
