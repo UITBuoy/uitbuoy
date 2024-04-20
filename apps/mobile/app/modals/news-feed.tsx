@@ -6,7 +6,7 @@ import { useGeneralNewsFeedQuery } from '../../src/gql/graphql';
 
 export default function NewsFeedModal() {
     const { data, loading } = useGeneralNewsFeedQuery({
-        variables: { limit: 10, skip: 0 },
+        variables: { limit: 7, skip: 0 },
     });
 
     return (
@@ -15,10 +15,10 @@ export default function NewsFeedModal() {
             className=" flex-1 bg-white"
         >
             <SafeAreaView style={{ flex: 1 }}>
-                <View className=" flex-1 py-2">
-                    <Text className=" font-semibold text-xl mx-4">News</Text>
-                    <View className=" mt-4">
-                        <ScrollView>
+                <Text className=" font-semibold text-xl mx-4">News</Text>
+                <View className=" mt-4 flex-1">
+                    <ScrollView className=" flex-1">
+                        <View style={{ paddingVertical: 10 }}>
                             {loading ? (
                                 <View></View>
                             ) : (
@@ -36,8 +36,8 @@ export default function NewsFeedModal() {
                                     ))}
                                 </View>
                             )}
-                        </ScrollView>
-                    </View>
+                        </View>
+                    </ScrollView>
                 </View>
             </SafeAreaView>
         </View>

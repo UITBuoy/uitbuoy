@@ -4,18 +4,23 @@ import { timeDiff } from '../utils/timeDiff';
 import NativeButton from './NativeButton/NativeButton';
 
 export default function NewsFeedItem({
-    news: { title, description, date, imageUrl, tags },
+    news: { title, description, date, imageUrl, tags, view },
 }: {
     news: NewsFeed;
 }) {
     const { time, type } = timeDiff(new Date(date));
 
     return (
-        <View className=" bg-white mx-4 rounded-2xl">
+        <View className=" bg-white mx-4 rounded-2xl" style={{ elevation: 0 }}>
             <NativeButton>
                 <View className=" bg-white p-4 px-4 flex flex-col items-start ">
-                    <Text className=" font-semibold">{title}</Text>
-                    <Text className=" mt-2 px-3 py-1 rounded-lg bg-neutral-95 text-black text-center font-medium text-sm">{`${time} ${type} trước`}</Text>
+                    <Text className=" font-bold flex flex-row items-center">
+                        {title}
+                    </Text>
+                    <View className=" mt-4 flex flex-row gap-2">
+                        <Text className=" px-3 py-1 rounded-lg bg-neutral-95 text-black text-center font-medium text-xs">{`${time} ${type} trước`}</Text>
+                        <Text className=" px-3 py-1 rounded-lg bg-neutral-95 text-black text-center font-medium text-xs">{`${view} lượt xem`}</Text>
+                    </View>
                     {description ? (
                         <Text className=" mt-4 text-neutral-40">
                             {description}
