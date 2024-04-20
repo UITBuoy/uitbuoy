@@ -26,7 +26,7 @@ export default function NewsFeedComponent({ tagName }: { tagName?: string }) {
     }, []);
 
     return (
-        <View className=" flex-1">
+        <View className=" flex-1" style={{ backgroundColor: '#EFEFEF' }}>
             <View className=" flex-1">
                 <View className=" flex-1" style={{ paddingVertical: 10 }}>
                     {loading && news.length === 0 ? (
