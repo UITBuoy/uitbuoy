@@ -30,7 +30,7 @@ export class ApiService {
                 wsfunction: functionName,
                 wstoken: token,
                 moodlewsrestformat: 'json',
-                ...params,
+                ...moodleParams,
             },
         });
         const result = response.data;
