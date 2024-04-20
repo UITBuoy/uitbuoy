@@ -46,7 +46,7 @@ export class NewsFeedResolver {
         description: 'Crawl the most recent news',
     })
     async dailyCrawlNewsFeed() {
-        await this.newsFeedService.crawlData(0, 2);
+        await this.newsFeedService.crawlData(0, 1);
         return true;
     }
 
@@ -69,12 +69,12 @@ export class NewsFeedResolver {
     @ResolveField(() => [NewsFeedTag])
     @UseGuards(JwtAuthGuard)
     async tags(@Parent() newsFeed: NewsFeed) {
-        return (await this.newsFeedService.findOne(newsFeed.id)).tags;
+        return (await this.newsFeedService.findOne(newsFeed.title)).tags;
     }
 
     @ResolveField(() => [NewsFeedFile])
     @UseGuards(JwtAuthGuard)
     async files(@Parent() newsFeed: NewsFeed) {
-        return (await this.newsFeedService.findOne(newsFeed.id)).files;
+        return (await this.newsFeedService.findOne(newsFeed.title)).files;
     }
 }
