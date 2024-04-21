@@ -33,6 +33,17 @@ export class CourseResolver {
         private readonly assignmentApiService: AssignmentApiService,
     ) {}
 
+    @Query(() => [String], { description: 'Return major of user' })
+    @UseGuards(JwtAuthGuard)
+    async findUserMajorByCourse(
+        @CurrentUser() user: User,
+        @Args() queryArgs: QueryArgs,
+    ) {
+        queryArgs.keyword = 'CVHT';
+        const courses = await this.userCourses(user, queryArgs);
+        return this.courseService.findUserMajorByCourse(courses);
+    }
+
     @Query(() => [Course], { description: 'Return all course of current user' })
     @UseGuards(JwtAuthGuard)
     async userCourses(@CurrentUser() user: User, @Args() queryArgs: QueryArgs) {

@@ -8,6 +8,7 @@ import { CourseModuleEntity } from '../entities/course-module.entity';
 import { User } from '@/user/entities/user.entity';
 import { CourseContentEntity } from '../entities/course-content.entity';
 import { QueryArgs } from '@/common/args/query.arg';
+import moment from 'moment';
 
 @Injectable()
 export class CourseService {
@@ -95,5 +96,10 @@ export class CourseService {
 
     async findCourseById(id: number) {
         return this.courseRepo.findOneBy({ id });
+    }
+
+    async findUserMajorByCourse(resolverCourses) {
+        const responseCourse = await this.findCourseById(resolverCourses[0].id);
+        return [responseCourse.shortname, responseCourse.coursecategory];
     }
 }
