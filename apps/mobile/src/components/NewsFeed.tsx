@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { FlatList, View } from 'react-native';
 import Animated, { FadeInUp, FadeOutUp } from 'react-native-reanimated';
 import { NewsFeed, useGeneralNewsFeedLazyQuery } from '../gql/graphql';
+import NewsFeedSkeleton from '../skeletons/NewsFeedSkeleton';
 import NewsFeedItem from './NewsFeedItem';
 
 export default function NewsFeedComponent({
@@ -35,7 +36,7 @@ export default function NewsFeedComponent({
             <View className=" flex-1">
                 <View className=" flex-1" style={{ paddingVertical: 10 }}>
                     {loading && news.length === 0 ? (
-                        <View></View>
+                        <NewsFeedSkeleton />
                     ) : (
                         <FlatList
                             data={news}
