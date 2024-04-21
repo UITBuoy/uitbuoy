@@ -33,13 +33,22 @@ export default function Layout() {
                         lazy: true,
                     }}
                 >
-                    <Tab.Screen name="General" children={() => <NewsFeed />} />
+                    <Tab.Screen
+                        name="General"
+                        children={({ navigation }) => (
+                            <NewsFeed navigation={navigation} />
+                        )}
+                    />
                     {tags.map((tag) => (
                         <Tab.Screen
                             key={tag}
                             name={tag}
-                            children={() => (
-                                <NewsFeed key={tag} tagName={tag} />
+                            children={({ navigation }) => (
+                                <NewsFeed
+                                    navigation={navigation}
+                                    key={tag}
+                                    tagName={tag}
+                                />
                             )}
                         />
                     ))}

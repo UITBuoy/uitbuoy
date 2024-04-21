@@ -1,11 +1,16 @@
 import { useEffect, useState } from 'react';
-import { FlatList, Text, View } from 'react-native';
+import { FlatList, View } from 'react-native';
 import Animated, { FadeInUp, FadeOutUp } from 'react-native-reanimated';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { NewsFeed, useGeneralNewsFeedLazyQuery } from '../gql/graphql';
 import NewsFeedItem from './NewsFeedItem';
 
-export default function NewsFeedComponent({ tagName }: { tagName?: string }) {
+export default function NewsFeedComponent({
+    tagName,
+    navigation,
+}: {
+    tagName?: string;
+    navigation: any;
+}) {
     const [page, setPage] = useState(0);
     const [news, setNews] = useState<NewsFeed[]>([]);
 
@@ -40,7 +45,10 @@ export default function NewsFeedComponent({ tagName }: { tagName?: string }) {
                                     entering={FadeInUp.delay(index * 70 + 100)}
                                     exiting={FadeOutUp}
                                 >
-                                    <NewsFeedItem news={item} />
+                                    <NewsFeedItem
+                                        navigation={navigation}
+                                        news={item}
+                                    />
                                 </Animated.View>
                             )}
                             refreshing={loading}

@@ -4,7 +4,13 @@ import { timeDiff } from '../utils/timeDiff';
 import NativeButton from './NativeButton/NativeButton';
 import { router } from 'expo-router';
 
-export default function NewsFeedItem({ news }: { news: NewsFeed }) {
+export default function NewsFeedItem({
+    news,
+    navigation,
+}: {
+    news: NewsFeed;
+    navigation: any;
+}) {
     const { title, description, date, imageUrl, tags, view } = news;
     const { time, type } = timeDiff(new Date(date));
 
@@ -18,7 +24,7 @@ export default function NewsFeedItem({ news }: { news: NewsFeed }) {
                     });
                 }}
             >
-                <View className=' p-4'>
+                <View className=" p-4">
                     <Text className=" font-bold flex flex-row items-center">
                         {title}
                     </Text>
@@ -46,7 +52,13 @@ export default function NewsFeedItem({ news }: { news: NewsFeed }) {
             </View>
             <View className=" mt-2 flex-row p-2 px-4 gap-4">
                 {tags.map((tag) => (
-                    <NativeButton key={tag.name} borderRadius={8}>
+                    <NativeButton
+                        onPress={() => {
+                            navigation.navigate(tag.name);
+                        }}
+                        key={tag.name}
+                        borderRadius={8}
+                    >
                         <View className=" rounded-lg bg-primary-70 px-3 py-1">
                             <Text className=" text-white text-center font-medium text-sm">
                                 {tag.name}
