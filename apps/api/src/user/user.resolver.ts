@@ -1,13 +1,13 @@
+import { GoogleTasksApiService } from '@/api/services/google-task-api.service';
 import { CurrentUser } from '@/auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
-import { Args, Mutation, ResolveField, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { CreateGoogleUserInput } from './dto/create-google-user.input';
 import { GoogleUser } from './entities/google-user.entity';
 import { User } from './entities/user.entity';
-import { UserService } from './services/user.service';
-import { GoogleTasksApiService } from '@/api/services/google-task-api.service';
 import { GoogleUserService } from './services/google-user.service';
+import { UserService } from './services/user.service';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -16,6 +16,21 @@ export class UserResolver {
         private readonly googleTasksApiService: GoogleTasksApiService,
         private readonly googleUserService: GoogleUserService,
     ) {}
+
+    @Query(() => User)
+    @UseGuards(JwtAuthGuard)
+    profile(@CurrentUser() user: User) {
+        return user;
+    }
+
+    @Query(() => String)
+    @UseGuards(JwtAuthGuard)
+    async year(@CurrentUser() user: User) {
+        const responseUser = await this.userService.findById(user.id);
+        return Math.floor(
+            parseInt(responseUser.username) / 1000000 - 5,
+        ).toString();
+    }
 
     @Mutation(() => GoogleUser)
     @UseGuards(JwtAuthGuard)
