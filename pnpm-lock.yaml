@@ -126,6 +126,9 @@ importers:
       class-validator:
         specifier: ^0.14.1
         version: 0.14.1
+      expo-server-sdk:
+        specifier: ^3.9.0
+        version: 3.9.0
       express-session:
         specifier: ^1.18.0
         version: 1.18.0
@@ -13155,6 +13158,16 @@ packages:
       - supports-color
     dev: false
 
+  /expo-server-sdk@3.9.0:
+    resolution: {integrity: sha512-7S24bGtGoyYfdJGzs4z8lKmDEzjSP+F/tCvhBycjW5rAEC2glYb9rUwvysV/9Gy2P2+zjJZCHahyYh6UJEY2mw==}
+    dependencies:
+      node-fetch: 2.7.0
+      promise-limit: 2.7.0
+      promise-retry: 2.0.1
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
   /expo-splash-screen@0.26.4(expo-modules-autolinking@1.10.3)(expo@50.0.14):
     resolution: {integrity: sha512-2DwofTQ0FFQCsvDysm/msENsbyNsJiAJwK3qK/oXeizECAPqD7bK19J4z9kuEbr7ORPX9MLnTQYKl6kmX3keUg==}
     peerDependencies:
@@ -18560,6 +18573,10 @@ packages:
     peerDependenciesMeta:
       bluebird:
         optional: true
+    dev: false
+
+  /promise-limit@2.7.0:
+    resolution: {integrity: sha512-7nJ6v5lnJsXwGprnGXga4wx6d1POjvi5Qmf1ivTRxTjH4Z/9Czja/UCMLVmB9N93GeWOU93XaFaEt6jbuoagNw==}
     dev: false
 
   /promise-queue@2.2.5:

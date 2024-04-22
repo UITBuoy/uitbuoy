@@ -34,4 +34,10 @@ export class NotificationResolver {
     ) {
         return !!(await this.notificationService.remove(user, token));
     }
+
+    @Mutation(() => Boolean)
+    async notifyEvents() {
+        await this.notificationService.notifyEvents()
+        return true;
+    }
 }
