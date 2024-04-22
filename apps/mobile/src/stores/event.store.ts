@@ -11,6 +11,7 @@ import {
     useUserEventsLazyQuery,
 } from '../gql/graphql';
 import { useUpdateEventNotification } from '../hooks/notifications/useUpdateEventNotification';
+import { useEffect } from 'react';
 
 export type IEventStore = {
     events: DeepPartial<EventEntity>[];
@@ -53,7 +54,16 @@ export function useEvents() {
         setLoading,
     } = useEventStore();
 
-    const [refetch, { loading }] = useUserEventsLazyQuery();
+    const [refetch, { loading, refetch: _refetch }] = useUserEventsLazyQuery();
+
+    useEffect(() => {
+        refetch({
+            fetchPolicy: 'cache-only',
+            onCompleted(data) {
+                _refetch({ isNew: true });
+            },
+        });
+    }, []);
 
     // useUpdateEventNotification(events);
 

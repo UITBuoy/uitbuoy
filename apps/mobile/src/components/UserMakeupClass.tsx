@@ -15,7 +15,10 @@ export default function UserMakeupClass({
     return (
         <View className="">
             <NativeButton borderRadius={0}>
-                <View className=" p-4 bg-primary-95">
+                <View
+                    style={{ backgroundColor: '#EDF4FA' }}
+                    className=" p-4 bg-primary-99"
+                >
                     <View className=" flex-row items-center gap-4">
                         <Text className="p-2 rounded-lg bg-primary-70 font-medium text-sm text-white">{`Còn ${-time} ${type} nữa`}</Text>
                         <Text className=" font-medium text-sm">

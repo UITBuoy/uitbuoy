@@ -35,7 +35,10 @@ export default function Page() {
     const { syncEvent } = useSyncEvent();
 
     function refetch() {
-        refetchEvents({ variables: { isNew: true } });
+        refetchEvents({
+            variables: { isNew: true },
+            fetchPolicy: 'network-only',
+        });
         refetchUserMakeupClasses({
             fetchPolicy: 'network-only',
         });
@@ -44,7 +47,9 @@ export default function Page() {
     const rootNavigationState = useRootNavigationState();
 
     useEffect(() => {
-        refetch();
+        refetchUserMakeupClasses({
+            fetchPolicy: 'network-only',
+        });
         if (!isLogin && rootNavigationState?.key) {
             router.replace('/modals/login');
         }
@@ -78,7 +83,7 @@ export default function Page() {
                         <View className=" flex flex-col gap-2">
                             <PreviewMakeupClass />
                         </View>
-                        <View className=" mt-10 flex flex-col gap-2">
+                        <View className=" mt-10 flex flex-col gap-0">
                             <RemainingActivities />
                             <SyncCalendar />
                         </View>

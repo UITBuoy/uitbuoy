@@ -28,7 +28,7 @@ export default function RemainingActivities() {
                 title="Các bài tập sắp đến hạn"
                 subTitle="Danh sách các bài tập trong tất cả các lớp ở học kỳ này"
             />
-            <View className=" flex py-5">
+            <View className=" flex py-0">
                 {loading ? (
                     <EventListSkeleton />
                 ) : (
