@@ -49,9 +49,7 @@ export function useNotificationConfig() {
     const [upload] = useUploadNotificationConfigMutation();
 
     useEffect(() => {
-        console.log({ timeBefore, token });
         if (token) {
-            console.log('uploading');
             upload({ variables: { token, beforeDay: timeBefore } });
         }
     }, [timeBefore, token]);

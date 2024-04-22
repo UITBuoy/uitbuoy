@@ -133,7 +133,7 @@ function Layout() {
                     <Stack.Screen
                         name="modals/makeup-classes"
                         options={{
-                            title: 'Các lớp học bù',
+                            title: 'Các lớp học bù / HT2',
                             presentation: 'modal',
                             animation: 'slide_from_left',
                             headerShadowVisible: true,

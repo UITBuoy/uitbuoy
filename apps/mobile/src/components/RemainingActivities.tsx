@@ -9,6 +9,8 @@ import EventListSkeleton from '../skeletons/EventListSkeleton';
 import { useEvents } from '../stores/event.store';
 import { timeDiff } from '../utils/timeDiff';
 import NativeButton from './NativeButton/NativeButton';
+import NOTE_TEXT from '../../assets/note-text.png';
+import HeaderButton from './HeaderButton';
 
 export default function RemainingActivities() {
     // const { data, loading, error, refetch } = useUserEventsQuery();
@@ -21,26 +23,11 @@ export default function RemainingActivities() {
 
     return (
         <View className=" flex mt-0">
-            <View className=" mx-4 flex-row justify-between items-center">
-                <Text className=" text-base font-semibold">
-                    Các bài tập sắp đến hạn
-                </Text>
-                <NativeButton
-                    onPress={() => {
-                        refetch({ variables: { isNew: true } });
-                    }}
-                >
-                    <View className=" flex-row gap-2 p-2 px-3 bg-primary-70 ">
-                        <Image
-                            style={{ width: 20, height: 20 }}
-                            source={REFRESH_ICON}
-                        />
-                        <Text className=" text-white text-sm font-medium">
-                            Reload
-                        </Text>
-                    </View>
-                </NativeButton>
-            </View>
+            <HeaderButton
+                icon={NOTE_TEXT}
+                title="Các bài tập sắp đến hạn"
+                subTitle="Danh sách các bài tập trong tất cả các lớp ở học kỳ này"
+            />
             <View className=" flex py-5">
                 {loading ? (
                     <EventListSkeleton />

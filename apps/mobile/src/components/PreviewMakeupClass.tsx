@@ -1,10 +1,13 @@
+import { router } from 'expo-router';
 import { useEffect } from 'react';
-import { FlatList, View, Text } from 'react-native';
+import { FlatList, Image, Text, View } from 'react-native';
+import CHEVRON from '../../assets/arrow-left.png';
+import NOTIFICATION from '../../assets/notification.png';
 import { useUserMakeUpClassQuery } from '../gql/graphql';
-import UserMakeupClass from './UserMakeupClass';
 import PreviewMakeupClassSkeleton from '../skeletons/PreviewMakeupClassSkeleton';
 import NativeButton from './NativeButton/NativeButton';
-import { router } from 'expo-router';
+import UserMakeupClass from './UserMakeupClass';
+import HeaderButton from './HeaderButton';
 
 export default function PreviewMakeupClass() {
     const { data, loading, error, refetch } = useUserMakeUpClassQuery();
@@ -15,9 +18,14 @@ export default function PreviewMakeupClass() {
 
     return (
         <View className=" flex flex-col gap-2">
-            <Text className=" mx-4 mt-10 font-semibold mb-4">
-                Các thông báo
-            </Text>
+            <HeaderButton
+                icon={NOTIFICATION}
+                title="Các lớp học bù hoặc HT2"
+                subTitle="Nhấn vào để xem tất cả các thông báo"
+                onPress={() => {
+                    router.push('/modals/makeup-classes');
+                }}
+            />
             {loading || !data?.makeUpClass ? (
                 <PreviewMakeupClassSkeleton />
             ) : (
@@ -34,17 +42,6 @@ export default function PreviewMakeupClass() {
                         )}
                         keyExtractor={(item) => item.title}
                     />
-                    <View className=" mt-4 flex-col items-center">
-                        <NativeButton
-                            onPress={() =>
-                                router.push('/modals/makeup-classes')
-                            }
-                        >
-                            <View className=" flex p-2 px-10">
-                                <Text className=" font-medium">Xem thêm</Text>
-                            </View>
-                        </NativeButton>
-                    </View>
                 </>
             )}
         </View>

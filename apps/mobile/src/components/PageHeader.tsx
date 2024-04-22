@@ -16,7 +16,7 @@ export default function PageHeader() {
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={() => {
-                        router.push('/modals/news-feed');
+                        router.push('/modals/makeup-classes');
                     }}
                     className=" p-1"
                 >
