@@ -5,6 +5,7 @@ import { Expo, ExpoPushMessage } from 'expo-server-sdk';
 import { And, LessThan, MoreThan, Repository } from 'typeorm';
 import { NotificationDevice } from './entities/notification-device.entity';
 import { UpdatedNotificationDevice } from './args/notification-device.arg';
+import { timeDiff } from '@/common/utils/timeDiff';
 
 @Injectable()
 export class NotificationService {
@@ -56,11 +57,14 @@ export class NotificationService {
                     if (
                         new Date().getTime() >
                         event.timestart * 1000 - device.beforeDay * 86_400_000
-                    )
+                    ) {
+                        const { time, type } = timeDiff(
+                            new Date(event.timestart * 1000),
+                        );
                         messages.push({
                             to: device.token,
                             sound: 'default',
-                            title: `h${event.name}`,
+                            title: `[Còn ${-time} ${type}] - ${event.name}`,
                             body: `Bài tập ${event.activityname} sẽ hết hạn vào lúc ${new Intl.DateTimeFormat(
                                 'vi-VN',
                                 {
@@ -69,14 +73,14 @@ export class NotificationService {
                                     timeZone: 'Asia/Ho_Chi_Minh',
                                 },
                             ).format(new Date(event.timestart * 1000))}`,
-                            data: { device },
+                            data: { event, time, type },
                             channelId: 'assignment_due',
                         });
+                    }
                 });
             });
         });
 
-        console.log({ messages });
         expo.sendPushNotificationsAsync(messages);
 
         // let chunks = expo.chunkPushNotifications(messages);
