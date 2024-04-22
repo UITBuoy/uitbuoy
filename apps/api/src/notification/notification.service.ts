@@ -26,7 +26,7 @@ export class NotificationService {
             .affected;
     }
 
-    async notifyEvents() {
+    async notifyEvents(): Promise<number> {
         let expo = new Expo({
             useFcmV1: true,
         });
@@ -92,6 +92,6 @@ export class NotificationService {
             } catch (error) {}
         });
 
-        return true;
+        return messages.length;
     }
 }

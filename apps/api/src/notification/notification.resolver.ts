@@ -4,6 +4,7 @@ import { User } from '@/user/entities/user.entity';
 import { UseGuards } from '@nestjs/common';
 import {
     Args,
+    Int,
     Mutation,
     ObjectType,
     OmitType,
@@ -36,9 +37,8 @@ export class NotificationResolver {
         return !!(await this.notificationService.remove(user, token));
     }
 
-    @Mutation(() => Boolean)
+    @Mutation(() => Int)
     async notifyEvents() {
-        await this.notificationService.notifyEvents();
-        return true;
+        return await this.notificationService.notifyEvents();
     }
 }
