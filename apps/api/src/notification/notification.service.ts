@@ -81,16 +81,16 @@ export class NotificationService {
             });
         });
 
-        expo.sendPushNotificationsAsync(messages);
+        // expo.sendPushNotificationsAsync(messages);
 
-        // let chunks = expo.chunkPushNotifications(messages);
+        let chunks = expo.chunkPushNotifications(messages);
 
-        // chunks.forEach(async (chunk) => {
-        //     try {
-        //         const ticketChunk =
-        //             await expo.sendPushNotificationsAsync(chunk);
-        //     } catch (error) {}
-        // });
+        chunks.forEach(async (chunk) => {
+            try {
+                const ticketChunk =
+                    await expo.sendPushNotificationsAsync(chunk);
+            } catch (error) {}
+        });
 
         return true;
     }
