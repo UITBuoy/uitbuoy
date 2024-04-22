@@ -1,7 +1,7 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, useRootNavigationState } from 'expo-router';
 import LottieView from 'lottie-react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     RefreshControl,
     ScrollView,
@@ -20,8 +20,10 @@ import { useSyncEvent } from '../../src/hooks/events/useSyncEvent';
 import { useAuth } from '../../src/stores/auth.store';
 import { useEvents } from '../../src/stores/event.store';
 import { useMakeupClass } from '../../src/stores/makeup-class.store';
+import { useMount } from '../../src/hooks/common/useMount';
 
 export default function Page() {
+    const isMount = useMount();
     const { isLogin } = useAuth();
 
     const {
@@ -47,13 +49,11 @@ export default function Page() {
         });
     }
 
-    const rootNavigationState = useRootNavigationState();
-
     useEffect(() => {
-        if (!isLogin && rootNavigationState?.key) {
+        if (!isLogin && isMount) {
             router.replace('/modals/login');
         }
-    }, []);
+    }, [isMount]);
 
     useEffect(() => {
         if (events) syncEvent();

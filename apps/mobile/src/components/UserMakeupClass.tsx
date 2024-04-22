@@ -33,7 +33,7 @@ export default function UserMakeupClass({
                     </Text>
                     <View
                         style={{ marginTop: 16 }}
-                        className=" rounded-lg bg-primary-80 flex-row justify-between items-center gap-2"
+                        className=" rounded-lg flex-row justify-between items-center gap-2"
                     >
                         {makeupClass.classroom ? (
                             <Text className=" rounded-lg text-sm text-primary-60 font-bold">
