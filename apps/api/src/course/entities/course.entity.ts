@@ -13,6 +13,7 @@ import {
     Relation,
 } from 'typeorm';
 import type { CourseSectionEntity } from './course-section.entity';
+import { EventEntity } from '@/event/entities/event.entity';
 
 @ObjectType()
 @Entity()
@@ -165,6 +166,9 @@ export class Course {
 
     @OneToMany('MakeUpClass', 'course')
     makeUpClasses: Relation<MakeUpClass>[];
+
+    @OneToMany('EventEntity', 'course')
+    events: Relation<EventEntity>[];
 
     @AfterLoad()
     loadFullName?() {
