@@ -16,10 +16,10 @@ import PageHeader from '../../src/components/PageHeader';
 import PreviewMakeupClass from '../../src/components/PreviewMakeupClass';
 import RemainingActivities from '../../src/components/RemainingActivities';
 import SyncCalendar from '../../src/components/SyncCalendar';
-import { useUserMakeUpClassLazyQuery } from '../../src/gql/graphql';
 import { useSyncEvent } from '../../src/hooks/events/useSyncEvent';
 import { useAuth } from '../../src/stores/auth.store';
 import { useEvents } from '../../src/stores/event.store';
+import { useMakeupClass } from '../../src/stores/makeup-class.store';
 
 export default function Page() {
     const { isLogin } = useAuth();
@@ -29,8 +29,11 @@ export default function Page() {
         loading: eventsLoading,
         refetch: refetchEvents,
     } = useEvents();
-    const [refetchUserMakeupClasses, { loading: userMakeupClassesLoading }] =
-        useUserMakeUpClassLazyQuery();
+    const {
+        classes,
+        loading: makeupClassesLoading,
+        refetch: refetchMakeupClasses,
+    } = useMakeupClass();
 
     const { syncEvent } = useSyncEvent();
 
@@ -39,7 +42,7 @@ export default function Page() {
             variables: { isNew: true },
             fetchPolicy: 'network-only',
         });
-        refetchUserMakeupClasses({
+        refetchMakeupClasses({
             fetchPolicy: 'network-only',
         });
     }
@@ -47,9 +50,6 @@ export default function Page() {
     const rootNavigationState = useRootNavigationState();
 
     useEffect(() => {
-        refetchUserMakeupClasses({
-            fetchPolicy: 'network-only',
-        });
         if (!isLogin && rootNavigationState?.key) {
             router.replace('/modals/login');
         }
@@ -68,9 +68,7 @@ export default function Page() {
                     className=" flex-1 flex-col gap-10"
                     refreshControl={
                         <RefreshControl
-                            refreshing={
-                                eventsLoading || userMakeupClassesLoading
-                            }
+                            refreshing={eventsLoading || makeupClassesLoading}
                             onRefresh={() => {
                                 refetch();
                             }}

@@ -6,73 +6,70 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import {
-    EventEntity,
     Exact,
-    UserEventsQuery,
-    useUserEventsLazyQuery,
+    MakeUpClass,
+    UserMakeUpClassQuery,
+    useUserMakeUpClassLazyQuery,
 } from '../gql/graphql';
 
-export type IEventStore = {
-    events: DeepPartial<EventEntity>[];
+export type IMakeupClassStore = {
+    classes: DeepPartial<MakeUpClass>[];
     loading: boolean;
-    setEvents: (events: DeepPartial<EventEntity>[]) => any;
+    setClasses: (classes: DeepPartial<MakeUpClass>[]) => any;
     setLoading: (loading: boolean) => any;
 };
 
-const useEventStore = create<
-    IEventStore,
+const useMakeupClassStore = create<
+    IMakeupClassStore,
     [['zustand/persist', never], ['zustand/immer', never]]
 >(
     persist(
-        immer<IEventStore>((set, get) => ({
-            events: [],
+        immer<IMakeupClassStore>((set, get) => ({
+            classes: [],
             loading: false,
             setLoading(loading) {
                 set((state) => {
                     state.loading = loading;
                 });
             },
-            setEvents(events) {
+            setClasses(classes) {
                 set((state) => {
-                    state.events = events;
+                    state.classes = classes;
                 });
             },
         })),
         {
-            name: 'events',
+            name: 'makeup-classes',
             storage: createJSONStorage(() => AsyncStorage),
         },
     ),
 );
 
-export function useEvents() {
+export function useMakeupClass() {
     const {
-        events,
-        setEvents,
+        classes,
+        setClasses,
         loading: isLoading,
         setLoading,
-    } = useEventStore();
+    } = useMakeupClassStore();
 
-    const [refetch, { loading, refetch: _refetch }] = useUserEventsLazyQuery();
+    const [refetch, { loading }] = useUserMakeUpClassLazyQuery();
 
     useEffect(() => {
         refetch({
             fetchPolicy: 'network-only',
             onCompleted(data) {
-                setEvents(data.userEvents);
+                setClasses(data.makeUpClass);
             },
         });
     }, []);
 
     return {
-        events,
-        loading: loading || isLoading,
+        classes,
+        loading: isLoading,
         refetch: async (
             options?: Partial<
-                LazyQueryHookExecOptions<
-                    UserEventsQuery,
-                    Exact<{ isNew?: boolean }>
-                >
+                LazyQueryHookExecOptions<UserMakeUpClassQuery, Exact<{}>>
             >,
         ) => {
             setLoading(true);
@@ -80,11 +77,11 @@ export function useEvents() {
                 ...options,
                 fetchPolicy: 'network-only',
             });
-            setEvents(response.data.userEvents);
+            setClasses(response.data.makeUpClass);
             setLoading(false);
         },
         removeAll: () => {
-            setEvents([]);
+            setClasses([]);
         },
     };
 }

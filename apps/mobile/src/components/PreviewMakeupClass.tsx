@@ -1,20 +1,13 @@
 import { router } from 'expo-router';
-import { useEffect } from 'react';
-import { FlatList, Image, Text, View } from 'react-native';
-import CHEVRON from '../../assets/arrow-left.png';
+import { FlatList, View } from 'react-native';
 import NOTIFICATION from '../../assets/notification.png';
-import { useUserMakeUpClassQuery } from '../gql/graphql';
 import PreviewMakeupClassSkeleton from '../skeletons/PreviewMakeupClassSkeleton';
-import NativeButton from './NativeButton/NativeButton';
-import UserMakeupClass from './UserMakeupClass';
+import { useMakeupClass } from '../stores/makeup-class.store';
 import HeaderButton from './HeaderButton';
+import UserMakeupClass from './UserMakeupClass';
 
 export default function PreviewMakeupClass() {
-    const { data, loading, error, refetch } = useUserMakeUpClassQuery();
-
-    useEffect(() => {
-        refetch();
-    }, []);
+    const { classes, refetch, loading } = useMakeupClass();
 
     return (
         <View className=" flex flex-col gap-2">
@@ -26,7 +19,7 @@ export default function PreviewMakeupClass() {
                     router.push('/modals/makeup-classes');
                 }}
             />
-            {loading || !data?.makeUpClass ? (
+            {loading || !classes ? (
                 <PreviewMakeupClassSkeleton />
             ) : (
                 <>
@@ -36,7 +29,7 @@ export default function PreviewMakeupClass() {
                             gap: 8,
                         }}
                         scrollEnabled={false}
-                        data={data.makeUpClass}
+                        data={classes}
                         renderItem={({ item }) => (
                             <UserMakeupClass makeupClass={item} />
                         )}

@@ -12,7 +12,7 @@ import { useRecentCourse } from '../../src/stores/recent-course.store';
 import RecentCourseItem from '../../src/components/RecentCourseItem';
 
 export default function Page() {
-    const [fetchCourses, { data: courses, loading, error }] =
+    const [fetchCourses, { data: courses, loading, error, refetch }] =
         useUserCoursesLazyQuery();
 
     const { recentCourses } = useRecentCourse();
@@ -20,7 +20,7 @@ export default function Page() {
     useEffect(() => {
         fetchCourses({
             variables: { isNew: true, isRecent: true },
-            fetchPolicy: 'cache-and-network',
+            fetchPolicy: 'cache-first',
         });
     }, []);
 

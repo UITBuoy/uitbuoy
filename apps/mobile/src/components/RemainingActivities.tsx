@@ -13,13 +13,7 @@ import NOTE_TEXT from '../../assets/note-text.png';
 import HeaderButton from './HeaderButton';
 
 export default function RemainingActivities() {
-    // const { data, loading, error, refetch } = useUserEventsQuery();
-    // const [isLoading, setIsLoading] = useState(false);
     const { events, refetch, loading } = useEvents();
-
-    useEffect(() => {
-        // refetch({ isNew: true });
-    }, []);
 
     return (
         <View className=" flex mt-0">
