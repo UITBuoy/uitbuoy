@@ -95,14 +95,40 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
                             .at(-1)
                             ?.subjects.push({
                                 code: textIndex,
+                                isRequired: true,
                             });
                     }
                 }
             }
         }
 
+        //
+        // function pushSpecialSubjectClassify(
+        //     courseIndex: number,
+        //     majorIndex: number,
+        //     tableElementLength,
+        //     tableElement,
+        // ) {
+        //     let classify = '';
+        //     for (
+        //         let tableElementIndex = 1;
+        //         tableElementIndex < tableElementLength;
+        //         tableElementIndex++
+        //     ) {
+        //         classify = tableElement
+        //             .find('tr')
+        //             .eq(tableElementIndex)
+        //             .find('td')
+        //             .eq(0)
+        //             .text()
+        //             .trim();
+        //     }
+        // }
+        //
+
         function pushSpecialMajor(courseIndex: number, majorIndex: number) {
             let typeTitles = '';
+            let classify = '';
             const typeNumbers = $data('*').filter('h3').length;
             let tableElement = null;
             for (let typeIndex = 0; typeIndex < typeNumbers; typeIndex++) {
@@ -131,6 +157,24 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
                         tableElementIndex < tableElementLength;
                         tableElementIndex++
                     ) {
+                        if (
+                            tableElement
+                                .find('tr')
+                                .eq(tableElementIndex)
+                                .find('td')
+                                .eq(0)
+                                .text()
+                                .trim()
+                                .match(RegEx.typeRegex || RegEx.subjectRegex)
+                        ) {
+                            classify = tableElement
+                                .find('tr')
+                                .eq(tableElementIndex)
+                                .find('td')
+                                .eq(0)
+                                .text()
+                                .trim();
+                        }
                         const code = tableElement
                             .find('tr')
                             .eq(tableElementIndex)
@@ -138,11 +182,11 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
                             .eq(1)
                             .text()
                             .trim();
-
+                            
                         if (code.match(RegEx.subjectRegex)) {
                             courses[courseIndex].majors[majorIndex].sections
                                 .at(-1)
-                                .subjects.push({ code });
+                                .subjects.push({ code, classify });
                         }
                     }
                 }
@@ -210,7 +254,9 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
             }
         }
 
-        console.log(JSON.stringify(courses[0].majors, null, 2));
+        console.log(JSON.stringify(courses[0].majors[7], null, 2));
+
+        function saveEducationProgram() {}
 
         courses.forEach((course) => {
             course.majors.forEach(async (major) => {
@@ -224,19 +270,5 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
         });
 
         console.log('??k?');
-    }
-    //once per 6 months
-    @Cron('0 0 0 1 6 *') // Remember to test later (13/3/24)
-    async cron() {
-        async function getPayload(url: string) {
-            return cheerio.load((await axios.get(url)).data);
-        }
-        const $educationProgram = await getPayload(API_URL.educationPrograms);
-
-        const test = $educationProgram('div#accordion active').text();
-        console.log(test);
-        // this.repo.save();
-
-        console.log('done');
     }
 }
