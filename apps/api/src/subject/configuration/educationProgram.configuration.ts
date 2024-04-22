@@ -182,13 +182,14 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
                             .eq(1)
                             .text()
                             .trim();
-                            
+
                         if (code.match(RegEx.subjectRegex)) {
                             courses[courseIndex].majors[majorIndex].sections
                                 .at(-1)
                                 .subjects.push({ code, classify });
                         }
                     }
+                    classify = '';
                 }
             }
         }
