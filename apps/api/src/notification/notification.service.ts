@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Expo } from 'expo-server-sdk';
 import { Repository } from 'typeorm';
 import { NotificationDevice } from './entities/notification-device.entity';
+import { UpdatedNotificationDevice } from './args/notification-device.arg';
 
 @Injectable()
 export class NotificationService {
@@ -12,8 +13,11 @@ export class NotificationService {
         private readonly repo: Repository<NotificationDevice>,
     ) {}
 
-    async update(user: User, token: string): Promise<NotificationDevice> {
-        return this.repo.save({ token, user });
+    async update(
+        user: User,
+        config: UpdatedNotificationDevice,
+    ): Promise<NotificationDevice> {
+        return this.repo.save({ ...config, user });
     }
 
     async remove(user: User, token: string): Promise<number> {

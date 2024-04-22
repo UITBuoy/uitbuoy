@@ -12,6 +12,7 @@ import {
 import { NotificationDevice } from './entities/notification-device.entity';
 import { NotificationService } from './notification.service';
 import { DeleteResult } from 'typeorm';
+import { UpdatedNotificationDevice } from './args/notification-device.arg';
 
 @Resolver(() => NotificationDevice)
 export class NotificationResolver {
@@ -19,11 +20,11 @@ export class NotificationResolver {
 
     @Mutation(() => NotificationDevice)
     @UseGuards(JwtAuthGuard)
-    async uploadNotificationPushToken(
+    async uploadNotificationConfig(
         @CurrentUser() user: User,
-        @Args('token') token: string,
+        @Args('config') config: UpdatedNotificationDevice,
     ) {
-        return this.notificationService.update(user, token);
+        return this.notificationService.update(user, config);
     }
 
     @Mutation(() => Boolean)
@@ -37,7 +38,7 @@ export class NotificationResolver {
 
     @Mutation(() => Boolean)
     async notifyEvents() {
-        await this.notificationService.notifyEvents()
+        await this.notificationService.notifyEvents();
         return true;
     }
 }
