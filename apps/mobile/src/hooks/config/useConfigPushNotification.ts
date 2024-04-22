@@ -3,6 +3,7 @@ import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import { useEffect, useRef, useState } from 'react';
 import { Platform } from 'react-native';
+import { useNotificationConfig } from '../../stores/notification-config';
 
 // Can use this function below or use Expo's Push Notification Tool from: https://expo.dev/notifications
 async function sendPushNotification(expoPushToken) {
@@ -52,7 +53,6 @@ async function registerForPushNotificationsAsync() {
         token = await Notifications.getExpoPushTokenAsync({
             projectId: Constants.expoConfig.extra.eas.projectId,
         });
-        console.log(token);
     } else {
         alert('Must use physical device for Push Notifications');
     }
@@ -66,6 +66,15 @@ export function useConfigPushNotification() {
     const notificationListener = useRef(null);
     const responseListener = useRef(null);
 
+    const { setNotitificationConfig } = useNotificationConfig();
+
+    useEffect(() => {
+        if (expoPushToken) {
+            console.log({ expoPushToken });
+            setNotitificationConfig({ token: expoPushToken });
+        }
+    }, [expoPushToken]);
+
     useEffect(() => {
         (async () => {
             Notifications.setNotificationHandler({
@@ -75,18 +84,9 @@ export function useConfigPushNotification() {
                     shouldSetBadge: false,
                 }),
             });
-
-            try {
-                const token = (await Notifications.getExpoPushTokenAsync())
-                    .data;
-                console.log({ token });
-            } catch (error) {
-                console.log({ error });
-            }
         })();
 
         registerForPushNotificationsAsync().then((token) => {
-            console.log({ token });
             return setExpoPushToken(token);
         });
 

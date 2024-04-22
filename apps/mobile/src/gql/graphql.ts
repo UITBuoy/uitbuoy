@@ -391,10 +391,13 @@ export type Mutation = {
   dailyCrawlNewsFeed: Scalars['Boolean']['output'];
   findAllEventByCourseIds: Array<Calendar>;
   login: AuthEntity;
+  notifyEvents: Scalars['Boolean']['output'];
   refreshToken: AuthEntity;
   removeNote: Scalars['String']['output'];
+  removeNotificationPushToken: Scalars['Boolean']['output'];
   syncEvents: Array<GoogleCalendarEvent>;
   updateNote: Scalars['String']['output'];
+  uploadNotificationConfig: NotificationDevice;
 };
 
 
@@ -443,6 +446,11 @@ export type MutationRemoveNoteArgs = {
 };
 
 
+export type MutationRemoveNotificationPushTokenArgs = {
+  token: Scalars['String']['input'];
+};
+
+
 export type MutationSyncEventsArgs = {
   accessToken: Scalars['String']['input'];
   googleUserId: Scalars['String']['input'];
@@ -451,6 +459,11 @@ export type MutationSyncEventsArgs = {
 
 export type MutationUpdateNoteArgs = {
   updateNoteInput: UpdateNoteInput;
+};
+
+
+export type MutationUploadNotificationConfigArgs = {
+  config: UpdatedNotificationDevice;
 };
 
 export type NewsFeed = {
@@ -486,6 +499,16 @@ export type NoteEntity = {
   id: Scalars['String']['output'];
   title: Scalars['String']['output'];
   user: User;
+};
+
+export type NotificationDevice = {
+  __typename?: 'NotificationDevice';
+  /** How many days should we notify the user before the event? */
+  beforeDay?: Maybe<Scalars['Float']['output']>;
+  /** Date of the last notification */
+  lastNotificationDate?: Maybe<Scalars['Float']['output']>;
+  /** Push token */
+  token: Scalars['String']['output'];
 };
 
 export type Query = {
@@ -598,6 +621,13 @@ export type UpdateNoteInput = {
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type UpdatedNotificationDevice = {
+  /** How many days should we notify the user before the event? */
+  beforeDay?: InputMaybe<Scalars['Float']['input']>;
+  /** Push token */
+  token: Scalars['String']['input'];
+};
+
 export type User = {
   __typename?: 'User';
   auth?: Maybe<Scalars['String']['output']>;
@@ -650,6 +680,14 @@ export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', auth?: string | null, city?: string | null, confirmed?: string | null, country?: string | null, department?: string | null, email: string, firstaccess?: number | null, fullname: string, id?: number | null, isIntegrateWithGoogle?: boolean | null, lang?: string | null, lastaccess?: number | null, mailformat?: string | null, profileimageurl?: string | null, profileimageurlsmall?: string | null, suspended?: string | null, theme?: string | null, timezone?: string | null, token: string, username: string } };
+
+export type UploadNotificationConfigMutationVariables = Exact<{
+  beforeDay?: InputMaybe<Scalars['Float']['input']>;
+  token: Scalars['String']['input'];
+}>;
+
+
+export type UploadNotificationConfigMutation = { __typename?: 'Mutation', uploadNotificationConfig: { __typename?: 'NotificationDevice', beforeDay?: number | null, lastNotificationDate?: number | null, token: string } };
 
 export type DetailAssignmentCourseQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -883,6 +921,42 @@ export type ProfileQueryResult = Apollo.QueryResult<ProfileQuery, ProfileQueryVa
 export function refetchProfileQuery(variables?: ProfileQueryVariables) {
       return { query: ProfileDocument, variables: variables }
     }
+export const UploadNotificationConfigDocument = gql`
+    mutation UploadNotificationConfig($beforeDay: Float, $token: String!) {
+  uploadNotificationConfig(config: {beforeDay: $beforeDay, token: $token}) {
+    beforeDay
+    lastNotificationDate
+    token
+  }
+}
+    `;
+export type UploadNotificationConfigMutationFn = Apollo.MutationFunction<UploadNotificationConfigMutation, UploadNotificationConfigMutationVariables>;
+
+/**
+ * __useUploadNotificationConfigMutation__
+ *
+ * To run a mutation, you first call `useUploadNotificationConfigMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUploadNotificationConfigMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [uploadNotificationConfigMutation, { data, loading, error }] = useUploadNotificationConfigMutation({
+ *   variables: {
+ *      beforeDay: // value for 'beforeDay'
+ *      token: // value for 'token'
+ *   },
+ * });
+ */
+export function useUploadNotificationConfigMutation(baseOptions?: Apollo.MutationHookOptions<UploadNotificationConfigMutation, UploadNotificationConfigMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UploadNotificationConfigMutation, UploadNotificationConfigMutationVariables>(UploadNotificationConfigDocument, options);
+      }
+export type UploadNotificationConfigMutationHookResult = ReturnType<typeof useUploadNotificationConfigMutation>;
+export type UploadNotificationConfigMutationResult = Apollo.MutationResult<UploadNotificationConfigMutation>;
+export type UploadNotificationConfigMutationOptions = Apollo.BaseMutationOptions<UploadNotificationConfigMutation, UploadNotificationConfigMutationVariables>;
 export const DetailAssignmentCourseDocument = gql`
     query DetailAssignmentCourse($id: Int!, $assignment_id: Int!) {
   assignmentCourse: course(course_id: $id) {

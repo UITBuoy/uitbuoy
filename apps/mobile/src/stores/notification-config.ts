@@ -1,55 +1,32 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useCallback, useEffect } from 'react';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
+import { useUploadNotificationConfigMutation } from '../gql/graphql';
 
 export type INotificationConfig = {
+    token: string;
     isVibration: boolean;
     isDimissible: boolean;
     isNotifyAtTheBeginingOfDay: boolean;
     timeBefore: number;
-    setVibration: (value: boolean) => any;
-    setDismissible: (value: boolean) => any;
-    setTimeBefore: (value: number) => any;
-    setIsNotifyAtTheBeginingOfDay: (value: boolean) => any;
     setNotitificationConfig: (config: Partial<INotificationConfig>) => any;
 };
 
-export const useNotificationConfig = create<
+export const useNotificationConfigStore = create<
     INotificationConfig,
     [['zustand/persist', never], ['zustand/immer', never]]
 >(
     persist(
         immer<INotificationConfig>((set, get) => ({
+            token: '',
             isVibration: false,
             isDimissible: true,
             isNotifyAtTheBeginingOfDay: true,
             timeBefore: 1,
-            setVibration: (isVibration) => {
-                set((state) => {
-                    state.isVibration = isVibration;
-                });
-            },
-            setDismissible: (isDimissable) => {
-                set((state) => {
-                    state.isDimissible = isDimissable;
-                });
-            },
-            setTimeBefore: (timeBefore) => {
-                set((state) => {
-                    state.timeBefore = timeBefore;
-                });
-            },
-            setIsNotifyAtTheBeginingOfDay: (isNotifyAtTheBeginingOfDay) => {
-                set((state) => {
-                    state.isNotifyAtTheBeginingOfDay =
-                        isNotifyAtTheBeginingOfDay;
-                });
-            },
             setNotitificationConfig(config) {
-                set((state) => {
-                    state = { ...state, ...config };
-                });
+                set((state) => ({ ...state, ...config }));
             },
         })),
         {
@@ -58,3 +35,33 @@ export const useNotificationConfig = create<
         },
     ),
 );
+
+export function useNotificationConfig() {
+    const {
+        token,
+        isVibration,
+        isDimissible,
+        isNotifyAtTheBeginingOfDay,
+        timeBefore,
+        setNotitificationConfig,
+    } = useNotificationConfigStore();
+
+    const [upload] = useUploadNotificationConfigMutation();
+
+    useEffect(() => {
+        console.log({ timeBefore, token });
+        if (token) {
+            console.log('uploading');
+            upload({ variables: { token, beforeDay: timeBefore } });
+        }
+    }, [timeBefore, token]);
+
+    return {
+        token,
+        isVibration,
+        isDimissible,
+        isNotifyAtTheBeginingOfDay,
+        timeBefore,
+        setNotitificationConfig,
+    };
+}
