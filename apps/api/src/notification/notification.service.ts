@@ -36,13 +36,13 @@ export class NotificationService {
             .leftJoinAndSelect('NotificationDevice.user', 'User')
             .leftJoinAndSelect('User.courses', 'Course')
             .leftJoinAndSelect('Course.events', 'EventEntity')
-            // .where(
-            //     'NotificationDevice.lastNotificationDate < :now - NotificationDevice.beforeDay * 86400000',
-            //     {
-            //         now: new Date().getTime(),
-            //     },
-            // )
-            // .orWhere('NotificationDevice.lastNotificationDate is null')
+            .where(
+                'NotificationDevice.lastNotificationDate < :now - NotificationDevice.beforeDay * 86400000',
+                {
+                    now: new Date().getTime(),
+                },
+            )
+            .orWhere('NotificationDevice.lastNotificationDate is null')
             .getMany();
 
         const messages: ExpoPushMessage[] = [];
