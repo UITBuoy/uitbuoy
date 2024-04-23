@@ -51,13 +51,42 @@ export class CourseResolver {
         )[1];
 
         const learntCourse =
-            this.courseService.findAllSubjectCodeByLearntCourse(courses);
-        const majorCourse = this.subjectService.findAllSubjectCodeByMajor(
+            await this.courseService.findAllSubjectCodeByLearntCourse(courses);
+        const majorCourse = await this.subjectService.findAllSubjectCodeByMajor(
             user,
             majorName,
         );
-        console.log('done')
-        return majorCourse;
+        console.log('done');
+
+        const [
+            majorSubjectCodes,
+            requiredSubjectCodes,
+            electiveFreeSubjectCodes,
+        ] = majorCourse;
+
+        const [requiredSubjectCodes2, electiveFreeSubjectCodes2] = [
+            requiredSubjectCodes,
+            electiveFreeSubjectCodes,
+        ];
+        for (let i = 0; i < requiredSubjectCodes.length; i++) {
+            for (let j = 0; j < learntCourse.length; j++) {
+                if (learntCourse[j].includes(requiredSubjectCodes[i])) {
+                    requiredSubjectCodes2.splice(i,1);
+                }
+            }
+        }
+
+        for (let i = 0; i < electiveFreeSubjectCodes.length; i++) {
+            for (let j = 0; j < learntCourse.length; j++) {
+                if (learntCourse[j].includes(electiveFreeSubjectCodes[i])) {
+                    electiveFreeSubjectCodes2.splice(i, 1);
+                }
+            }
+        }
+
+        const result = [...requiredSubjectCodes2, ...electiveFreeSubjectCodes2];
+        console.log({result});
+        return result;
     }
 
     @Query(() => [String], { description: 'Return major of user' })

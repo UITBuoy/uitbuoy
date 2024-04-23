@@ -60,6 +60,9 @@ export class SubjectService {
 
     async findAllSubjectCodeByMajor(user: User, majorName: string) {
         const majorSubjectCodes = [];
+        const requiredSubjectCodes = [];
+        const electiveRequiredSubjectCodes = [];
+        const electioveFreeSubjectCodes = [];
 
         const year = await this.userService.findYear(user);
         // const majorName =
@@ -73,9 +76,21 @@ export class SubjectService {
             for (let i = 0; i < years.sections.length; i++)
                 for (let j = 0; j < years.sections[i].subjects.length; j++) {
                     majorSubjectCodes.push(years.sections[i].subjects[j].code);
+                    if (years.sections[i].subjects[j].isRequired)
+                        requiredSubjectCodes.push(
+                            years.sections[i].subjects[j].code,
+                        );
+                    else
+                        electioveFreeSubjectCodes.push(
+                            years.sections[i].subjects[j].code,
+                        );
                 }
 
         console.log({ majorSubjectCodes });
-        return majorSubjectCodes;
+        return [
+            majorSubjectCodes,
+            requiredSubjectCodes,
+            electioveFreeSubjectCodes,
+        ];
     }
 }
