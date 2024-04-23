@@ -64,7 +64,7 @@ export class NotificationService {
                         messages.push({
                             to: device.token,
                             sound: 'default',
-                            title: `[Còn ${-time} ${type}] - ${event.name}`,
+                            title: `[Còn ${time} ${type}] - ${event.name}`,
                             body: `Bài tập ${event.activityname} sẽ hết hạn vào lúc ${new Intl.DateTimeFormat(
                                 'vi-VN',
                                 {
