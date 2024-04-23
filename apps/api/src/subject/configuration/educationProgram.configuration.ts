@@ -7,6 +7,7 @@ import API_URL from 'src/common/constants/url';
 import RegEx from 'src/common/constants/regex';
 import { Repository } from 'typeorm';
 import { EducationProgram } from '../entities/educationProgram.entity';
+import { is } from 'cheerio/lib/api/traversing';
 
 @Injectable()
 export class EducationProgramConfiguration implements OnApplicationBootstrap {
@@ -21,7 +22,7 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
         }
         const $educationProgram = await getPayload(API_URL.educationPrograms);
 
-        const courses = [];
+        const years = [];
 
         const courseLength: number = $educationProgram('div.acc-item').length;
 
@@ -36,7 +37,7 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
                     .children('a');
                 const majorName = educationProgramData.text();
                 const link: string = educationProgramData.attr('href');
-                courses[courseIndex].majors.push({
+                years[courseIndex].majors.push({
                     majorName,
                     link,
                     totalCredit: '',
@@ -61,7 +62,7 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
                     .text()
                     .trim(),
             );
-            courses[courseIndex].majors[majorIndex].totalCredit = isNaN(
+            years[courseIndex].majors[majorIndex].totalCredit = isNaN(
                 totalCredit,
             )
                 ? 0
@@ -84,14 +85,14 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
             for (let tableIndex = 1; tableIndex < tableLength; tableIndex++) {
                 let textIndex = getTextIndex(0, tableIndex);
                 if (textIndex.match(RegEx.typeRegex)) {
-                    courses[courseIndex].majors[majorIndex].sections.push({
+                    years[courseIndex].majors[majorIndex].sections.push({
                         name: textIndex,
                         subjects: [],
                     });
                 } else {
                     textIndex = getTextIndex(1, tableIndex);
                     if (textIndex.match(RegEx.subjectRegex)) {
-                        courses[courseIndex].majors[majorIndex].sections
+                        years[courseIndex].majors[majorIndex].sections
                             .at(-1)
                             ?.subjects.push({
                                 code: textIndex,
@@ -102,33 +103,9 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
             }
         }
 
-        //
-        // function pushSpecialSubjectClassify(
-        //     courseIndex: number,
-        //     majorIndex: number,
-        //     tableElementLength,
-        //     tableElement,
-        // ) {
-        //     let classify = '';
-        //     for (
-        //         let tableElementIndex = 1;
-        //         tableElementIndex < tableElementLength;
-        //         tableElementIndex++
-        //     ) {
-        //         classify = tableElement
-        //             .find('tr')
-        //             .eq(tableElementIndex)
-        //             .find('td')
-        //             .eq(0)
-        //             .text()
-        //             .trim();
-        //     }
-        // }
-        //
-
         function pushSpecialMajor(courseIndex: number, majorIndex: number) {
             let typeTitles = '';
-            let classify = '';
+            let type = '';
             const typeNumbers = $data('*').filter('h3').length;
             let tableElement = null;
             for (let typeIndex = 0; typeIndex < typeNumbers; typeIndex++) {
@@ -147,7 +124,7 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
                         ?.at(2)
                         .split(':')
                         .at(0);
-                    courses[courseIndex].majors[majorIndex].sections.push({
+                    years[courseIndex].majors[majorIndex].sections.push({
                         name: typeTitles,
                         subjects: [],
                     });
@@ -167,7 +144,7 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
                                 .trim()
                                 .match(RegEx.typeRegex || RegEx.subjectRegex)
                         ) {
-                            classify = tableElement
+                            type = tableElement
                                 .find('tr')
                                 .eq(tableElementIndex)
                                 .find('td')
@@ -184,12 +161,16 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
                             .trim();
 
                         if (code.match(RegEx.subjectRegex)) {
-                            courses[courseIndex].majors[majorIndex].sections
+                            years[courseIndex].majors[majorIndex].sections
                                 .at(-1)
-                                .subjects.push({ code, classify });
+                                .subjects.push({
+                                    code,
+                                    type,
+                                    isRequired: false,
+                                });
                         }
                     }
-                    classify = '';
+                    type = '';
                 }
             }
         }
@@ -200,7 +181,7 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
             courseIndex: number,
         ) {
             const $fieldRoot = await getPayload(
-                `${API_URL.headLink}${courses[courseIndex].majors[majorIndex].link}`,
+                `${API_URL.headLink}${years[courseIndex].majors[majorIndex].link}`,
             );
             const html = (await $fieldRoot(element).html()) || '';
 
@@ -208,60 +189,91 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
         }
 
         //push courses
-        for (let courseIndex = 0; courseIndex < courseLength; courseIndex++) {
+        for (let yearIndex = 0; yearIndex < courseLength; yearIndex++) {
             const courseName = $educationProgram('div.accordion')
-                .eq(courseIndex)
+                .eq(yearIndex)
                 .text();
-            courses.push({ course: courseName, majors: [] });
+            years.push({ course: courseName, majors: [] });
 
             const majorLength = $educationProgram('div.acc-item')
-                .eq(courseIndex)
+                .eq(yearIndex)
                 .children('div.panel')
                 .children('div.views-row').length;
 
-            pushMajorItems(majorLength, courseIndex);
+            pushMajorItems(majorLength, yearIndex);
 
             for (let majorIndex = 0; majorIndex < majorLength; majorIndex++) {
                 if (
-                    courses &&
-                    courses[courseIndex] &&
-                    courses[courseIndex].majors &&
-                    courses[courseIndex].majors[majorIndex] &&
-                    courses[courseIndex].majors[majorIndex].link
+                    years &&
+                    years[yearIndex] &&
+                    years[yearIndex].majors &&
+                    years[yearIndex].majors[majorIndex] &&
+                    years[yearIndex].majors[majorIndex].link
                 ) {
                     $data = await getEducationProgramMajorElement(
                         majorIndex,
                         'dd:nth-child(6)',
-                        courseIndex,
+                        yearIndex,
                     );
 
                     //get total credit
-                    pushTotalCredit(courseIndex, majorIndex);
+                    pushTotalCredit(yearIndex, majorIndex);
 
                     //get subjects by type (dai cuong)
                     if (
-                        courses &&
-                        courses[courseIndex] &&
-                        courses[courseIndex].majors &&
-                        courses[courseIndex].majors[majorIndex] &&
-                        courses[courseIndex].majors[majorIndex].link &&
-                        courses[courseIndex].majors[majorIndex].sections
+                        years &&
+                        years[yearIndex] &&
+                        years[yearIndex].majors &&
+                        years[yearIndex].majors[majorIndex] &&
+                        years[yearIndex].majors[majorIndex].link &&
+                        years[yearIndex].majors[majorIndex].sections
                     )
-                        pushGeneralSubjects(courseIndex, majorIndex);
+                        pushGeneralSubjects(yearIndex, majorIndex);
 
                     //get subjects by orther types
-                    pushSpecialMajor(courseIndex, majorIndex);
+                    pushSpecialMajor(yearIndex, majorIndex);
                 }
             }
         }
 
-        console.log(JSON.stringify(courses[0].majors[7], null, 2));
+        for (let i = 0; i < years.length; i++) {
+            for (let j = 0; j < years[i].majors.length; j++) {
+                for (let k = 0; k < years[i].majors[j].sections.length; k++) {
+                    if (
+                        years[i].majors[j].sections[k].name?.match(/khác/i) ||
+                        years[i].majors[j].sections[k].name?.match(/đồ án/i) ||
+                        years[i].majors[j].sections[k].name?.match(/thực tập/i)
+                    )
+                        for (
+                            let t = 0;
+                            t < years[i].majors[j].sections[k].subjects.length;
+                            t++
+                        )
+                            years[i].majors[j].sections[k].subjects[
+                                t
+                            ].isRequired = true;
+                    for (
+                        let t = 0;
+                        t < years[i].majors[j].sections[k].subjects.length;
+                        t++
+                    )
+                        if (
+                            years[i].majors[j].sections[k].subjects[
+                                t
+                            ].type?.match(/bắt buộc/i)
+                        )
+                            years[i].majors[j].sections[k].subjects[
+                                t
+                            ].isRequired = true;
+                }
+            }
+        }
 
-        function saveEducationProgram() {}
+        years.forEach((year) => {
+            year.majors.forEach(async (major) => {
+                major.year = year.course;
 
-        courses.forEach((course) => {
-            course.majors.forEach(async (major) => {
-                major.year = course.course;
+                // setIsRequired(year);
                 try {
                     await this.repo.save(major);
                 } catch (error) {
@@ -269,6 +281,8 @@ export class EducationProgramConfiguration implements OnApplicationBootstrap {
                 }
             });
         });
+
+        console.log(JSON.stringify(years[0].majors[7], null, 2));
 
         console.log('??k?');
     }

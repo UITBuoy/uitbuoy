@@ -33,10 +33,6 @@ export class Section {
     @Column({ nullable: true })
     totalCredit: number;
 
-    @Field(() => String, { nullable: true })
-    @Column({ nullable: true })
-    title: string; //enum
-
     @ManyToMany('MajorSubject', 'sections', { cascade: true })
     @JoinTable()
     subjects: Relation<MajorSubject[]>;

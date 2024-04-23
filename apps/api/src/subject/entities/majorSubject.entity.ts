@@ -19,7 +19,7 @@ export class MajorSubject {
 
     @Field(() => Boolean, { nullable: true })
     @Column({ nullable: true })
-    isRequired: boolean ;
+    isRequired: boolean = false;
 
     @Field(() => Boolean, { nullable: true })
     @Column({ nullable: true })
@@ -28,10 +28,6 @@ export class MajorSubject {
     @Field(() => String, { nullable: true })
     @Column({ nullable: true })
     type: string;
-
-    @Field(() => String, { nullable: true })
-    @Column({ nullable: true })
-    classify: string; //major? type? character of free subject?
 
     @Field(() => Int, { nullable: true })
     @Column({ nullable: true })
