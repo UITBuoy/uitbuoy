@@ -1,14 +1,12 @@
+import { QueryArgs } from '@/common/args/query.arg';
+import { CourseApiService } from '@/course/services/course-api.service';
+import { SubjectService } from '@/subject/services/subject.service';
+import { User } from '@/user/entities/user.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Course } from '../entities/course.entity';
-import { CourseApiService } from '@/course/services/course-api.service';
 import { CourseSectionEntity } from '../entities/course-section.entity';
-import { CourseModuleEntity } from '../entities/course-module.entity';
-import { User } from '@/user/entities/user.entity';
-import { CourseContentEntity } from '../entities/course-content.entity';
-import { QueryArgs } from '@/common/args/query.arg';
-import moment from 'moment';
+import { Course } from '../entities/course.entity';
 
 @Injectable()
 export class CourseService {
@@ -17,6 +15,7 @@ export class CourseService {
         @InjectRepository(CourseSectionEntity)
         private sectionRepo: Repository<CourseSectionEntity>,
         private readonly courseApiService: CourseApiService,
+        private readonly subjectService: SubjectService,
     ) {}
 
     async findAllCoursesOfUser(
@@ -101,5 +100,17 @@ export class CourseService {
     async findUserMajorByCourse(resolverCourses) {
         const responseCourse = await this.findCourseById(resolverCourses[0].id);
         return [responseCourse.shortname, responseCourse.coursecategory];
+    }
+
+    async findAllSubjectCodeByLearntCourse(resolverCourses) {
+        const learntSubjectCodes = [];
+        for (let i = 0; i < resolverCourses.length; i++) {
+            const responseCourse = await this.findCourseById(
+                resolverCourses[i].id,
+            );
+            learntSubjectCodes.push(responseCourse.shortname);
+        }
+        console.log(learntSubjectCodes);
+        return learntSubjectCodes;
     }
 }
