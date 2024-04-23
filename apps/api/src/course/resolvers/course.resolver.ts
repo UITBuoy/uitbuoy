@@ -22,6 +22,9 @@ import { LecturerService } from '@/lecturer/services/lecturer.service';
 import { Lecturer } from '@/lecturer/lecturer.entity';
 import { AssignmentApiService } from '@/event/services/assignment-api.service';
 import { Assignment } from '@/event/entities/assignment.entity';
+import { LearningPathArgs } from '@/common/args/learningPath.arg';
+import { Subject } from 'rxjs';
+import { SubjectService } from '@/subject/services/subject.service';
 
 @Resolver(() => Course)
 export class CourseResolver {
@@ -31,7 +34,31 @@ export class CourseResolver {
         private readonly eventApiService: EventApiService,
         private readonly lecturerService: LecturerService,
         private readonly assignmentApiService: AssignmentApiService,
+        private readonly subjectService: SubjectService,
     ) {}
+
+    @Query(() => [String], { description: 'Return learning path of user' })
+    @UseGuards(JwtAuthGuard)
+    async giveLearningPath(
+        @CurrentUser() user: User,
+        // @Args() learningPathArgs: LearningPathArgs,
+        @Args() queryArgs: QueryArgs,
+    ) {
+        const courses = await this.userCourses(user, queryArgs);
+
+        const majorName = (
+            await this.findUserMajorByCourse(user, queryArgs)
+        )[1];
+
+        const learntCourse =
+            this.courseService.findAllSubjectCodeByLearntCourse(courses);
+        const majorCourse = this.subjectService.findAllSubjectCodeByMajor(
+            user,
+            majorName,
+        );
+        console.log('done')
+        return majorCourse;
+    }
 
     @Query(() => [String], { description: 'Return major of user' })
     @UseGuards(JwtAuthGuard)
