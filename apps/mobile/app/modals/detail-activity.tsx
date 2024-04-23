@@ -96,10 +96,10 @@ export default function DetailActivity() {
                             </View>
                         </View>
                         <Animated.View
-                            className=" w-[130px] h-[130px] flex flex-row justify-center items-center"
+                            className=" flex flex-row justify-center items-center"
                             entering={BounceInUp}
                             exiting={BounceOutUp}
-                            style={{ zIndex: 50 }}
+                            style={{ zIndex: 50, width: 130, height: 130 }}
                         >
                             <Image
                                 source={LIFE_BUOY}
