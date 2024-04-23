@@ -15,7 +15,9 @@ export default function NewsFeedComponent({
     const [page, setPage] = useState(0);
     const [news, setNews] = useState<NewsFeed[]>([]);
 
-    const [refetch, { data, loading }] = useGeneralNewsFeedLazyQuery();
+    const [refetch, { data, loading }] = useGeneralNewsFeedLazyQuery({
+        fetchPolicy: 'network-only',
+    });
 
     useEffect(() => {
         refetch({
@@ -40,7 +42,9 @@ export default function NewsFeedComponent({
                     ) : (
                         <FlatList
                             data={news}
-                            keyExtractor={(item) => item.title}
+                            keyExtractor={(item) =>
+                                item.title + (tagName || '')
+                            }
                             renderItem={({ item, index }) => (
                                 <Animated.View
                                     entering={FadeInUp.delay(index * 70 + 100)}
@@ -61,6 +65,7 @@ export default function NewsFeedComponent({
                                         skip: 0,
                                         tags: tagName ? [tagName] : undefined,
                                     },
+                                    fetchPolicy: 'network-only',
                                     onCompleted(data) {
                                         setNews(data.newsFeed);
                                         setPage(1);
