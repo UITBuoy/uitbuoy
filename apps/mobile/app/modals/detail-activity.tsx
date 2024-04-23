@@ -62,7 +62,7 @@ export default function DetailActivity() {
             ) : (
                 <View className=" flex-1">
                     <Animated.View
-                        className=" flex flex-row mx-1"
+                        className=" flex flex-row mx-2"
                         entering={FadeInUp}
                         exiting={FadeOutUp}
                     >
@@ -99,6 +99,7 @@ export default function DetailActivity() {
                             className=" w-[130px] h-[130px] flex flex-row justify-center items-center"
                             entering={BounceInUp}
                             exiting={BounceOutUp}
+                            style={{ zIndex: 50 }}
                         >
                             <Image
                                 source={LIFE_BUOY}
