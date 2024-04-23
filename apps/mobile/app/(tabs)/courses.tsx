@@ -2,7 +2,7 @@ import { Spinner } from '@gluestack-ui/themed';
 import { useEffect } from 'react';
 import { RefreshControl, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import CourseItem from '../../src/components/CourseItem/CourseItem';
+import CourseItem from '../../src/components/CourseItem';
 import CourseSearch from '../../src/components/CourseSearch/CourseSearch';
 import PageHeader from '../../src/components/PageHeader';
 import { useUserCoursesLazyQuery } from '../../src/gql/graphql';

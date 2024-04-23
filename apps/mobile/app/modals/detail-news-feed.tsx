@@ -80,7 +80,7 @@ export default function DetailNewsFeedModal() {
                             </View>
                         </View>
                         <View className=" flex-row gap-4">
-                            {tags.map((tag) => (
+                            {tags?.map((tag) => (
                                 <NativeButton key={tag.name} borderRadius={8}>
                                     <View className=" rounded-lg bg-primary-70 px-3 py-1">
                                         <Text className=" text-white text-center font-medium text-sm">

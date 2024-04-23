@@ -25,6 +25,7 @@ export default function SignInResolve() {
 
     useEffect(() => {
         if (isLogin) {
+            refetch();
             getCourses({
                 variables: {
                     isNew: true,

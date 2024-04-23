@@ -1,12 +1,12 @@
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { Text, TouchableNativeFeedback, View } from 'react-native';
-import { Course } from '../../gql/graphql';
-import { useDeadline } from '../../hooks/course/useDeadline';
-import DeadlineSkeleton from '../../skeletons/DeadlineSkeleton';
-import HAS_DEADLINE_ICON from '../../../assets/small-has-deadline-icon.png';
-import REST_TIME_RIGHT from '../../../assets/rest-time-right.png';
-import { useRecentCourse } from '../../stores/recent-course.store';
+import REST_TIME_RIGHT from '../../assets/rest-time-right.png';
+import HAS_DEADLINE_ICON from '../../assets/small-has-deadline-icon.png';
+import { Course } from '../gql/graphql';
+import { useDeadline } from '../hooks/course/useDeadline';
+import DeadlineSkeleton from '../skeletons/DeadlineSkeleton';
+import { useRecentCourse } from '../stores/recent-course.store';
 
 export default function CourseItem({
     fullname,
