@@ -56,6 +56,7 @@ export function useEvents() {
     const [refetch, { loading, refetch: _refetch }] = useUserEventsLazyQuery();
 
     useEffect(() => {
+        setLoading(false);
         refetch({
             fetchPolicy: 'network-only',
             onCompleted(data) {

@@ -6,8 +6,6 @@ import { LoggerService } from './logger/logger.service';
 import { ConfigService } from '@nestjs/config';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 
-let server: Handler;
-
 async function bootstrap(): Promise<Handler> {
     const app = await NestFactory.create(AppModule);
 
@@ -25,11 +23,14 @@ async function bootstrap(): Promise<Handler> {
     return serverlessExpress({ app: expressApp });
 }
 
+const serverPromise = bootstrap();
+let server: Handler;
+
 export const handler: Handler = async (
     event: any,
     context: Context,
     callback: Callback,
 ) => {
-    server = server ?? (await bootstrap());
+    server = server ?? (await serverPromise);
     return server(event, context, callback);
 };

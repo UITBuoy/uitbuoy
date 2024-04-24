@@ -70,7 +70,6 @@ export function useConfigPushNotification() {
 
     useEffect(() => {
         if (expoPushToken) {
-            console.log({ expoPushToken });
             setNotitificationConfig({ token: expoPushToken });
         }
     }, [expoPushToken]);

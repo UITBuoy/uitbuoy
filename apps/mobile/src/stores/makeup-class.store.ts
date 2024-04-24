@@ -56,6 +56,7 @@ export function useMakeupClass() {
     const [refetch, { loading }] = useUserMakeUpClassLazyQuery();
 
     useEffect(() => {
+        setLoading(false);
         refetch({
             fetchPolicy: 'network-only',
             onCompleted(data) {
