@@ -8,7 +8,7 @@ import { Repository } from 'typeorm';
 import { Subject } from '../entities/subject.entity';
 
 @Injectable()
-export class SubjectConfiguration {
+export class SubjectConfiguration{
     constructor(@InjectRepository(Subject) private repo: Repository<Subject>) {}
 
     //once per 6 months

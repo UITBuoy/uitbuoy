@@ -5,15 +5,28 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { User } from 'src/user/entities/user.entity';
 import { Subject } from './entities/subject.entity';
 import { SubjectService } from './services/subject.service';
+import { CourseResolver } from '@/course/resolvers/course.resolver';
+import { SubjectConfiguration } from './configuration/subject.cofiguration';
 
 @Resolver(() => Subject)
 export class SubjectResolver {
-    constructor(private readonly subjecService: SubjectService) {}
+    constructor(
+        private readonly subjecService: SubjectService,
+        private readonly subjecConfig: SubjectConfiguration,
+    ) {}
+
+    @Query(() => Boolean, {
+        description: 'Return all courses of current user',
+    })
+    @UseGuards(JwtAuthGuard)
+    async crawlSubject(@CurrentUser() user: User) {
+        return this.subjecConfig.cron();
+    }
 
     @Query(() => [Subject])
     @UseGuards(JwtAuthGuard)
-    findOne(@CurrentUser() user: User, @Args('code') code: string) {
-        return this.subjecService.findSubjectDataByCode(user.token, code);
+    findOne(@Args('code') code: string) {
+        return this.subjecService.findSubjectDataByCode(code);
     }
 
     @Query(() => [Subject])
