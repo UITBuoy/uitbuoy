@@ -24,7 +24,7 @@ export class SubjectService {
         private readonly courseService: CourseService,
     ) {}
 
-    async findSubjectDataByCode(token: String, code: string) {
+    async findSubjectDataByCode(code: string) {
         return this.subjectRepo.findOneBy({ code });
     }
 

@@ -23,8 +23,8 @@ import { Lecturer } from '@/lecturer/lecturer.entity';
 import { AssignmentApiService } from '@/event/services/assignment-api.service';
 import { Assignment } from '@/event/entities/assignment.entity';
 import { LearningPathArgs } from '@/common/args/learningPath.arg';
-import { Subject } from 'rxjs';
 import { SubjectService } from '@/subject/services/subject.service';
+import { Subject } from '@/subject/entities/subject.entity';
 
 @Resolver(() => Course)
 export class CourseResolver {
@@ -36,6 +36,26 @@ export class CourseResolver {
         private readonly assignmentApiService: AssignmentApiService,
         private readonly subjectService: SubjectService,
     ) {}
+
+    @Query(() => [Subject], {
+        description: 'Return all subjects recommend for user',
+    })
+    @UseGuards(JwtAuthGuard)
+    async recommendSubject(
+        @CurrentUser() user: User,
+        @Args() queryArgs: QueryArgs,
+    ) {
+        const subjects = await this.giveLearningPath(user, queryArgs);
+        const result: Subject[] = [];
+        for (let i = 0; i < subjects.length; i++) {
+            console.log({subject: subjects[i]});
+            result.push(
+                await this.subjectService.findSubjectDataByCode(subjects[i]),
+            );
+        }
+        console.log({result});
+        return result;
+    }
 
     @Query(() => [String], { description: 'Return learning path of user' })
     @UseGuards(JwtAuthGuard)
@@ -71,7 +91,7 @@ export class CourseResolver {
         for (let i = 0; i < requiredSubjectCodes.length; i++) {
             for (let j = 0; j < learntCourse.length; j++) {
                 if (learntCourse[j].includes(requiredSubjectCodes[i])) {
-                    requiredSubjectCodes2.splice(i,1);
+                    requiredSubjectCodes2.splice(i, 1);
                 }
             }
         }
@@ -84,9 +104,12 @@ export class CourseResolver {
             }
         }
 
-        const result = [...requiredSubjectCodes2, ...electiveFreeSubjectCodes2];
-        console.log({result});
-        return result;
+        const subjects = [
+            ...requiredSubjectCodes2,
+            ...electiveFreeSubjectCodes2,
+        ];
+        console.log(subjects);
+        return subjects;
     }
 
     @Query(() => [String], { description: 'Return major of user' })
