@@ -102,8 +102,10 @@ export class CourseService {
         return [responseCourse.shortname, responseCourse.coursecategory];
     }
 
-    async findAllSubjectCodeByLearntCourse(resolverCourses) {
-        const learntSubjectCodes = [];
+    async findAllSubjectCodeByLearntCourse(
+        resolverCourses: Course[],
+    ): Promise<string[]> {
+        const learntSubjectCodes: string[] = [];
         for (let i = 0; i < resolverCourses.length; i++) {
             const responseCourse = await this.findCourseById(
                 resolverCourses[i].id,
@@ -112,5 +114,20 @@ export class CourseService {
         }
         console.log(learntSubjectCodes);
         return learntSubjectCodes;
+    }
+
+    async spliceSubjectCodeArray(
+        subjectCodeArray: string[],
+        compareSubjectCodeArray: string[],
+    ): Promise<string[]> {
+        const newSubjectCodeArray = subjectCodeArray;
+        for (let i = 0; i < subjectCodeArray.length; i++) {
+            for (let j = 0; j < compareSubjectCodeArray.length; j++) {
+                if (compareSubjectCodeArray[j].includes(subjectCodeArray[i])) {
+                    newSubjectCodeArray.splice(i, 1);
+                }
+            }
+        }
+        return newSubjectCodeArray;
     }
 }

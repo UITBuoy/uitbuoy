@@ -59,14 +59,12 @@ export class SubjectService {
     }
 
     async findAllSubjectCodeByMajor(user: User, majorName: string) {
-        const majorSubjectCodes = [];
-        const requiredSubjectCodes = [];
-        const electiveRequiredSubjectCodes = [];
-        const electioveFreeSubjectCodes = [];
+        const majorSubjectCodes: string[] = [];
+        const requiredSubjectCodes: string[] = [];
+        const electiveRequiredSubjectCodes: string[] = [];
+        const electioveFreeSubjectCodes: string[] = [];
 
         const year = await this.userService.findYear(user);
-        // const majorName =
-        //     await this.courseService.findUserMajorByCourse(resolverCourses);
 
         const years = await this.findSubjectEducationByYearAndMajorName(
             year,

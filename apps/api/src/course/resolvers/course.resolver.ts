@@ -48,12 +48,11 @@ export class CourseResolver {
         const subjects = await this.giveLearningPath(user, queryArgs);
         const result: Subject[] = [];
         for (let i = 0; i < subjects.length; i++) {
-            console.log({subject: subjects[i]});
+            console.log({ subject: subjects[i] });
             result.push(
                 await this.subjectService.findSubjectDataByCode(subjects[i]),
             );
         }
-        console.log({result});
         return result;
     }
 
@@ -63,61 +62,43 @@ export class CourseResolver {
         @CurrentUser() user: User,
         // @Args() learningPathArgs: LearningPathArgs,
         @Args() queryArgs: QueryArgs,
-    ) {
+    ): Promise<string[]> {
         const courses = await this.userCourses(user, queryArgs);
-
-        const majorName = (
-            await this.findUserMajorByCourse(user, queryArgs)
-        )[1];
 
         const learntCourse =
             await this.courseService.findAllSubjectCodeByLearntCourse(courses);
-        const majorCourse = await this.subjectService.findAllSubjectCodeByMajor(
-            user,
-            majorName,
-        );
-        console.log('done');
 
         const [
             majorSubjectCodes,
             requiredSubjectCodes,
             electiveFreeSubjectCodes,
-        ] = majorCourse;
-
-        const [requiredSubjectCodes2, electiveFreeSubjectCodes2] = [
-            requiredSubjectCodes,
-            electiveFreeSubjectCodes,
-        ];
-        for (let i = 0; i < requiredSubjectCodes.length; i++) {
-            for (let j = 0; j < learntCourse.length; j++) {
-                if (learntCourse[j].includes(requiredSubjectCodes[i])) {
-                    requiredSubjectCodes2.splice(i, 1);
-                }
-            }
-        }
-
-        for (let i = 0; i < electiveFreeSubjectCodes.length; i++) {
-            for (let j = 0; j < learntCourse.length; j++) {
-                if (learntCourse[j].includes(electiveFreeSubjectCodes[i])) {
-                    electiveFreeSubjectCodes2.splice(i, 1);
-                }
-            }
-        }
+        ] = await this.subjectService.findAllSubjectCodeByMajor(
+            user,
+            (await this.findUserMajorByCourse(user, queryArgs))[1],
+        );
 
         const subjects = [
-            ...requiredSubjectCodes2,
-            ...electiveFreeSubjectCodes2,
+            ...(await this.courseService.spliceSubjectCodeArray(
+                requiredSubjectCodes,
+                learntCourse,
+            )),
+            ...(await this.courseService.spliceSubjectCodeArray(
+                electiveFreeSubjectCodes,
+                learntCourse,
+            )),
         ];
         console.log(subjects);
         return subjects;
     }
 
-    @Query(() => [String], { description: 'Return major of user' })
+    @Query(() => [String], {
+        description: 'Return string array is [class,major] of user',
+    })
     @UseGuards(JwtAuthGuard)
     async findUserMajorByCourse(
         @CurrentUser() user: User,
         @Args() queryArgs: QueryArgs,
-    ) {
+    ): Promise<string[]> {
         queryArgs.keyword = 'CVHT';
         const courses = await this.userCourses(user, queryArgs);
         return this.courseService.findUserMajorByCourse(courses);
