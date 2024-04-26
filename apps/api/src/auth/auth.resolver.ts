@@ -43,9 +43,5 @@ export class AuthResolver {
         return { access_token, accessTokenExpiredDate, ...user };
     }
 
-    @Query(() => User)
-    @UseGuards(JwtAuthGuard)
-    profile(@CurrentUser() user: User) {
-        return user;
-    }
+
 }

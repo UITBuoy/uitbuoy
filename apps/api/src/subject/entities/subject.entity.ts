@@ -13,43 +13,43 @@ export class Subject {
     nameVN: string;
 
     @Field(() => String)
-    @Column()
+    @Column({ nullable: true })
     nameEN: string;
 
     @Field(() => Boolean)
-    @Column()
+    @Column({ nullable: true })
     isActive: boolean;
 
     @Field(() => String)
-    @Column()
+    @Column({ nullable: true })
     department: string;
 
     @Field(() => String)
-    @Column()
+    @Column({ nullable: true })
     type: string;
 
     @Field(() => String, { nullable: true })
-    @Column()
+    @Column({ nullable: true })
     oldCode: string;
 
     @Field(() => String, { nullable: true })
-    @Column()
+    @Column({ nullable: true })
     equivalentCode: string;
 
     @Field(() => String, { nullable: true })
-    @Column()
+    @Column({ nullable: true })
     requiredCode: string;
 
     @Field(() => String, { nullable: true })
-    @Column()
+    @Column({ nullable: true })
     previousCode: string;
 
     @Field(() => Int)
-    @Column()
+    @Column({ nullable: true })
     theoreticalCredit: number;
 
     @Field(() => Int)
-    @Column()
+    @Column({ nullable: true })
     practicalCredit: number;
 
     @Field(() => String, { nullable: true }) // Graphql

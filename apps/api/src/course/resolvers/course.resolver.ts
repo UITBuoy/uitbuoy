@@ -22,6 +22,9 @@ import { LecturerService } from '@/lecturer/services/lecturer.service';
 import { Lecturer } from '@/lecturer/lecturer.entity';
 import { AssignmentApiService } from '@/event/services/assignment-api.service';
 import { Assignment } from '@/event/entities/assignment.entity';
+import { LearningPathArgs } from '@/common/args/learningPath.arg';
+import { SubjectService } from '@/subject/services/subject.service';
+import { Subject } from '@/subject/entities/subject.entity';
 
 @Resolver(() => Course)
 export class CourseResolver {
@@ -31,7 +34,75 @@ export class CourseResolver {
         private readonly eventApiService: EventApiService,
         private readonly lecturerService: LecturerService,
         private readonly assignmentApiService: AssignmentApiService,
+        private readonly subjectService: SubjectService,
     ) {}
+
+    @Query(() => [Subject], {
+        description: 'Return all subjects recommend for user',
+    })
+    @UseGuards(JwtAuthGuard)
+    async recommendSubject(
+        @CurrentUser() user: User,
+        @Args() queryArgs: QueryArgs,
+    ) {
+        const subjects = await this.giveLearningPath(user, queryArgs);
+        const result: Subject[] = [];
+        for (let i = 0; i < subjects.length; i++) {
+            console.log({ subject: subjects[i] });
+            result.push(
+                await this.subjectService.findSubjectDataByCode(subjects[i]),
+            );
+        }
+        return result;
+    }
+
+    @Query(() => [String], { description: 'Return learning path of user' })
+    @UseGuards(JwtAuthGuard)
+    async giveLearningPath(
+        @CurrentUser() user: User,
+        // @Args() learningPathArgs: LearningPathArgs,
+        @Args() queryArgs: QueryArgs,
+    ): Promise<string[]> {
+        const courses = await this.userCourses(user, queryArgs);
+
+        const learntCourse =
+            await this.courseService.findAllSubjectCodeByLearntCourse(courses);
+
+        const [
+            majorSubjectCodes,
+            requiredSubjectCodes,
+            electiveFreeSubjectCodes,
+        ] = await this.subjectService.findAllSubjectCodeByMajor(
+            user,
+            (await this.findUserMajorByCourse(user, queryArgs))[1],
+        );
+
+        const subjects = [
+            ...(await this.courseService.spliceSubjectCodeArray(
+                requiredSubjectCodes,
+                learntCourse,
+            )),
+            ...(await this.courseService.spliceSubjectCodeArray(
+                electiveFreeSubjectCodes,
+                learntCourse,
+            )),
+        ];
+        console.log(subjects);
+        return subjects;
+    }
+
+    @Query(() => [String], {
+        description: 'Return string array is [class,major] of user',
+    })
+    @UseGuards(JwtAuthGuard)
+    async findUserMajorByCourse(
+        @CurrentUser() user: User,
+        @Args() queryArgs: QueryArgs,
+    ): Promise<string[]> {
+        queryArgs.keyword = 'CVHT';
+        const courses = await this.userCourses(user, queryArgs);
+        return this.courseService.findUserMajorByCourse(courses);
+    }
 
     @Query(() => [Course], { description: 'Return all course of current user' })
     @UseGuards(JwtAuthGuard)

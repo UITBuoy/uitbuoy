@@ -6,109 +6,179 @@ import * as cheerio from 'cheerio';
 import API_URL from 'src/common/constants/url';
 import { Repository } from 'typeorm';
 import { Subject } from '../entities/subject.entity';
+import { SubjectService } from '../services/subject.service';
 
 @Injectable()
 export class SubjectConfiguration {
-    constructor(@InjectRepository(Subject) private repo: Repository<Subject>) {}
+    constructor(
+        @InjectRepository(Subject) private repo: Repository<Subject>,
+        private readonly subjectService: SubjectService,
+    ) {}
 
-    //once per 6 months
-    @Cron('0 0 0 1 6 *') // Remember to test later (13/3/24)
-    async cron() {
-        async function getPayload(url: string) {
-            return cheerio.load((await axios.get(url)).data);
-        }
-        const $summary = await getPayload(API_URL.summarySubjects);
-        const $subject = await getPayload(API_URL.subjects);
+    async saveSubject() {
+        const subjects = await this.crawlSubject();
+        const subjectsSummary = await this.crawlSummarySubject();
 
-        const subjectsSummary = [];
-        const subjects = [];
+        console.log({ subjects });
+        console.log({ subjectsSummary });
 
-        const tableSummary = $summary('table tr').slice(1);
+        this.repo.save(subjects);
+        this.repo.save(subjectsSummary);
+        return await this.subjectService.findAllSubject();
+    }
+    async crawlSubject() {
+        const $subject = await this.getPayload(API_URL.subjects);
         const tableSubject = $subject('table.tablesorter tr').slice(1); // this html has 2 table elements
-
-        function childrenOptionWithMultiTag(child, colId: number) {
-            return $summary(child[colId]).children('p').first().text();
-        }
-
-        function childrenOption(child, colId: number) {
-            return $subject(child[colId]).text();
-        }
-
-        function handleMultiChildren(child, index) {
-            return $subject(child[index])
-                .contents()
-                .filter((i, value) => value.type == 'text')
-                .toArray()
-                .map((value) => $subject(value).text());
-        }
-
-        function handleImgChildren(child, index) {
-            const $child = $subject(child[index]).children('img').first();
-            if ($child.attr('alt') == 'Hiện không còn mở') return false;
-            else if ($child.attr('alt') == 'Hiện đang mở') return true;
-            else return null;
-        }
-
-        function pushData(
-            table,
-            dataList,
-            property: {
-                name: string;
-                colId: number;
-                function: (child, colId) => any;
-            }[],
-        ) {
-            table.each(function (rowId: number, element) {
-                const children = element.children;
-
-                const obj = {};
-                property.forEach((value) => {
-                    obj[value.name] = value.function(children, value.colId);
-                });
-
-                dataList.push(obj);
-            });
-        }
-
-        pushData(tableSummary, subjectsSummary, [
-            { name: 'code', function: childrenOptionWithMultiTag, colId: 3 },
-            { name: 'summary', function: childrenOptionWithMultiTag, colId: 7 },
-        ]);
-
-        pushData(tableSubject, subjects, [
+        return await this.pushData(tableSubject, [
             {
                 name: 'index',
                 colId: 0,
-                function: (child, colId) =>
-                    parseInt(childrenOption(child, colId)),
+                function: (child, colId: number) =>
+                    parseInt(this.childrenOption(child, colId, $subject)),
             },
-            { name: 'code', function: childrenOption, colId: 1 },
-            { name: 'nameVN', function: childrenOption, colId: 2 },
-            { name: 'nameEN', function: childrenOption, colId: 3 },
-            { name: 'isActive', function: handleImgChildren, colId: 4 },
-            { name: 'department', function: childrenOption, colId: 5 },
-            { name: 'type', function: childrenOption, colId: 6 },
-            { name: 'oldCode', function: childrenOption, colId: 7 },
-            { name: 'equivalentCode', function: handleMultiChildren, colId: 8 },
-            { name: 'requiredCode', function: handleMultiChildren, colId: 9 },
-            { name: 'previousCode', function: handleMultiChildren, colId: 10 },
+            {
+                name: 'code',
+                function: (child, colId: number) =>
+                    this.childrenOption(child, colId, $subject),
+                colId: 1,
+            },
+            {
+                name: 'nameVN',
+                function: (child, colId: number) =>
+                    this.childrenOption(child, colId, $subject),
+                colId: 2,
+            },
+            {
+                name: 'nameEN',
+                function: (child, colId: number) =>
+                    this.childrenOption(child, colId, $subject),
+                colId: 3,
+            },
+            {
+                name: 'isActive',
+                function: (child, colId: number) =>
+                    this.handleImgChildren(child, colId, $subject),
+                colId: 4,
+            },
+            {
+                name: 'department',
+                function: (child, colId: number) =>
+                    this.childrenOption(child, colId, $subject),
+                colId: 5,
+            },
+            {
+                name: 'type',
+                function: (child, colId: number) =>
+                    this.childrenOption(child, colId, $subject),
+                colId: 6,
+            },
+            {
+                name: 'oldCode',
+                function: (child, colId: number) =>
+                    this.childrenOption(child, colId, $subject),
+                colId: 7,
+            },
+            {
+                name: 'equivalentCode',
+                function: (child, colId: number) =>
+                    this.handleMultiChildren(child, colId, $subject),
+                colId: 8,
+            },
+            {
+                name: 'requiredCode',
+                function: (child, colId: number) =>
+                    this.handleMultiChildren(child, colId, $subject),
+                colId: 9,
+            },
+            {
+                name: 'previousCode',
+                function: (child, colId: number) =>
+                    this.handleMultiChildren(child, colId, $subject),
+                colId: 10,
+            },
             {
                 name: 'theoreticalCredit',
                 colId: 11,
                 function: (child, index) =>
-                    parseInt(childrenOption(child, index)),
+                    parseInt(this.childrenOption(child, index, $subject)),
             },
             {
                 name: 'practicalCredit',
                 colId: 12,
                 function: (child, index) =>
-                    parseInt(childrenOption(child, index)),
+                    parseInt(this.childrenOption(child, index, $subject)),
             },
         ]);
+    }
+    async crawlSummarySubject() {
+        const $summary = await this.getPayload(API_URL.summarySubjects);
+        const tableSummary = $summary('table tr').slice(1);
+        return await this.pushData(tableSummary, [
+            {
+                name: 'code',
+                function: (child, colId: number) =>
+                    this.childrenOptionWithMultiTag(child, colId, $summary),
+                colId: 3,
+            },
+            {
+                name: 'summary',
+                function: (child, colId: number) =>
+                    this.childrenOptionWithMultiTag(child, colId, $summary),
+                colId: 7,
+            },
+        ]);
+    }
 
-        this.repo.save(subjects);
-        this.repo.save(subjectsSummary);
+    async getPayload(url: string) {
+        return cheerio.load((await axios.get(url)).data);
+    }
 
-        console.log('done');
+    childrenOptionWithMultiTag(
+        child,
+        colId: number,
+        $summary: cheerio.CheerioAPI,
+    ) {
+        return $summary(child[colId]).children('p').first().text();
+    }
+
+    childrenOption(child, colId: number, $subject: cheerio.CheerioAPI) {
+        return $subject(child[colId]).text();
+    }
+
+    handleMultiChildren(child, index, $subject: cheerio.CheerioAPI) {
+        return $subject(child[index])
+            .contents()
+            .filter((i, value) => value.type == 'text')
+            .toArray()
+            .map((value) => $subject(value).text());
+    }
+
+    handleImgChildren(child, index, $subject: cheerio.CheerioAPI) {
+        const $child = $subject(child[index]).children('img').first();
+        if ($child.attr('alt') == 'Hiện không còn mở') return false;
+        else if ($child.attr('alt') == 'Hiện đang mở') return true;
+        else return null;
+    }
+
+    async pushData(
+        table: cheerio.Cheerio<cheerio.Element>,
+        property: {
+            name: string;
+            colId: number;
+            function: (child, colId) => any;
+        }[],
+    ) {
+        const dataList = [];
+        table.each(function (rowId: number, element) {
+            const children = element.children;
+
+            const obj = {};
+            property.forEach((value) => {
+                obj[value.name] = value.function(children, value.colId);
+            });
+
+            dataList.push(obj);
+        });
+        return dataList;
     }
 }

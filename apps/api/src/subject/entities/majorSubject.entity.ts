@@ -19,7 +19,7 @@ export class MajorSubject {
 
     @Field(() => Boolean, { nullable: true })
     @Column({ nullable: true })
-    isRequired: boolean;
+    isRequired: boolean = false;
 
     @Field(() => Boolean, { nullable: true })
     @Column({ nullable: true })

@@ -13,15 +13,11 @@ import type { Section } from './section.entity';
 @Entity()
 export class EducationProgram {
     @Field()
-    @PrimaryGeneratedColumn()
-    id: string;
-
-    @Field({ nullable: true })
-    @Column({ nullable: true })
+    @PrimaryColumn()
     year: string;
 
-    @Field({ nullable: true })
-    @Column({ nullable: true })
+    @Field()
+    @PrimaryColumn()
     majorName: string;
 
     @Field({ nullable: true })
