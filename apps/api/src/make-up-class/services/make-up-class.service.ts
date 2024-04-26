@@ -1,6 +1,7 @@
+import { User } from '@/user/entities/user.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, MoreThan, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { MakeUpClass } from '../entities/make-up-class.entity';
 
 @Injectable()
@@ -14,35 +15,50 @@ export class MakeUpClassService {
         year,
         month,
         day,
-        courseCodes,
+        userId,
         inComing,
     }: {
         year?: number;
         month?: number;
         day?: number;
-        courseCodes: string[];
+        userId: number;
         inComing: boolean;
     }) {
         if (year && month && day) {
             const time = new Date(year, month - 1, day, 12, 0, 0, 0);
-            return this.repo.find({
-                where: {
-                    courseCode: In(courseCodes),
-                    time: time.getTime(),
-                },
-                order: { time: 'ASC' },
-            });
+            return this.repo
+                .createQueryBuilder()
+                .where('time = :time', { time })
+                .andWhere((qb) => {
+                    const subQuery = qb
+                        .subQuery()
+                        .select('course.shortname')
+                        .from(User, 'User')
+                        .leftJoinAndSelect('User.courses', 'course')
+                        .where('User.id = :userId', { userId })
+                        .getQuery();
+                    return '"courseCode" IN ' + subQuery;
+                })
+                .orderBy('time', 'ASC')
+                .getMany();
         }
-        return this.repo.find({
-            where: {
-                courseCode: In(courseCodes),
-                ...(inComing
-                    ? {
-                          time: MoreThan(new Date().getTime()),
-                      }
-                    : {}),
-            },
-            order: { time: 'ASC' },
-        });
+
+        return this.repo
+            .createQueryBuilder()
+            .where(inComing ? 'MakeUpClass.time > :time' : 'true', {
+                time: new Date().getTime(),
+            })
+            .andWhere((qb) => {
+                const subQuery = qb
+                    .subQuery()
+                    .select('course.shortname')
+                    .from(User, 'User')
+                    .leftJoin('User.courses', 'course')
+                    .where('User.id = :userId', { userId })
+                    .getQuery();
+                return '"courseCode" IN ' + subQuery;
+            })
+            .orderBy('time', 'ASC')
+            .getMany();
     }
 }

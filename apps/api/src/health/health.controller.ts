@@ -12,9 +12,10 @@ export class HealthController {
     //     private db: TypeOrmHealthIndicator,
     // ) {}
 
-    // @Get()
-    // @HealthCheck()
-    // check() {
-    //     return this.health.check([() => this.db.pingCheck('database')]);
-    // }
+    @Get()
+    check() {
+        return {
+            status: true,
+        };
+    }
 }

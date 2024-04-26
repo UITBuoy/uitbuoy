@@ -12,9 +12,10 @@ export function useLogin() {
                 const authEntityResponse = await loginFunction({
                     variables: { username, password },
                 });
-                console.log({ authEntityResponse });
-                //@ts-ignore
-                return authLogin(authEntityResponse.data.login);
+                if (authEntityResponse.data.login)
+                    //@ts-ignore
+                    return authLogin(authEntityResponse.data.login);
+                return true;
             } catch (error) {
                 console.log({ error });
             }

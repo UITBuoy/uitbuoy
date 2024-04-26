@@ -1,4 +1,3 @@
-import { Spinner } from '@gluestack-ui/themed';
 import { router, useGlobalSearchParams } from 'expo-router';
 import React, { useEffect } from 'react';
 import {
@@ -7,24 +6,25 @@ import {
     Text,
     useWindowDimensions,
     View,
+    Image,
 } from 'react-native';
-import RenderHtml from 'react-native-render-html';
-import NativeButton from '../../src/components/NativeButton/NativeButton';
-import {
-    useDetailAssignmentCourseLazyQuery,
-    useDetailAssignmentCourseQuery,
-} from '../../src/gql/graphql';
-import { useViewFile } from '../../src/hooks/file/useViewFile';
-import AssignIcon from '../../src/icons/assign';
-import { useAuth } from '../../src/stores/auth.store';
-import ActivityScreenSkeleton from '../../src/skeletons/ActivityScreenSkeleton';
 import Animated, {
+    BounceInUp,
+    BounceOutUp,
     FadeIn,
-    FadeInDown,
     FadeInUp,
     FadeOut,
     FadeOutUp,
 } from 'react-native-reanimated';
+import RenderHtml from 'react-native-render-html';
+import LIFE_BUOY from '../../assets/lifebuoy.png';
+import NativeButton from '../../src/components/NativeButton/NativeButton';
+import { useDetailAssignmentCourseLazyQuery } from '../../src/gql/graphql';
+import { useViewFile } from '../../src/hooks/file/useViewFile';
+import AssignIcon from '../../src/icons/assign';
+import ActivityScreenSkeleton from '../../src/skeletons/ActivityScreenSkeleton';
+import { useAuth } from '../../src/stores/auth.store';
+import { timeDiff } from '../../src/utils/timeDiff';
 
 export default function DetailActivity() {
     const { width } = useWindowDimensions();
@@ -48,18 +48,79 @@ export default function DetailActivity() {
 
     const assignment = data?.assignmentCourse?.assignment;
 
+    const diff = assignment
+        ? timeDiff(new Date(assignment.duedate * 1000))
+        : null;
+
     useEffect(() => {
         refetch();
     }, []);
 
     return (
-        <View className=" flex-1 bg-white pt-4">
+        <View className=" flex-1 bg-white">
             {loading || !assignment ? (
                 <ActivityScreenSkeleton />
             ) : (
                 <View className=" flex-1">
+                    <Animated.View
+                        className=" flex flex-row mx-1"
+                        entering={FadeInUp}
+                        exiting={FadeOutUp}
+                    >
+                        <View className=" flex-1 pt-4 px-2">
+                            <View className=" px-3 flex-row items-center gap-3">
+                                <Text className="text-xl font-medium">
+                                    {assignment.name}
+                                </Text>
+                            </View>
+                            <View className=" mt-5">
+                                <NativeButton
+                                    key={data.assignmentCourse.id}
+                                    onPress={() => {
+                                        router.push({
+                                            pathname: `/modals/courseDetail`,
+                                            params: {
+                                                ...data.assignmentCourse,
+                                            },
+                                        });
+                                    }}
+                                >
+                                    <View className=" bg-neutral-95 flex flex-col gap-2 p-3 border-[0px] rounded-2xl border-neutral-80">
+                                        <Text className=" text-primary-10">
+                                            {data.assignmentCourse.shortname}
+                                        </Text>
+                                        <Text className=" text-primary-10 font-medium">
+                                            {data.assignmentCourse.display_name}
+                                        </Text>
+                                    </View>
+                                </NativeButton>
+                            </View>
+                        </View>
+                        <Animated.View
+                            className=" w-[150px] h-[150px] flex flex-row justify-center items-center"
+                            entering={BounceInUp}
+                            exiting={BounceOutUp}
+                        >
+                            <Image
+                                source={LIFE_BUOY}
+                                style={{
+                                    width: 150,
+                                    height: 150,
+                                    position: 'absolute',
+                                    top: 0,
+                                    right: 0,
+                                }}
+                            />
+                            <View className=" flex-col items-center">
+                                <Text className=" font-bold text-3xl">
+                                    {-diff?.time}
+                                </Text>
+                                <Text className=" -mt-2">{diff?.type}</Text>
+                            </View>
+                        </Animated.View>
+                    </Animated.View>
                     <ScrollView
-                        className=" flex-1"
+                        className=" flex-1 mt-4 "
                         refreshControl={
                             <RefreshControl
                                 refreshing={loading}
@@ -69,44 +130,8 @@ export default function DetailActivity() {
                             />
                         }
                     >
-                        <Animated.View
-                            className=" mx-4"
-                            entering={FadeInUp}
-                            exiting={FadeOutUp}
-                        >
-                            <NativeButton
-                                key={data.assignmentCourse.id}
-                                onPress={() => {
-                                    router.push({
-                                        pathname: `/modals/courseDetail`,
-                                        params: { ...data.assignmentCourse },
-                                    });
-                                }}
-                            >
-                                <View className=" bg-primary-95 flex flex-col gap-1 p-3 border-[0.5px] rounded-2xl border-neutral-80">
-                                    <Text className=" text-primary-50">
-                                        {data.assignmentCourse.shortname}
-                                    </Text>
-                                    <Text className=" text-primary-50 font-medium">
-                                        {data.assignmentCourse.display_name}
-                                    </Text>
-                                </View>
-                            </NativeButton>
-                        </Animated.View>
-                        <View className=" mt-10 flex-1 flex-col gap-6">
-                            <Animated.View
-                                className=" px-4 w-full flex-row items-center gap-3"
-                                entering={FadeIn.delay(200)}
-                                exiting={FadeOut}
-                            >
-                                <View className=" pt-0">
-                                    <AssignIcon scale={1.2} />
-                                </View>
-                                <Text className=" flex-1 text-xl font-medium">
-                                    {assignment.name}
-                                </Text>
-                            </Animated.View>
-                            <View className=" mt-4 flex-col gap-4 bg-neutral-99 p-4">
+                        <View className=" flex-1 flex-col gap-6">
+                            <View className="flex-col gap-4 bg-neutral-99 p-4">
                                 <Animated.View
                                     className=" flex-row items-center gap-4"
                                     entering={FadeIn.delay(300)}

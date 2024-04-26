@@ -3,7 +3,7 @@ import { TextInput, View } from 'react-native';
 
 type IProps = React.ComponentProps<typeof TextInput> & {
     title: string;
-    type: 'text' | 'password';
+    type: 'none' | 'password';
     placeholder?: string;
     className?: string;
     fieldClassName?: string;
@@ -31,6 +31,7 @@ const TextField = React.forwardRef(
                     value={value}
                     onChangeText={onChangeText}
                     ref={ref}
+                    secureTextEntry={type === 'password'}
                     className={fieldClassName}
                     placeholder={placeholder}
                     {...props}

@@ -7,6 +7,7 @@ import { Course } from '../gql/graphql';
 export type IRecentCourse = {
     recentCourses: Partial<Course>[];
     addRecentCourse: (course: Partial<Course>) => Partial<Course>[];
+    removeAllRecentCourses: () => any;
 };
 
 export const useRecentCourse = create<
@@ -25,6 +26,11 @@ export const useRecentCourse = create<
                     state.recentCourses = newCourseList;
                 });
                 return newCourseList;
+            },
+            removeAllRecentCourses() {
+                set((state) => {
+                    state.recentCourses = [];
+                });
             },
         })),
         {

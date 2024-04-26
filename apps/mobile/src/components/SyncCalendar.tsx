@@ -1,13 +1,21 @@
 import { Text, TouchableNativeFeedback, View } from 'react-native';
 import { useSyncEvent } from '../hooks/events/useSyncEvent';
 import { useGoogleSignin } from '../hooks/google/useGoogleSignin';
+import { useAuth } from '../stores/auth.store';
+import { useProfileQuery } from '../gql/graphql';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 export default function SyncCalendar() {
     const { signIn } = useGoogleSignin();
     const { syncEvent } = useSyncEvent();
+    const { data, loading } = useProfileQuery({ fetchPolicy: 'no-cache' });
 
-    return (
-        <View className=" mx-4 py-4 px-6 rounded-2xl bg-primary-95">
+    return data?.profile && !loading ? (
+        <Animated.View
+            entering={FadeIn}
+            exiting={FadeOut}
+            className=" mx-4 py-4 px-6 rounded-2xl bg-primary-95"
+        >
             <Text className=" text-xl text-primary-20 font-bold">
                 Đồng bộ với Google
             </Text>
@@ -28,6 +36,6 @@ export default function SyncCalendar() {
                     </View>
                 </TouchableNativeFeedback>
             </View>
-        </View>
-    );
+        </Animated.View>
+    ) : null;
 }

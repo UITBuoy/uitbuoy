@@ -202,7 +202,7 @@ export class EventEntity {
     @Column({ nullable: true })
     groupname: string;
 
-    @ManyToOne('Course')
+    @ManyToOne('Course', { cascade: false })
     @JoinColumn({ name: 'course_id' })
     course: Relation<Course>;
 

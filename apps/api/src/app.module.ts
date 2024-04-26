@@ -30,6 +30,7 @@ import { MakeUpClassModule } from './make-up-class/make-up-class.module';
 import { NoteModule } from './note/note.module';
 import { SubjectModule } from './subject/subject.module';
 import { UserModule } from './user/user.module';
+import { NewsFeedModule } from './news-feed/news-feed.module';
 
 @Module({
     imports: [
@@ -85,16 +86,23 @@ import { UserModule } from './user/user.module';
                 username: configService.get<string>('MAIN_DB_USERNAME'),
                 password: configService.get<string>('MAIN_DB_PASSWORD'),
                 database: configService.get<string>('MAIN_DB_NAME'),
-                synchronize:
-                    configService.get<EnvironmentType>('ENVIRONMENT') ==
-                    'development',
+                // synchronize:
+                //     configService.get<EnvironmentType>('ENVIRONMENT') ==
+                //     'development',
+                synchronize: true,
                 autoLoadEntities: true,
-                ssl: true,
-                extra: {
-                    ssl: {
-                        rejectUnauthorized: false,
-                    },
-                },
+                ssl:
+                    configService.get<EnvironmentType>('ENVIRONMENT') ===
+                    'production',
+                extra:
+                    configService.get<EnvironmentType>('ENVIRONMENT') ===
+                    'production'
+                        ? {
+                              ssl: {
+                                  rejectUnauthorized: false,
+                              },
+                          }
+                        : undefined,
             }),
         }),
         WinstonModule.forRootAsync({
@@ -171,6 +179,7 @@ import { UserModule } from './user/user.module';
         GoogleCalendarModule,
         MakeUpClassModule,
         NoteModule,
+        NewsFeedModule,
     ],
     controllers: [AppController],
     providers: [

@@ -1,13 +1,5 @@
-import type { Course } from '@/course/entities/course.entity';
 import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
-import {
-    Column,
-    Entity,
-    JoinColumn,
-    ManyToOne,
-    PrimaryColumn,
-    Relation,
-} from 'typeorm';
+import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @ObjectType()
 @Entity()

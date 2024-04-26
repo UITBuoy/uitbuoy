@@ -61,15 +61,15 @@ export default function NotificationConfig() {
                             source={NOT_DISMISSIBLE_ICON}
                             title="Không thể bỏ qua"
                             description="Đảm bảo mọi bài tập sẽ luôn được hoàn thành"
-                            isSelected={isDimissible}
-                            onPress={() => setDismissible(true)}
+                            isSelected={!isDimissible}
+                            onPress={() => setDismissible(false)}
                         />
                         <HorizontalIllustrationSelector
                             source={DISMISSIBLE_ICON}
                             title="Có thể bỏ qua"
                             description="Bạn có thể lướt để bỏ qua tin nhắn, điều này có thể khiến bạn vô tình bỏ lỡ hạn nộp bài"
-                            isSelected={!isDimissible}
-                            onPress={() => setDismissible(false)}
+                            isSelected={isDimissible}
+                            onPress={() => setDismissible(true)}
                         />
                     </View>
                 </View>
@@ -121,7 +121,7 @@ export default function NotificationConfig() {
                                 }
                                 keyboardType={'numeric'}
                             />
-                            <Text className=" mt-1 font-light">tiếng</Text>
+                            <Text className=" mt-1 font-light">ngày</Text>
                         </View>
                         {/* <Text className=" mt-1 font-light">
                             trước khi đến hạn nộp bài

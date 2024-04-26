@@ -10,7 +10,12 @@ import {
 } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import HELP_ICON from '../../assets/settings/help.png';
+import NOTIFICATION_ICON from '../../assets/settings/notification.png';
+import REPORT_ICON from '../../assets/settings/report.png';
+import SETTING_ICON from '../../assets/settings/setting.png';
 import NativeButton from '../../src/components/NativeButton/NativeButton';
+import ProfileButton from '../../src/components/ProfileButton';
 import {
     useProfileLazyQuery,
     useSyncEventMutation,
@@ -18,14 +23,13 @@ import {
 import { useGoogleSignin } from '../../src/hooks/google/useGoogleSignin';
 import ProfileScreenSkeleton from '../../src/skeletons/ProfileScreenSkeleton';
 import { useAuth } from '../../src/stores/auth.store';
-import NOTIFICATION_ICON from '../../assets/settings/notification.png';
-import SETTING_ICON from '../../assets/settings/setting.png';
-import HELP_ICON from '../../assets/settings/help.png';
-import REPORT_ICON from '../../assets/settings/report.png';
-import ProfileButton from '../../src/components/ProfileButton';
+import { useRecentCourse } from '../../src/stores/recent-course.store';
+import { useRecentSearch } from '../../src/stores/recent-search.store';
 
 export default function Page() {
     const { isIntegrateWithGoogle, googleData, authLogout } = useAuth();
+    const { removeAllRecentCourses } = useRecentCourse();
+    const { removeSearch } = useRecentSearch();
 
     const { signIn } = useGoogleSignin();
 
@@ -33,7 +37,7 @@ export default function Page() {
     const [syncEvent] = useSyncEventMutation();
 
     useEffect(() => {
-        refetch();
+        refetch({ fetchPolicy: 'no-cache' });
     }, []);
 
     return (
@@ -207,8 +211,10 @@ export default function Page() {
                     <NativeButton
                         className=" mx-6 mt-10"
                         onPress={async () => {
-                            router.replace('/login');
+                            router.replace('/modals/login');
                             authLogout();
+                            removeAllRecentCourses();
+                            removeSearch();
                         }}
                     >
                         <View className=" p-4 px-10 rounded-2xl bg-[#FE5050] flex-row justify-center gap-2">

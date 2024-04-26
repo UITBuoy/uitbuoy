@@ -60,6 +60,9 @@ export const useAuth = create<
             authLogout: () => {
                 set((state) => {
                     state.isLogin = false;
+                    state.isIntegrateWithGoogle = false;
+                    state.authData = undefined;
+                    state.googleData = undefined;
                 });
                 return true;
             },
