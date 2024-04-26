@@ -32,6 +32,8 @@ export class EducationProgramConfiguration {
                 }
             });
         });
+
+        console.log({years});
         return this.subjectService.findAllEducationProgram();
     }
 
@@ -78,7 +80,7 @@ export class EducationProgramConfiguration {
                         years,
                         $data,
                     );
-                    
+
                     // get subjects by type (dai cuong)
                     if (years?.[yearIndex]?.majors?.[majorIndex]?.sections)
                         await this.pushGeneralSubjects(
