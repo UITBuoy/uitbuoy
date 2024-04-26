@@ -40,6 +40,10 @@ export class SubjectService {
         return this.educationProgramRepo.findOneBy({ id });
     }
 
+    async findAllEducationProgram() {
+        return this.educationProgramRepo.find();
+    }
+
     async findSubjectEducationByYearAndMajorName(
         year: string,
         majorName: string,

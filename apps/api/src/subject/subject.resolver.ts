@@ -7,19 +7,28 @@ import { Subject } from './entities/subject.entity';
 import { SubjectService } from './services/subject.service';
 import { CourseResolver } from '@/course/resolvers/course.resolver';
 import { SubjectConfiguration } from './configuration/subject.cofiguration';
+import { EducationProgramConfiguration } from './configuration/educationProgram.configuration';
+import { EducationProgram } from './entities/educationProgram.entity';
 
 @Resolver(() => Subject)
 export class SubjectResolver {
     constructor(
         private readonly subjecService: SubjectService,
         private readonly subjecConfig: SubjectConfiguration,
+        private readonly educationProgramConfig: EducationProgramConfiguration,
     ) {}
 
-    @Query(() => Boolean, {
-        description: 'Return all courses of current user',
+    @Query(() => [EducationProgram], {
+        description: 'Return all education programs of UIT students',
     })
-    @UseGuards(JwtAuthGuard)
-    async crawlSubject(@CurrentUser() user: User) {
+    async crawlEducationProgram() {
+        return this.educationProgramConfig.saveEducationProgramData();
+    }
+
+    @Query(() => Boolean, {
+        description: 'Return all subjects of UIT students',
+    })
+    async crawlSubject() {
         return this.subjecConfig.cron();
     }
 
