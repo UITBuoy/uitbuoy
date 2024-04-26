@@ -32,6 +32,10 @@ export class SubjectService {
         return this.subjectRepo.findBy({ nameEN });
     }
 
+    async findAllSubject() {
+        return this.subjectRepo.find();
+    }
+
     async findEducationProgram(token: String, majorName: string) {
         return this.educationProgramRepo.findBy({ majorName });
     }

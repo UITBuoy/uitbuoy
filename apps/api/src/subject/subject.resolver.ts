@@ -25,11 +25,11 @@ export class SubjectResolver {
         return this.educationProgramConfig.saveEducationProgramData();
     }
 
-    @Query(() => Boolean, {
+    @Query(() => [Subject], {
         description: 'Return all subjects of UIT students',
     })
     async crawlSubject() {
-        return this.subjecConfig.cron();
+        return this.subjecConfig.saveSubject();
     }
 
     @Query(() => [Subject])
