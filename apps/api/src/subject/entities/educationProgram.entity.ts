@@ -13,7 +13,7 @@ import type { Section } from './section.entity';
 @Entity()
 export class EducationProgram {
     @Field()
-    @PrimaryColumn()
+    @Column()
     year: string;
 
     @Field()
