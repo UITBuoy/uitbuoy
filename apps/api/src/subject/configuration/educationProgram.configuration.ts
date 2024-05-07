@@ -8,6 +8,9 @@ import { Repository } from 'typeorm';
 import { YearEducationProgram } from '../dto/yearEducationProgram.dto';
 import { EducationProgram } from '../entities/educationProgram.entity';
 import { SubjectService } from '../services/subject.service';
+import SE23 from 'src/common/requiredSubjects/SE23';
+import GENERAL from '@/common/requiredSubjects/general';
+import { Section } from '../entities/section.entity';
 
 @Injectable()
 export class EducationProgramConfiguration {
@@ -28,12 +31,12 @@ export class EducationProgramConfiguration {
                 try {
                     await this.educationProgramRepo.save(educationProgram);
                 } catch (error) {
-                    console.log({ major });
+                    console.log({ major, error });
                 }
             });
         });
 
-        console.log({years});
+        console.log({ years });
         return this.subjectService.findAllEducationProgram();
     }
 
@@ -294,28 +297,22 @@ export class EducationProgramConfiguration {
         for (let i = 0; i < years.length; i++) {
             for (let j = 0; j < years[i].majors.length; j++) {
                 for (let k = 0; k < years[i].majors[j].sections.length; k++) {
-                    if (
-                        years[i].majors[j].sections[k].name?.match(/khác/i) ||
-                        years[i].majors[j].sections[k].name?.match(/đồ án/i) ||
-                        years[i].majors[j].sections[k].name?.match(/thực tập/i)
-                    )
-                        for (
-                            let t = 0;
-                            t < years[i].majors[j].sections[k].subjects.length;
-                            t++
-                        )
-                            years[i].majors[j].sections[k].subjects[
-                                t
-                            ].isRequired = true;
                     for (
                         let t = 0;
                         t < years[i].majors[j].sections[k].subjects.length;
                         t++
                     )
                         if (
-                            years[i].majors[j].sections[k].subjects[
-                                t
-                            ].type?.match(/bắt buộc/i)
+                            SE23.some((item) => {
+                                years[i].majors[j].sections[k].subjects[
+                                    t
+                                ].code?.match(item);
+                            }) ||
+                            GENERAL.some((item) => {
+                                years[i].majors[j].sections[k].subjects[
+                                    t
+                                ].code?.match(item);
+                            })
                         )
                             years[i].majors[j].sections[k].subjects[
                                 t
