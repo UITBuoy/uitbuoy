@@ -66,7 +66,7 @@ export class SubjectService {
         const majorSubjectCodes: string[] = [];
         const requiredSubjectCodes: string[] = [];
         const electiveRequiredSubjectCodes: string[] = [];
-        const electioveFreeSubjectCodes: string[] = [];
+        const electiveFreeSubjectCodes: string[] = [];
 
         const year = await this.userService.findYear(user);
 
@@ -83,7 +83,7 @@ export class SubjectService {
                             years.sections[i].subjects[j].code,
                         );
                     else
-                        electioveFreeSubjectCodes.push(
+                        electiveFreeSubjectCodes.push(
                             years.sections[i].subjects[j].code,
                         );
                 }
@@ -92,7 +92,7 @@ export class SubjectService {
         return [
             majorSubjectCodes,
             requiredSubjectCodes,
-            electioveFreeSubjectCodes,
+            electiveFreeSubjectCodes,
         ];
     }
 }

@@ -9,6 +9,7 @@ import { CourseResolver } from '@/course/resolvers/course.resolver';
 import { SubjectConfiguration } from './configuration/subject.cofiguration';
 import { EducationProgramConfiguration } from './configuration/educationProgram.configuration';
 import { EducationProgram } from './entities/educationProgram.entity';
+import { CrawlArgs } from '@/common/args/crawl.arg';
 
 @Resolver(() => Subject)
 export class SubjectResolver {
@@ -21,8 +22,10 @@ export class SubjectResolver {
     @Query(() => [EducationProgram], {
         description: 'Return all education programs of UIT students',
     })
-    async crawlEducationProgram() {
-        return this.educationProgramConfig.saveEducationProgramData();
+    async crawlEducationProgram(
+        @Args() crawlArgs: CrawlArgs,
+    ): Promise<EducationProgram[]> {
+        return this.educationProgramConfig.saveEducationProgramData(crawlArgs);
     }
 
     @Query(() => [Subject], {

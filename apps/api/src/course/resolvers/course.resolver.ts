@@ -25,6 +25,7 @@ import { Assignment } from '@/event/entities/assignment.entity';
 import { LearningPathArgs } from '@/common/args/learningPath.arg';
 import { SubjectService } from '@/subject/services/subject.service';
 import { Subject } from '@/subject/entities/subject.entity';
+import { GiveLearningPathSubjectCodesResult } from '../dto/give-learning-path-subject-codes-result.dto';
 
 @Resolver(() => Course)
 export class CourseResolver {
@@ -43,30 +44,58 @@ export class CourseResolver {
     @UseGuards(JwtAuthGuard)
     async recommendSubject(
         @CurrentUser() user: User,
+        @Args() learningPathArgs: LearningPathArgs,
         @Args() queryArgs: QueryArgs,
     ) {
-        const subjects = await this.giveLearningPath(user, queryArgs);
+        queryArgs.isRecent = false;
+
+        const giveLearningPathSubjectCodesResult =
+            await this.giveLearningPathSubjectCodes(user, queryArgs);
         const result: Subject[] = [];
-        for (let i = 0; i < subjects.length; i++) {
-            console.log({ subject: subjects[i] });
+        for (
+            let i = 0;
+            i <
+            giveLearningPathSubjectCodesResult[learningPathArgs.option].length;
+            i++
+        ) {
+            console.log({
+                subject:
+                    giveLearningPathSubjectCodesResult[learningPathArgs.option][
+                        i
+                    ],
+            });
             result.push(
-                await this.subjectService.findSubjectDataByCode(subjects[i]),
+                await this.subjectService.findSubjectDataByCode(
+                    giveLearningPathSubjectCodesResult[learningPathArgs.option][
+                        i
+                    ],
+                ),
             );
         }
         return result;
     }
 
-    @Query(() => [String], { description: 'Return learning path of user' })
+    @Query(() => GiveLearningPathSubjectCodesResult, {
+        description: 'Return learning code of elective subjects',
+    })
     @UseGuards(JwtAuthGuard)
-    async giveLearningPath(
+    async giveLearningPathSubjectCodes(
         @CurrentUser() user: User,
         // @Args() learningPathArgs: LearningPathArgs,
         @Args() queryArgs: QueryArgs,
-    ): Promise<string[]> {
+    ): Promise<GiveLearningPathSubjectCodesResult> {
+        queryArgs.isRecent = false;
+
         const courses = await this.userCourses(user, queryArgs);
 
         const learntCourse =
             await this.courseService.findAllSubjectCodeByLearntCourse(courses);
+
+        console.log({ learntCourse });
+
+        const majorName = (
+            await this.findUserMajorByCourse(user, queryArgs)
+        )[1];
 
         const [
             majorSubjectCodes,
@@ -74,21 +103,23 @@ export class CourseResolver {
             electiveFreeSubjectCodes,
         ] = await this.subjectService.findAllSubjectCodeByMajor(
             user,
-            (await this.findUserMajorByCourse(user, queryArgs))[1],
+            majorName,
         );
 
-        const subjects = [
-            ...(await this.courseService.spliceSubjectCodeArray(
-                requiredSubjectCodes,
-                learntCourse,
-            )),
+        const electiveSubjects = [
             ...(await this.courseService.spliceSubjectCodeArray(
                 electiveFreeSubjectCodes,
                 learntCourse,
             )),
         ];
-        console.log(subjects);
-        return subjects;
+
+        const requiredSubjects = [
+            ...(await this.courseService.spliceSubjectCodeArray(
+                requiredSubjectCodes,
+                learntCourse,
+            )),
+        ];
+        return { electiveSubjects, requiredSubjects };
     }
 
     @Query(() => [String], {
@@ -100,6 +131,8 @@ export class CourseResolver {
         @Args() queryArgs: QueryArgs,
     ): Promise<string[]> {
         queryArgs.keyword = 'CVHT';
+        queryArgs.isRecent = false;
+
         const courses = await this.userCourses(user, queryArgs);
         return this.courseService.findUserMajorByCourse(courses);
     }

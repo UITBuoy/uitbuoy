@@ -1,15 +1,17 @@
-import { ArgsType, Field } from '@nestjs/graphql';
+import { ArgsType, Field, registerEnumType } from '@nestjs/graphql';
 
 @ArgsType()
 export class LearningPathArgs {
-    @Field(() => Boolean, {
+    @Field(() => LearningPathOptionEnum, {
+        description: 'The keyword to get suitable subject codes',
         nullable: true,
-        defaultValue: false,
-        description:
-            'If true, fetch the new data from Moodle API, else query from the database',
     })
-    isNew?: boolean;
-
-    @Field({ nullable: true, description: 'The keyword to find suitable subject' })
-    keyword?: string; //later
+    option?: LearningPathOptionEnum; //later
 }
+
+export enum LearningPathOptionEnum {
+    electiveSubjects = 'electiveSubjects',
+    requiredSubjects = 'requiredSubjects',
+}
+
+registerEnumType(LearningPathOptionEnum, { name: 'LearningPathOptionEnum' });

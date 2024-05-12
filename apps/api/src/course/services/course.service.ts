@@ -93,13 +93,13 @@ export class CourseService {
         }
     }
 
-    async findCourseById(id: number) {
+    async findCourseById(id: number | undefined) {
         return this.courseRepo.findOneBy({ id });
     }
 
     async findUserMajorByCourse(resolverCourses) {
-        const responseCourse = await this.findCourseById(resolverCourses[0].id);
-        return [responseCourse.shortname, responseCourse.coursecategory];
+        const responseCourse = await this.findCourseById(resolverCourses?.[0]?.id);
+        return [responseCourse?.shortname, responseCourse?.coursecategory];
     }
 
     async findAllSubjectCodeByLearntCourse(
@@ -112,7 +112,7 @@ export class CourseService {
             );
             learntSubjectCodes.push(responseCourse.shortname);
         }
-        console.log(learntSubjectCodes);
+        console.log({learntSubjectCodes});
         return learntSubjectCodes;
     }
 
