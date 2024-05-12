@@ -1,13 +1,13 @@
+import { CourseService } from '@/course/services/course.service';
 import { User } from '@/user/entities/user.entity';
+import { UserService } from '@/user/services/user.service';
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Like, Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { EducationProgram } from '../entities/educationProgram.entity';
 import { MajorSubject } from '../entities/majorSubject.entity';
 import { Section } from '../entities/section.entity';
 import { Subject } from '../entities/subject.entity';
-import { UserService } from '@/user/services/user.service';
-import { CourseService } from '@/course/services/course.service';
 
 @Injectable()
 export class SubjectService {
