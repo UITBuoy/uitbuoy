@@ -168,14 +168,22 @@ export class CourseService {
         subjectCodeArray: string[],
         compareSubjectCodeArray: string[],
     ): Promise<string[]> {
-        const newSubjectCodeArray = subjectCodeArray;
-        for (let i = 0; i < subjectCodeArray.length; i++) {
+        console.log({ subjectCodeArray, compareSubjectCodeArray });
+        const newSubjectCodeArray = [...subjectCodeArray];
+        for (let i = 0; i < newSubjectCodeArray.length; i++) {
             for (let j = 0; j < compareSubjectCodeArray.length; j++) {
-                if (compareSubjectCodeArray[j].includes(subjectCodeArray[i])) {
+                if (
+                    newSubjectCodeArray[i].includes('ME001') ||
+                    compareSubjectCodeArray[j].includes(newSubjectCodeArray[i])
+                ) {
                     newSubjectCodeArray.splice(i, 1);
+                    i--;
+                    break;
                 }
             }
         }
+
+        console.log({ newSubjectCodeArray });
         return newSubjectCodeArray;
     }
 
@@ -184,13 +192,12 @@ export class CourseService {
         queryArgs: QueryArgs,
     ): Promise<GiveLearningPathSubjectCodesResult> {
         queryArgs.isRecent = false;
+        queryArgs.isNew = false;
 
         const courses = await this.userCourses(user, queryArgs);
 
         const learntCourse =
             await this.findAllSubjectCodeByLearntCourse(courses);
-
-        console.log({ learntCourse });
 
         const majorName = (
             await this.findUserMajorByCourse(user, queryArgs)

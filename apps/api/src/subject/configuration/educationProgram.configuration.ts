@@ -18,7 +18,6 @@ import YEARS from '@/common/elements/years';
 
 @Injectable()
 export class EducationProgramConfiguration {
-    // export class EducationProgramConfiguration {
     constructor(
         @InjectRepository(EducationProgram)
         private educationProgramRepo: Repository<EducationProgram>,
@@ -36,14 +35,13 @@ export class EducationProgramConfiguration {
                 const educationProgram = { ...major, year: year.yearName };
 
                 try {
-                    await this.educationProgramRepo.save(educationProgram);
+                        await this.educationProgramRepo.save(educationProgram);
                 } catch (error) {
                     console.log({ major, error });
                 }
             });
         });
 
-        console.log({ years });
         return this.subjectService.findAllEducationProgram();
     }
 
@@ -78,8 +76,6 @@ export class EducationProgramConfiguration {
 
             for (let majorIndex = 0; majorIndex < majorLength; majorIndex++) {
                 if (years?.[yearIndex]?.majors?.[majorIndex]?.link) {
-                    console.log(years[yearIndex].majors[majorIndex].link);
-                    console.log(yearIndex);
                     const $data = await this.getEducationProgramMajorElement(
                         yearElement?.[yearIndex], //moi nam moi khac
                         years[yearIndex].majors[majorIndex].link,
