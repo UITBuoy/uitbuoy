@@ -7,6 +7,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CourseSectionEntity } from '../entities/course-section.entity';
 import { Course } from '../entities/course.entity';
+import moment from 'moment';
+import { GiveLearningPathSubjectCodesResult } from '../dto/give-learning-path-subject-codes-result.dto';
 
 @Injectable()
 export class CourseService {
@@ -17,6 +19,44 @@ export class CourseService {
         private readonly courseApiService: CourseApiService,
         private readonly subjectService: SubjectService,
     ) {}
+
+    async userCourses(user: User, queryArgs: QueryArgs) {
+        if (queryArgs.isNew) {
+            const apiCourses = (
+                await this.courseApiService.findAllCoursesOfUser({
+                    ...user,
+                    ...queryArgs,
+                })
+            ).map((course) => ({ ...course, users: [user] }));
+            await this.save(apiCourses);
+
+            if (queryArgs.isRecent) {
+                return apiCourses.filter(
+                    ({ startdate }) =>
+                        moment().diff(
+                            moment(new Date(startdate * 1000)),
+                            'months',
+                            true,
+                        ) < 5,
+                );
+            }
+            return apiCourses;
+        }
+
+        const courses = await this.findAllCoursesOfUser(user, queryArgs);
+
+        if (queryArgs.isRecent) {
+            return courses.filter(
+                ({ startdate }) =>
+                    moment().diff(
+                        moment(new Date(startdate * 1000)),
+                        'months',
+                        true,
+                    ) < 5,
+            );
+        }
+        return courses;
+    }
 
     async findAllCoursesOfUser(
         user: User,
@@ -93,13 +133,21 @@ export class CourseService {
         }
     }
 
-    async findCourseById(id: number) {
+    async findCourseById(id: number | undefined) {
         return this.courseRepo.findOneBy({ id });
     }
 
-    async findUserMajorByCourse(resolverCourses) {
-        const responseCourse = await this.findCourseById(resolverCourses[0].id);
-        return [responseCourse.shortname, responseCourse.coursecategory];
+    async findUserMajorByCourse(
+        user: User,
+        queryArgs: QueryArgs,
+    ): Promise<string[]> {
+        queryArgs.keyword = 'CVHT';
+        queryArgs.isRecent = false;
+        queryArgs.isNew = false;
+
+        const courses = await this.userCourses(user, queryArgs);
+        const responseCourse = await this.findCourseById(courses?.[0]?.id);
+        return [responseCourse?.shortname, responseCourse?.coursecategory];
     }
 
     async findAllSubjectCodeByLearntCourse(
@@ -112,7 +160,7 @@ export class CourseService {
             );
             learntSubjectCodes.push(responseCourse.shortname);
         }
-        console.log(learntSubjectCodes);
+        console.log({ learntSubjectCodes });
         return learntSubjectCodes;
     }
 
@@ -120,14 +168,63 @@ export class CourseService {
         subjectCodeArray: string[],
         compareSubjectCodeArray: string[],
     ): Promise<string[]> {
-        const newSubjectCodeArray = subjectCodeArray;
-        for (let i = 0; i < subjectCodeArray.length; i++) {
+        console.log({ subjectCodeArray, compareSubjectCodeArray });
+        const newSubjectCodeArray = [...subjectCodeArray];
+        for (let i = 0; i < newSubjectCodeArray.length; i++) {
             for (let j = 0; j < compareSubjectCodeArray.length; j++) {
-                if (compareSubjectCodeArray[j].includes(subjectCodeArray[i])) {
+                if (
+                    newSubjectCodeArray[i].includes('ME001') ||
+                    compareSubjectCodeArray[j].includes(newSubjectCodeArray[i])
+                ) {
                     newSubjectCodeArray.splice(i, 1);
+                    i--;
+                    break;
                 }
             }
         }
+
+        console.log({ newSubjectCodeArray });
         return newSubjectCodeArray;
+    }
+
+    async giveLearningPathSubjectCodes(
+        user: User,
+        queryArgs: QueryArgs,
+    ): Promise<GiveLearningPathSubjectCodesResult> {
+        queryArgs.isRecent = false;
+        queryArgs.isNew = false;
+
+        const courses = await this.userCourses(user, queryArgs);
+
+        const learntCourse =
+            await this.findAllSubjectCodeByLearntCourse(courses);
+
+        const majorName = (
+            await this.findUserMajorByCourse(user, queryArgs)
+        )[1];
+
+        const [
+            majorSubjectCodes,
+            requiredSubjectCodes,
+            electiveFreeSubjectCodes,
+        ] = await this.subjectService.findAllSubjectCodeByMajor(
+            user,
+            majorName,
+        );
+
+        const electiveSubjects = [
+            ...(await this.spliceSubjectCodeArray(
+                electiveFreeSubjectCodes,
+                learntCourse,
+            )),
+        ];
+
+        const requiredSubjects = [
+            ...(await this.spliceSubjectCodeArray(
+                requiredSubjectCodes,
+                learntCourse,
+            )),
+        ];
+        return { electiveSubjects, requiredSubjects };
     }
 }

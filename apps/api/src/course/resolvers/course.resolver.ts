@@ -25,6 +25,7 @@ import { Assignment } from '@/event/entities/assignment.entity';
 import { LearningPathArgs } from '@/common/args/learningPath.arg';
 import { SubjectService } from '@/subject/services/subject.service';
 import { Subject } from '@/subject/entities/subject.entity';
+import { GiveLearningPathSubjectCodesResult } from '../dto/give-learning-path-subject-codes-result.dto';
 
 @Resolver(() => Course)
 export class CourseResolver {
@@ -43,52 +44,43 @@ export class CourseResolver {
     @UseGuards(JwtAuthGuard)
     async recommendSubject(
         @CurrentUser() user: User,
+        @Args() learningPathArgs: LearningPathArgs,
         @Args() queryArgs: QueryArgs,
     ) {
-        const subjects = await this.giveLearningPath(user, queryArgs);
+        queryArgs.isRecent = false;
+
+        const giveLearningPathSubjectCodesResult =
+            await this.courseService.giveLearningPathSubjectCodes(
+                user,
+                queryArgs,
+            );
         const result: Subject[] = [];
-        for (let i = 0; i < subjects.length; i++) {
-            console.log({ subject: subjects[i] });
+        for (
+            let i = 0;
+            i <
+            giveLearningPathSubjectCodesResult[learningPathArgs.option].length;
+            i++
+        ) {
             result.push(
-                await this.subjectService.findSubjectDataByCode(subjects[i]),
+                await this.subjectService.findSubjectDataByCode(
+                    giveLearningPathSubjectCodesResult[learningPathArgs.option][
+                        i
+                    ],
+                ),
             );
         }
         return result;
     }
 
-    @Query(() => [String], { description: 'Return learning path of user' })
+    @Query(() => GiveLearningPathSubjectCodesResult, {
+        description: 'Return learning code of elective subjects',
+    })
     @UseGuards(JwtAuthGuard)
-    async giveLearningPath(
+    async giveLearningPathSubjectCodes(
         @CurrentUser() user: User,
-        // @Args() learningPathArgs: LearningPathArgs,
         @Args() queryArgs: QueryArgs,
-    ): Promise<string[]> {
-        const courses = await this.userCourses(user, queryArgs);
-
-        const learntCourse =
-            await this.courseService.findAllSubjectCodeByLearntCourse(courses);
-
-        const [
-            majorSubjectCodes,
-            requiredSubjectCodes,
-            electiveFreeSubjectCodes,
-        ] = await this.subjectService.findAllSubjectCodeByMajor(
-            user,
-            (await this.findUserMajorByCourse(user, queryArgs))[1],
-        );
-
-        const subjects = [
-            ...(await this.courseService.spliceSubjectCodeArray(
-                requiredSubjectCodes,
-                learntCourse,
-            )),
-            ...(await this.courseService.spliceSubjectCodeArray(
-                electiveFreeSubjectCodes,
-                learntCourse,
-            )),
-        ];
-        console.log(subjects);
-        return subjects;
+    ): Promise<GiveLearningPathSubjectCodesResult> {
+        return this.courseService.giveLearningPathSubjectCodes(user, queryArgs);
     }
 
     @Query(() => [String], {
@@ -99,52 +91,13 @@ export class CourseResolver {
         @CurrentUser() user: User,
         @Args() queryArgs: QueryArgs,
     ): Promise<string[]> {
-        queryArgs.keyword = 'CVHT';
-        const courses = await this.userCourses(user, queryArgs);
-        return this.courseService.findUserMajorByCourse(courses);
+        return this.courseService.findUserMajorByCourse(user, queryArgs);
     }
 
     @Query(() => [Course], { description: 'Return all course of current user' })
     @UseGuards(JwtAuthGuard)
     async userCourses(@CurrentUser() user: User, @Args() queryArgs: QueryArgs) {
-        if (queryArgs.isNew) {
-            const apiCourses = (
-                await this.courseApiService.findAllCoursesOfUser({
-                    ...user,
-                    ...queryArgs,
-                })
-            ).map((course) => ({ ...course, users: [user] }));
-            await this.courseService.save(apiCourses);
-
-            if (queryArgs.isRecent) {
-                return apiCourses.filter(
-                    ({ startdate }) =>
-                        moment().diff(
-                            moment(new Date(startdate * 1000)),
-                            'months',
-                            true,
-                        ) < 5,
-                );
-            }
-            return apiCourses;
-        }
-
-        const courses = await this.courseService.findAllCoursesOfUser(
-            user,
-            queryArgs,
-        );
-
-        if (queryArgs.isRecent) {
-            return courses.filter(
-                ({ startdate }) =>
-                    moment().diff(
-                        moment(new Date(startdate * 1000)),
-                        'months',
-                        true,
-                    ) < 5,
-            );
-        }
-        return courses;
+        return this.courseService.userCourses(user, queryArgs);
     }
 
     @Query(() => Course, {

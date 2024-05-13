@@ -1,14 +1,14 @@
+import { CrawlArgs } from '@/common/args/crawl.arg';
 import { UseGuards } from '@nestjs/common';
 import { Args, Query, Resolver } from '@nestjs/graphql';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { User } from 'src/user/entities/user.entity';
+import { EducationProgramConfiguration } from './configuration/educationProgram.configuration';
+import { SubjectConfiguration } from './configuration/subject.cofiguration';
+import { EducationProgram } from './entities/educationProgram.entity';
 import { Subject } from './entities/subject.entity';
 import { SubjectService } from './services/subject.service';
-import { CourseResolver } from '@/course/resolvers/course.resolver';
-import { SubjectConfiguration } from './configuration/subject.cofiguration';
-import { EducationProgramConfiguration } from './configuration/educationProgram.configuration';
-import { EducationProgram } from './entities/educationProgram.entity';
 
 @Resolver(() => Subject)
 export class SubjectResolver {
@@ -21,8 +21,10 @@ export class SubjectResolver {
     @Query(() => [EducationProgram], {
         description: 'Return all education programs of UIT students',
     })
-    async crawlEducationProgram() {
-        return this.educationProgramConfig.saveEducationProgramData();
+    async crawlEducationProgram(
+        @Args() crawlArgs: CrawlArgs,
+    ): Promise<EducationProgram[]> {
+        return this.educationProgramConfig.saveEducationProgramData(crawlArgs);
     }
 
     @Query(() => [Subject], {

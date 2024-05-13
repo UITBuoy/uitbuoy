@@ -38,6 +38,9 @@ export class Section {
     subjects: Relation<MajorSubject[]>;
 
     @ManyToOne('EducationProgram', 'sections')
-    @JoinColumn({ name: 'education_program_id' })
+    @JoinColumn([
+        { name: 'year_education', referencedColumnName: 'year' },
+        { name: 'major_education', referencedColumnName: 'majorName' },
+    ])
     educationProgram: Relation<EducationProgram>;
 }

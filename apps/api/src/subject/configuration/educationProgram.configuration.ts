@@ -8,17 +8,26 @@ import { Repository } from 'typeorm';
 import { YearEducationProgram } from '../dto/yearEducationProgram.dto';
 import { EducationProgram } from '../entities/educationProgram.entity';
 import { SubjectService } from '../services/subject.service';
+import SE23 from 'src/common/requiredSubjects/SE23';
+import GENERAL from '@/common/requiredSubjects/general';
+import { Section } from '../entities/section.entity';
+import { CrawlArgs } from '@/common/args/crawl.arg';
+import ELEMENTS from '@/common/constants/elements';
+import { SectionEducationProgram } from '../dto/sectionEducationPro';
+import YEARS from '@/common/elements/years';
 
 @Injectable()
 export class EducationProgramConfiguration {
-    // export class EducationProgramConfiguration {
     constructor(
         @InjectRepository(EducationProgram)
         private educationProgramRepo: Repository<EducationProgram>,
         private readonly subjectService: SubjectService,
     ) {}
 
-    async saveEducationProgramData(): Promise<EducationProgram[]> {
+    async saveEducationProgramData(
+        crawlArgs: CrawlArgs,
+    ): Promise<EducationProgram[]> {
+        const getYear = crawlArgs.years;
         const years = await this.getYearEducationProgram();
 
         years.forEach((year) => {
@@ -26,36 +35,37 @@ export class EducationProgramConfiguration {
                 const educationProgram = { ...major, year: year.yearName };
 
                 try {
-                    await this.educationProgramRepo.save(educationProgram);
+                        await this.educationProgramRepo.save(educationProgram);
                 } catch (error) {
-                    console.log({ major });
+                    console.log({ major, error });
                 }
             });
         });
 
-        console.log({years});
         return this.subjectService.findAllEducationProgram();
     }
 
     async getYearEducationProgram() {
         const years: YearEducationProgram[] = [];
 
+        const yearElement = Object.values(YEARS).reverse();
+
         const $educationProgram = await this.getPayload(
             API_URL.educationPrograms,
         );
 
-        const courseLength = $educationProgram('div.acc-item').length;
+        const courseLength = $educationProgram(ELEMENTS.yearElement).length;
 
         for (let yearIndex = 0; yearIndex < courseLength; yearIndex++) {
-            const yearName = $educationProgram('div.accordion')
+            const yearName = $educationProgram(ELEMENTS.yearName)
                 .eq(yearIndex)
                 .text();
             years.push({ yearName: yearName, majors: [] });
 
-            const majorLength = $educationProgram('div.acc-item')
+            const majorLength = $educationProgram(ELEMENTS.yearElement)
                 .eq(yearIndex)
-                .children('div.panel')
-                .children('div.views-row').length;
+                .children(ELEMENTS.majorList)
+                .children(ELEMENTS.majorElement).length;
 
             this.pushMajorItems(
                 majorLength,
@@ -67,10 +77,8 @@ export class EducationProgramConfiguration {
             for (let majorIndex = 0; majorIndex < majorLength; majorIndex++) {
                 if (years?.[yearIndex]?.majors?.[majorIndex]?.link) {
                     const $data = await this.getEducationProgramMajorElement(
-                        majorIndex,
-                        'dd:nth-child(6)',
-                        yearIndex,
-                        years,
+                        yearElement?.[yearIndex], //moi nam moi khac
+                        years[yearIndex].majors[majorIndex].link,
                     );
 
                     // get total credit
@@ -82,21 +90,18 @@ export class EducationProgramConfiguration {
                     );
 
                     // get subjects by type (dai cuong)
-                    if (years?.[yearIndex]?.majors?.[majorIndex]?.sections)
+                    if (years?.[yearIndex]?.majors?.[majorIndex]?.sections) {
                         await this.pushGeneralSubjects(
-                            yearIndex,
-                            majorIndex,
-                            years,
+                            years[yearIndex].majors[majorIndex].sections,
                             $data,
                         );
 
-                    // get subjects by orther types
-                    await this.pushSpecialMajor(
-                        yearIndex,
-                        majorIndex,
-                        years,
-                        $data,
-                    );
+                        // get subjects by orther types
+                        await this.pushSpecialMajor(
+                            years[yearIndex].majors[majorIndex].sections,
+                            $data,
+                        );
+                    }
                 }
             }
         }
@@ -104,12 +109,16 @@ export class EducationProgramConfiguration {
         await this.setIsRequired(years);
         return years;
     }
+    async getEducationProgramMajorElement(element: string, link: string) {
+        const $fieldRoot = await this.getPayload(`${API_URL.headLink}${link}`);
+        const html = $fieldRoot(element).html() || '';
+        if (html == '') console.log({ html });
+        return cheerio.load(html);
+    }
 
     async getPayload(url: string) {
         return cheerio.load((await axios.get(url)).data);
     }
-
-    //     let $data = null;
 
     async pushMajorItems(
         majorLength: number,
@@ -118,13 +127,13 @@ export class EducationProgramConfiguration {
         $educationProgram: cheerio.CheerioAPI,
     ) {
         for (let majorIndex = 0; majorIndex < majorLength; majorIndex++) {
-            const educationProgramData = $educationProgram('div.panel')
+            const educationProgramData = $educationProgram(ELEMENTS.majorList)
                 .eq(yearIndex)
-                .children('div')
+                .children(ELEMENTS.div)
                 .eq(majorIndex)
-                .children('a');
+                .children(ELEMENTS.a);
             const majorName = educationProgramData.text();
-            const link: string = educationProgramData.attr('href');
+            const link: string = educationProgramData.attr(ELEMENTS.href);
             years[yearIndex].majors.push({
                 majorName,
                 link,
@@ -136,24 +145,24 @@ export class EducationProgramConfiguration {
     }
 
     async pushTotalCredit(
-        courseIndex: number,
+        yearIndex: number,
         majorIndex: number,
         years: YearEducationProgram[],
         $data: cheerio.CheerioAPI,
     ) {
         const totalCredit = parseInt(
-            $data('table')
+            $data(ELEMENTS.table)
                 .eq(0)
                 .contents()
-                .children('tr')
+                .children(ELEMENTS.tr)
                 .last()
-                .children('td')
+                .children(ELEMENTS.td)
                 .last()
                 .prev()
                 .text()
                 .trim(),
         );
-        years[courseIndex].majors[majorIndex].totalCredit = isNaN(totalCredit)
+        years[yearIndex].majors[majorIndex].totalCredit = isNaN(totalCredit)
             ? 0
             : totalCredit;
     }
@@ -163,49 +172,45 @@ export class EducationProgramConfiguration {
         tableIndex: number,
         $data: cheerio.CheerioAPI,
     ) {
-        return $data('table')
+        return $data(ELEMENTS.table)
             .eq(1)
-            .find('tr')
+            .find(ELEMENTS.tr)
             .eq(tableIndex)
-            .find('td')
+            .find(ELEMENTS.td)
             .eq(selectIndex)
             .text()
             .trim();
     }
 
     async pushGeneralSubjects(
-        courseIndex: number,
-        majorIndex: number,
-        years: YearEducationProgram[],
+        sections: SectionEducationProgram[],
         $data: cheerio.CheerioAPI,
     ) {
-        const tableLength = $data('table').eq(1).find('tr').length;
+        const tableLength = $data(ELEMENTS.table)
+            .eq(1)
+            .find(ELEMENTS.tr).length;
 
         for (let tableIndex = 1; tableIndex < tableLength; tableIndex++) {
             let textIndex = await this.getTextIndex(0, tableIndex, $data);
             if (textIndex.match(RegEx.typeRegex)) {
-                years[courseIndex].majors[majorIndex].sections.push({
+                sections.push({
                     name: textIndex,
                     subjects: [],
                 });
             } else {
                 textIndex = await this.getTextIndex(1, tableIndex, $data);
                 if (textIndex.match(RegEx.subjectRegex)) {
-                    years[courseIndex].majors[majorIndex].sections
-                        .at(-1)
-                        ?.subjects.push({
-                            code: textIndex,
-                            isRequired: true,
-                        });
+                    sections.at(-1)?.subjects.push({
+                        code: textIndex,
+                        isRequired: false,
+                    });
                 }
             }
         }
     }
 
     async pushSpecialMajor(
-        courseIndex: number,
-        majorIndex: number,
-        years: YearEducationProgram[],
+        sections: SectionEducationProgram[],
         $data: cheerio.CheerioAPI,
     ) {
         let typeTitles = '';
@@ -213,9 +218,12 @@ export class EducationProgramConfiguration {
         const typeNumbers = $data('*').filter('h3').length;
         let tableElement = null;
         for (let typeIndex = 0; typeIndex < typeNumbers; typeIndex++) {
-            tableElement = $data('h3').eq(typeIndex).nextAll('table').first();
+            tableElement = $data('h3')
+                .eq(typeIndex)
+                .nextAll(ELEMENTS.table)
+                .first();
 
-            const tableElementLength = tableElement.find('tr').length;
+            const tableElementLength = tableElement.find(ELEMENTS.tr).length;
 
             const title = $data('h3').eq(typeIndex).text();
 
@@ -225,7 +233,7 @@ export class EducationProgramConfiguration {
                     ?.at(2)
                     .split(':')
                     .at(0);
-                years[courseIndex].majors[majorIndex].sections.push({
+                sections.push({
                     name: typeTitles,
                     subjects: [],
                 });
@@ -237,9 +245,9 @@ export class EducationProgramConfiguration {
                 ) {
                     if (
                         tableElement
-                            .find('tr')
+                            .find(ELEMENTS.tr)
                             .eq(tableElementIndex)
-                            .find('td')
+                            .find(ELEMENTS.td)
                             .eq(0)
                             .text()
                             .trim()
@@ -262,13 +270,11 @@ export class EducationProgramConfiguration {
                         .trim();
 
                     if (code.match(RegEx.subjectRegex)) {
-                        years[courseIndex].majors[majorIndex].sections
-                            .at(-1)
-                            .subjects.push({
-                                code,
-                                type,
-                                isRequired: false,
-                            });
+                        sections.at(-1).subjects.push({
+                            code,
+                            type,
+                            isRequired: false,
+                        });
                     }
                 }
                 type = '';
@@ -276,46 +282,26 @@ export class EducationProgramConfiguration {
         }
     }
 
-    async getEducationProgramMajorElement(
-        majorIndex: number,
-        element: string,
-        courseIndex: number,
-        years: YearEducationProgram[],
-    ) {
-        const $fieldRoot = await this.getPayload(
-            `${API_URL.headLink}${years[courseIndex].majors[majorIndex].link}`,
-        );
-        const html = (await $fieldRoot(element).html()) || '';
-
-        return cheerio.load(html);
-    }
-
     async setIsRequired(years: YearEducationProgram[]) {
         for (let i = 0; i < years.length; i++) {
             for (let j = 0; j < years[i].majors.length; j++) {
                 for (let k = 0; k < years[i].majors[j].sections.length; k++) {
-                    if (
-                        years[i].majors[j].sections[k].name?.match(/khác/i) ||
-                        years[i].majors[j].sections[k].name?.match(/đồ án/i) ||
-                        years[i].majors[j].sections[k].name?.match(/thực tập/i)
-                    )
-                        for (
-                            let t = 0;
-                            t < years[i].majors[j].sections[k].subjects.length;
-                            t++
-                        )
-                            years[i].majors[j].sections[k].subjects[
-                                t
-                            ].isRequired = true;
                     for (
                         let t = 0;
                         t < years[i].majors[j].sections[k].subjects.length;
                         t++
                     )
                         if (
-                            years[i].majors[j].sections[k].subjects[
-                                t
-                            ].type?.match(/bắt buộc/i)
+                            SE23.some((item) => {
+                                return years[i].majors[j].sections[k].subjects[
+                                    t
+                                ].code?.match(item);
+                            }) ||
+                            GENERAL.some((item) => {
+                                return years[i].majors[j].sections[k].subjects[
+                                    t
+                                ].code?.match(item);
+                            })
                         )
                             years[i].majors[j].sections[k].subjects[
                                 t
