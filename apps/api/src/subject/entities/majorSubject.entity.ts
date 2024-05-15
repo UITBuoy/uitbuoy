@@ -10,6 +10,7 @@ import {
     Relation,
 } from 'typeorm';
 import type { Section } from './section.entity';
+import { KnowledgeBlock } from './knowledgeBlock';
 
 @ObjectType()
 @Entity()
@@ -48,4 +49,7 @@ export class MajorSubject {
 
     @ManyToMany('Section', 'subjects')
     sections: Relation<Section[]>;
+
+    @ManyToMany('KnowledgeBlock', 'subjects')
+    knowledgeBlocks: Relation<KnowledgeBlock[]>;
 }

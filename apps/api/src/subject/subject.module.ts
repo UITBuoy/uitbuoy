@@ -11,11 +11,13 @@ import { Section } from './entities/section.entity';
 import { MajorSubject } from './entities/majorSubject.entity';
 import { UserModule } from '@/user/user.module';
 import { CourseModule } from '@/course/course.module';
+import { KnowledgeBlock } from './entities/knowledgeBlock';
 
 @Module({
     imports: [
         ApiModule,
         TypeOrmModule.forFeature([Subject]),
+        TypeOrmModule.forFeature([KnowledgeBlock]),
         TypeOrmModule.forFeature([EducationProgram]),
         TypeOrmModule.forFeature([Section]),
         TypeOrmModule.forFeature([MajorSubject]),
