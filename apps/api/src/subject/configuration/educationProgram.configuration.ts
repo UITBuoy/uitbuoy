@@ -35,7 +35,7 @@ export class EducationProgramConfiguration {
                 const educationProgram = { ...major, year: year.yearName };
 
                 try {
-                        await this.educationProgramRepo.save(educationProgram);
+                    await this.educationProgramRepo.save(educationProgram);
                 } catch (error) {
                     console.log({ major, error });
                 }
@@ -194,7 +194,7 @@ export class EducationProgramConfiguration {
             let textIndex = await this.getTextIndex(0, tableIndex, $data);
             if (textIndex.match(RegEx.typeRegex)) {
                 sections.push({
-                    name: textIndex,
+                    name: 'đại cương',
                     subjects: [],
                 });
             } else {
@@ -232,11 +232,60 @@ export class EducationProgramConfiguration {
                     .match(RegEx.multitypeRegex)
                     ?.at(2)
                     .split(':')
-                    .at(0);
-                sections.push({
-                    name: typeTitles,
-                    subjects: [],
-                });
+                    .at(0)
+                    .normalize('NFD');
+
+                //
+                if (typeTitles.includes('cơ sở ngành'.normalize('NFD')))
+                    sections.push({
+                        name: 'cơ sở ngành',
+                        subjects: [],
+                    });
+                else if (typeTitles.includes('cơ sở nhóm ngành'.normalize('NFD')))
+                    sections.push({
+                        name: 'cơ sở nhóm ngành',
+                        subjects: [],
+                    });
+                else if (typeTitles.includes('chuyên ngành'.normalize('NFD')))
+                    sections.push({
+                        name: 'chuyên ngành',
+                        subjects: [],
+                    });
+                else if (typeTitles.includes('khác'.normalize('NFD')))
+                    sections.push({
+                        name: 'khác',
+                        subjects: [],
+                    });
+                else if (typeTitles.includes('Thực tập'.normalize('NFD')))
+                    sections.push({
+                        name: 'thực tập',
+                        subjects: [],
+                    });
+                else if (typeTitles.includes('đồ án'.normalize('NFD')))
+                    sections.push({
+                        name: 'đồ án',
+                        subjects: [],
+                    });
+                else if (typeTitles.includes('Khóa luận'.normalize('NFD')))
+                    sections.push({
+                        name: 'khoá luận',
+                        subjects: [],
+                    });
+                else if (
+                    typeTitles.includes(
+                        ' chuyên đề tốt nghiệp'.normalize('NFD'),
+                    )
+                )
+                    sections.push({
+                        name: 'chuyên đề tốt nghiệp',
+                        subjects: [],
+                    });
+                //
+                else
+                    sections.push({
+                        name: typeTitles + 1,
+                        subjects: [],
+                    });
 
                 for (
                     let tableElementIndex = 1;
