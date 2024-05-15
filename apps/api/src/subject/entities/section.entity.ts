@@ -6,13 +6,11 @@ import {
     JoinTable,
     ManyToMany,
     ManyToOne,
-    OneToMany,
-    PrimaryColumn,
     PrimaryGeneratedColumn,
-    Relation,
+    Relation
 } from 'typeorm';
-import type { MajorSubject } from './majorSubject.entity';
 import type { EducationProgram } from './educationProgram.entity';
+import type { MajorSubject } from './majorSubject.entity';
 
 @ObjectType()
 @Entity()

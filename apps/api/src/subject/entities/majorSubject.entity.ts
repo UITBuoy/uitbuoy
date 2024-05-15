@@ -2,15 +2,12 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import {
     Column,
     Entity,
-    JoinColumn,
     ManyToMany,
-    ManyToOne,
-    PrimaryColumn,
     PrimaryGeneratedColumn,
-    Relation,
+    Relation
 } from 'typeorm';
-import type { Section } from './section.entity';
 import { KnowledgeBlock } from './knowledgeBlock';
+import type { Section } from './section.entity';
 
 @ObjectType()
 @Entity()

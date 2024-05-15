@@ -4,11 +4,10 @@ import {
     Entity,
     OneToMany,
     PrimaryColumn,
-    PrimaryGeneratedColumn,
-    Relation,
+    Relation
 } from 'typeorm';
-import type { Section } from './section.entity';
 import { KnowledgeBlock } from './knowledgeBlock';
+import type { Section } from './section.entity';
 
 @ObjectType()
 @Entity()
