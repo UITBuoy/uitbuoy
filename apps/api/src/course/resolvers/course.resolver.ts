@@ -54,21 +54,25 @@ export class CourseResolver {
                 user,
                 queryArgs,
             );
-        const result: Subject[] = [];
-        for (
-            let i = 0;
-            i <
-            giveLearningPathSubjectCodesResult[learningPathArgs.option].length;
-            i++
-        ) {
-            result.push(
-                await this.subjectService.findSubjectDataByCode(
-                    giveLearningPathSubjectCodesResult[learningPathArgs.option][
-                        i
-                    ],
-                ),
+        // const result: Subject[] = [];
+        const result: Subject[] =
+            await this.subjectService.findSubjectsDataByCodes(
+                giveLearningPathSubjectCodesResult[learningPathArgs.option],
             );
-        }
+        // for (
+        //     let i = 0;
+        //     i <
+        //     giveLearningPathSubjectCodesResult[learningPathArgs.option].length;
+        //     i++
+        // ) {
+        //     result.push(
+        //         await this.subjectService.findSubjectDataByCode(
+        //             giveLearningPathSubjectCodesResult[learningPathArgs.option][
+        //                 i
+        //             ],
+        //         ),
+        //     );
+        // }
         return result;
     }
 

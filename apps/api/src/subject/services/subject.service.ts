@@ -3,7 +3,7 @@ import { User } from '@/user/entities/user.entity';
 import { UserService } from '@/user/services/user.service';
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Repository } from 'typeorm';
+import { ILike, In, Repository } from 'typeorm';
 import { EducationProgram } from '../entities/educationProgram.entity';
 import { MajorSubject } from '../entities/majorSubject.entity';
 import { Section } from '../entities/section.entity';
@@ -26,6 +26,10 @@ export class SubjectService {
 
     async findSubjectDataByCode(code: string) {
         return this.subjectRepo.findOneBy({ code });
+    }
+
+    async findSubjectsDataByCodes(codes: string[]) {
+        return this.subjectRepo.findBy({ code: In(codes) });
     }
 
     async findSubjectData(token: String, nameEN: string) {
