@@ -8,18 +8,18 @@
   "scripts": {
     "build": "nest build",
     "build-webpack": "nest build --webpack",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "dev": "nest start --watch",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "node dist/apps/api/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./apps/api/test/jest-e2e.json"
   },
   "dependencies": {
     "@apollo/gateway": "^2.7.2",
@@ -27,6 +27,8 @@
     "@apollo/subgraph": "^2.7.2",
     "@as-integrations/fastify": "^2.1.1",
     "@codegenie/serverless-express": "^4.14.0",
+    "@grpc/grpc-js": "^1.10.8",
+    "@grpc/proto-loader": "^0.7.13",
     "@nestjs/apollo": "^12.1.0",
     "@nestjs/axios": "^3.0.2",
     "@nestjs/common": "^10.0.0",
@@ -35,6 +37,7 @@
     "@nestjs/graphql": "^12.1.1",
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/mapped-types": "*",
+    "@nestjs/microservices": "^10.3.8",
     "@nestjs/mongoose": "^10.0.4",
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.0.0",
@@ -53,6 +56,7 @@
     "expo-server-sdk": "^3.9.0",
     "express-session": "^1.18.0",
     "graphql": "^16.8.1",
+    "kafkajs": "^2.2.4",
     "knex": "^3.1.0",
     "mongodb": "^6.5.0",
     "mongoose": "^8.2.2",
@@ -112,7 +116,7 @@
       "json",
       "ts"
     ],
-    "rootDir": "src",
+    "rootDir": ".",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
@@ -120,7 +124,10 @@
     "collectCoverageFrom": [
       "**/*.(t|j)s"
     ],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "coverageDirectory": "./coverage",
+    "testEnvironment": "node",
+    "roots": [
+      "<rootDir>/apps/"
+    ]
   }
 }

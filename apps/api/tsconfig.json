@@ -13,7 +13,7 @@
         "noImplicitAny": false,
         "outDir": "./dist",
         "paths": {
-            "@/*": ["src/*"]
+            "@/*": ["apps/api/src/*"]
         },
         "removeComments": true,
         "resolveJsonModule": true,
