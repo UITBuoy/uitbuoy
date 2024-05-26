@@ -30,6 +30,7 @@ import {
     ElectiveObjectArgs,
     ElectiveSubjectsArgs,
 } from '@/common/args/electiveSubjects.arg';
+import { ElectiveSubjectsResult } from '../dto/elective-subject-result.dto copy';
 
 @Resolver(() => Course)
 export class CourseResolver {
@@ -42,7 +43,7 @@ export class CourseResolver {
         private readonly subjectService: SubjectService,
     ) {}
 
-    @Query(() => [Subject], {
+    @Query(() => [ElectiveSubjectsResult], {
         description: 'Return all elective subjects recommend for user',
     })
     @UseGuards(JwtAuthGuard)
@@ -50,7 +51,7 @@ export class CourseResolver {
         @CurrentUser() user: User,
         @Args() queryArgs: QueryArgs,
         @Args() electiveObjectArgs: ElectiveObjectArgs,
-    ) {
+    ): Promise<ElectiveSubjectsResult[]> {
         return this.courseService.recommendElectiveSubject(
             user,
             queryArgs,

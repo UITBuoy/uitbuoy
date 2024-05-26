@@ -25,7 +25,7 @@ export class ElectiveSubjectsArgs {
 export class ElectiveObjectArgs {
     @Field(() => [ElectiveSubjectsArgs], {
         description: 'The keyword to get suitable subject codes',
-        nullable: true,
+        nullable: false,
     })
     options: ElectiveSubjectsArgs[];
 }

@@ -238,7 +238,7 @@ export class CourseService {
                 }
             }
         }
-        console.log(electiveSubjects);
+        console.log({ electiveSubjects });
 
         return electiveSubjects;
     }
