@@ -9,7 +9,7 @@ const CircularDependencyPlugin = require('circular-dependency-plugin');
 
 /** @type { import('webpack').Configuration } */
 module.exports = {
-    entry: './src/serverless',
+    entry: './apps/api/src/serverless',
     output: {
         filename: 'serverless.js',
         path: path.resolve(__dirname, 'dist/'),
@@ -79,12 +79,12 @@ module.exports = {
             cwd: process.cwd(),
         }),
     ],
-    resolve: {
-        extensions: ['.js', '.json', '.ts'],
-        mainFields: ['main'],
-        plugins: [new TsconfigPathsPlugin({ configFile: 'tsconfig.json' })],
-        symlinks: true, //default value
-    },
+    // resolve: {
+    //     extensions: ['.js', '.json', '.ts'],
+    //     mainFields: ['main'],
+    //     plugins: [new TsconfigPathsPlugin({ configFile: 'tsconfig.json' })],
+    //     symlinks: true, //default value
+    // },
     target: 'node',
     stats: {
         excludeAssets: /\.map$/,
