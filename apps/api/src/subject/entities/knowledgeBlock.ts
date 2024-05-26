@@ -3,39 +3,40 @@ import {
     Column,
     Entity,
     JoinColumn,
-    JoinTable,
-    ManyToMany,
     ManyToOne,
     PrimaryGeneratedColumn,
     Relation
 } from 'typeorm';
 import type { EducationProgram } from './educationProgram.entity';
-import type { MajorSubject } from './majorSubject.entity';
 
 @ObjectType()
 @Entity()
-export class Section {
+export class KnowledgeBlock {
     @Field()
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Field({ nullable: true })
+    @Field(() => Int, { nullable: true })
     @Column({ nullable: true })
-    name: string;
+    groupBaseCredit: number;
 
     @Field(() => Int, { nullable: true })
     @Column({ nullable: true })
-    order: number;
+    baseCredit: number;
 
     @Field(() => Int, { nullable: true })
     @Column({ nullable: true })
-    totalCredit: number;
+    majorCredit: number;
 
-    @ManyToMany('MajorSubject', 'sections', { cascade: true })
-    @JoinTable()
-    subjects: Relation<MajorSubject[]>;
+    @Field(() => Int, { nullable: true })
+    @Column({ nullable: true })
+    thesisCredit: number;
 
-    @ManyToOne('EducationProgram', 'sections')
+    @Field(() => String, { nullable: true })
+    @Column({ nullable: true })
+    majors: string;
+
+    @ManyToOne('EducationProgram', 'knowledgeBlocks')
     @JoinColumn([
         { name: 'year_education', referencedColumnName: 'year' },
         { name: 'major_education', referencedColumnName: 'majorName' },

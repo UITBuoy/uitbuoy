@@ -9,6 +9,11 @@ import { CourseSectionEntity } from '../entities/course-section.entity';
 import { Course } from '../entities/course.entity';
 import moment from 'moment';
 import { GiveLearningPathSubjectCodesResult } from '../dto/give-learning-path-subject-codes-result.dto';
+import { ElectiveObjectArgs } from '@/common/args/electiveSubjects.arg';
+import { MajorSubject } from '@/subject/entities/majorSubject.entity';
+import { UserService } from '@/user/services/user.service';
+import { extraIncludes } from '@/common/utils/extraIncludes';
+import { ElectiveSubjectsResult } from '../dto/elective-subject-result.dto copy';
 
 @Injectable()
 export class CourseService {
@@ -18,6 +23,7 @@ export class CourseService {
         private sectionRepo: Repository<CourseSectionEntity>,
         private readonly courseApiService: CourseApiService,
         private readonly subjectService: SubjectService,
+        private readonly userService: UserService,
     ) {}
 
     async userCourses(user: User, queryArgs: QueryArgs) {
@@ -173,8 +179,11 @@ export class CourseService {
         for (let i = 0; i < newSubjectCodeArray.length; i++) {
             for (let j = 0; j < compareSubjectCodeArray.length; j++) {
                 if (
-                    newSubjectCodeArray[i].includes('ME001') ||
-                    compareSubjectCodeArray[j].includes(newSubjectCodeArray[i])
+                    extraIncludes(newSubjectCodeArray[i], 'ME001') ||
+                    extraIncludes(
+                        compareSubjectCodeArray[j],
+                        newSubjectCodeArray[i],
+                    )
                 ) {
                     newSubjectCodeArray.splice(i, 1);
                     i--;
@@ -185,6 +194,53 @@ export class CourseService {
 
         console.log({ newSubjectCodeArray });
         return newSubjectCodeArray;
+    }
+
+    async recommendElectiveSubject(
+        user: User,
+        queryArgs: QueryArgs,
+        electiveObjectArgs: ElectiveObjectArgs,
+    ): Promise<ElectiveSubjectsResult[]> {
+        const majorName = (
+            await this.findUserMajorByCourse(user, queryArgs)
+        )[1];
+
+        const year = await this.userService.findYear(user);
+
+        const electiveMajorSubjects =
+            await this.subjectService.findMajorSubjectByCodeList(
+                (await this.giveLearningPathSubjectCodes(user, queryArgs))
+                    .electiveSubjects,
+                majorName,
+                year,
+            );
+
+        const electiveSubjects: {
+            name: string;
+            credits: string;
+            codes: string[];
+        }[] = electiveObjectArgs.options.map((value) => ({
+            ...value,
+            codes: [],
+        }));
+
+        for (let i = 0; i < electiveObjectArgs.options.length; i++) {
+            for (let j = 0; j < electiveMajorSubjects.length; j++) {
+                if (
+                    extraIncludes(
+                        electiveMajorSubjects[j].sections[0].name,
+                        electiveObjectArgs.options[i].name,
+                    )
+                ) {
+                    electiveSubjects[i].codes.push(
+                        electiveMajorSubjects[j].code,
+                    );
+                }
+            }
+        }
+        console.log(electiveSubjects);
+
+        return electiveSubjects;
     }
 
     async giveLearningPathSubjectCodes(
@@ -203,25 +259,23 @@ export class CourseService {
             await this.findUserMajorByCourse(user, queryArgs)
         )[1];
 
-        const [
-            majorSubjectCodes,
-            requiredSubjectCodes,
-            electiveFreeSubjectCodes,
-        ] = await this.subjectService.findAllSubjectCodeByMajor(
-            user,
-            majorName,
-        );
+        const allSubjectCodesByMajor =
+            await this.subjectService.findAllSubjectCodeByMajor(
+                user,
+                majorName,
+            );
 
+        console.log({ allSubjectCodesByMajor });
         const electiveSubjects = [
             ...(await this.spliceSubjectCodeArray(
-                electiveFreeSubjectCodes,
+                allSubjectCodesByMajor.electiveSubjectCodes,
                 learntCourse,
             )),
         ];
 
         const requiredSubjects = [
             ...(await this.spliceSubjectCodeArray(
-                requiredSubjectCodes,
+                allSubjectCodesByMajor.requiredSubjectCodes,
                 learntCourse,
             )),
         ];

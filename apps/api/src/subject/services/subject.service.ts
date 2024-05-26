@@ -8,6 +8,7 @@ import { EducationProgram } from '../entities/educationProgram.entity';
 import { MajorSubject } from '../entities/majorSubject.entity';
 import { Section } from '../entities/section.entity';
 import { Subject } from '../entities/subject.entity';
+import { AllSubjectCodeByMajorResult } from '../dto/allSubjectCodes';
 
 @Injectable()
 export class SubjectService {
@@ -30,6 +31,60 @@ export class SubjectService {
 
     async findSubjectsDataByCodes(codes: string[]) {
         return this.subjectRepo.findBy({ code: In(codes) });
+    }
+
+    async findSubjectCodeBySectionName(sectionName: string) {
+        return this.majorSubjectRepo.findBy({
+            sections: {
+                name: sectionName,
+            },
+        });
+    }
+
+    async findSubjectCodesByMajorSubjects(majorSubjects: MajorSubject[]) {
+        const subjectCodes: String[] = [];
+        for (let i = 0; i < majorSubjects.length; i++) {
+            subjectCodes.push(majorSubjects[i].code);
+        }
+        return subjectCodes;
+    }
+
+    async findMajorSubjectByCodeList(
+        codes: string[],
+        majorName: string,
+        year: string,
+    ) {
+        console.log({ codes, majorName, year });
+        return this.majorSubjectRepo.find({
+            where: {
+                code: In(codes),
+                sections: {
+                    educationProgram: {
+                        majorName: ILike(`%${majorName}%`),
+                        year: ILike(`%${year}%`),
+                    },
+                },
+            },
+            relations: {
+                sections: {
+                    educationProgram: true,
+                },
+            },
+        });
+    }
+
+    async findSectionByName(name: string) {
+        return this.sectionRepo.findBy({ name });
+    }
+
+    async findSectionNameByMajorSubjectCode(code: string) {
+        return this.sectionRepo.findBy({ subjects: { code: code } });
+    }
+
+    async findSectionNameByMajorSubjectId(code: string) {
+        return this.sectionRepo.findBy(
+            await this.majorSubjectRepo.findBy({ code }),
+        );
     }
 
     async findSubjectData(token: String, nameEN: string) {
@@ -66,11 +121,19 @@ export class SubjectService {
         });
     }
 
-    async findAllSubjectCodeByMajor(user: User, majorName: string) {
+    async findAllSubjectCodeByMajor(
+        user: User,
+        majorName: string,
+    ): Promise<AllSubjectCodeByMajorResult> {
         const majorSubjectCodes: string[] = [];
         const requiredSubjectCodes: string[] = [];
-        const electiveRequiredSubjectCodes: string[] = [];
-        const electiveFreeSubjectCodes: string[] = [];
+        const electiveSubjectCodes: string[] = [];
+
+        const allSubjectCodes: AllSubjectCodeByMajorResult = {
+            majorSubjectCodes,
+            requiredSubjectCodes,
+            electiveSubjectCodes,
+        };
 
         const year = await this.userService.findYear(user);
 
@@ -81,22 +144,20 @@ export class SubjectService {
         if (years)
             for (let i = 0; i < years.sections.length; i++)
                 for (let j = 0; j < years.sections[i].subjects.length; j++) {
-                    majorSubjectCodes.push(years.sections[i].subjects[j].code);
+                    allSubjectCodes.majorSubjectCodes.push(
+                        years.sections[i].subjects[j].code,
+                    );
                     if (years.sections[i].subjects[j].isRequired)
-                        requiredSubjectCodes.push(
+                        allSubjectCodes.requiredSubjectCodes.push(
                             years.sections[i].subjects[j].code,
                         );
                     else
-                        electiveFreeSubjectCodes.push(
+                        allSubjectCodes.electiveSubjectCodes.push(
                             years.sections[i].subjects[j].code,
                         );
                 }
 
         console.log({ majorSubjectCodes });
-        return [
-            majorSubjectCodes,
-            requiredSubjectCodes,
-            electiveFreeSubjectCodes,
-        ];
+        return allSubjectCodes;
     }
 }

@@ -4,9 +4,9 @@ import {
     Entity,
     OneToMany,
     PrimaryColumn,
-    PrimaryGeneratedColumn,
-    Relation,
+    Relation
 } from 'typeorm';
+import { KnowledgeBlock } from './knowledgeBlock';
 import type { Section } from './section.entity';
 
 @ObjectType()
@@ -34,4 +34,7 @@ export class EducationProgram {
 
     @OneToMany('Section', 'educationProgram', { cascade: true })
     sections: Relation<Section[]>;
+
+    @OneToMany('KnowledgeBlock', 'educationProgram', { cascade: true })
+    knowledgeBlocks: Relation<KnowledgeBlock[]>;
 }

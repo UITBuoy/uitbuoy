@@ -26,6 +26,10 @@ import { LearningPathArgs } from '@/common/args/learningPath.arg';
 import { SubjectService } from '@/subject/services/subject.service';
 import { Subject } from '@/subject/entities/subject.entity';
 import { GiveLearningPathSubjectCodesResult } from '../dto/give-learning-path-subject-codes-result.dto';
+import {
+    ElectiveObjectArgs,
+    ElectiveSubjectsArgs,
+} from '@/common/args/electiveSubjects.arg';
 
 @Resolver(() => Course)
 export class CourseResolver {
@@ -37,6 +41,22 @@ export class CourseResolver {
         private readonly assignmentApiService: AssignmentApiService,
         private readonly subjectService: SubjectService,
     ) {}
+
+    @Query(() => [Subject], {
+        description: 'Return all elective subjects recommend for user',
+    })
+    @UseGuards(JwtAuthGuard)
+    async recommendElectiveSubject(
+        @CurrentUser() user: User,
+        @Args() queryArgs: QueryArgs,
+        @Args() electiveObjectArgs: ElectiveObjectArgs,
+    ) {
+        return this.courseService.recommendElectiveSubject(
+            user,
+            queryArgs,
+            electiveObjectArgs,
+        );
+    }
 
     @Query(() => [Subject], {
         description: 'Return all subjects recommend for user',
