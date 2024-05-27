@@ -9,6 +9,7 @@ import { SubjectConfiguration } from './configuration/subject.cofiguration';
 import { EducationProgram } from './entities/educationProgram.entity';
 import { Subject } from './entities/subject.entity';
 import { SubjectService } from './services/subject.service';
+import { Section } from './entities/section.entity';
 
 @Resolver(() => Subject)
 export class SubjectResolver {
@@ -29,6 +30,10 @@ export class SubjectResolver {
     ) {
         return this.subjecService.findSubjectInfo(code);
     }
+
+    @Query(() => [Section])
+    @UseGuards(JwtAuthGuard)
+    async sections(@CurrentUser() user: User) {}
 
     @ResolveField(() => [Subject])
     async requiredSubjects(@Parent() subject: Subject): Promise<Subject[]> {
