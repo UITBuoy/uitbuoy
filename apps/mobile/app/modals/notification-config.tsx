@@ -1,24 +1,21 @@
 import React, { useEffect } from 'react';
 import { ScrollView, Text, TextInput, View } from 'react-native';
-import VIBRATION_ICON from '../../assets/settings/vibration.png';
-import SOUND_ICON from '../../assets/settings/sound.png';
-import NOT_DISMISSIBLE_ICON from '../../assets/settings/not-dismissible.png';
 import DISMISSIBLE_ICON from '../../assets/settings/dismissible.png';
+import NOT_DISMISSIBLE_ICON from '../../assets/settings/not-dismissible.png';
 import NOTIFY_BEGIN_OF_DAY_ICON from '../../assets/settings/notify-begin-day.png';
-import { useNotificationConfig } from '../../src/stores/notification-config';
-import LargeIllustrationSelector from '../../src/components/LargeIllustrationSelector';
+import SOUND_ICON from '../../assets/settings/sound.png';
+import VIBRATION_ICON from '../../assets/settings/vibration.png';
 import HorizontalIllustrationSelector from '../../src/components/HorizontalIllustrationSelector';
+import LargeIllustrationSelector from '../../src/components/LargeIllustrationSelector';
+import { useNotificationConfig } from '../../src/stores/notification-config';
 
 export default function NotificationConfig() {
     const {
         isVibration,
-        setVibration,
         isDimissible,
-        setDismissible,
         isNotifyAtTheBeginingOfDay,
-        setIsNotifyAtTheBeginingOfDay,
         timeBefore,
-        setTimeBefore,
+        setNotitificationConfig,
     } = useNotificationConfig();
 
     useEffect(() => {}, []);
@@ -36,14 +33,18 @@ export default function NotificationConfig() {
                             title="Rung"
                             description="Rung khi có thông báo mới xuất hiện"
                             isSelected={isVibration}
-                            onPress={() => setVibration(true)}
+                            onPress={() =>
+                                setNotitificationConfig({ isVibration: true })
+                            }
                         />
                         <LargeIllustrationSelector
                             source={SOUND_ICON}
                             title="Âm thanh"
                             description="Bật chuông thông báo khi có thông báo mới xuất hiện"
                             isSelected={!isVibration}
-                            onPress={() => setVibration(false)}
+                            onPress={() =>
+                                setNotitificationConfig({ isVibration: false })
+                            }
                         />
                     </View>
                 </View>
@@ -62,14 +63,18 @@ export default function NotificationConfig() {
                             title="Không thể bỏ qua"
                             description="Đảm bảo mọi bài tập sẽ luôn được hoàn thành"
                             isSelected={!isDimissible}
-                            onPress={() => setDismissible(false)}
+                            onPress={() =>
+                                setNotitificationConfig({ isDimissible: false })
+                            }
                         />
                         <HorizontalIllustrationSelector
                             source={DISMISSIBLE_ICON}
                             title="Có thể bỏ qua"
                             description="Bạn có thể lướt để bỏ qua tin nhắn, điều này có thể khiến bạn vô tình bỏ lỡ hạn nộp bài"
                             isSelected={isDimissible}
-                            onPress={() => setDismissible(true)}
+                            onPress={() =>
+                                setNotitificationConfig({ isDimissible: true })
+                            }
                         />
                     </View>
                 </View>
@@ -88,9 +93,10 @@ export default function NotificationConfig() {
                             description="Đảm bảo mọi bài tập sẽ luôn được hoàn thành"
                             isSelected={isNotifyAtTheBeginingOfDay}
                             onPress={() =>
-                                setIsNotifyAtTheBeginingOfDay(
-                                    !isNotifyAtTheBeginingOfDay,
-                                )
+                                setNotitificationConfig({
+                                    isNotifyAtTheBeginingOfDay:
+                                        !isNotifyAtTheBeginingOfDay,
+                                })
                             }
                         />
                     </View>
@@ -117,15 +123,14 @@ export default function NotificationConfig() {
                                 className=" rounded-2xl text-center text-2xl font-semibold"
                                 value={timeBefore.toString()}
                                 onChangeText={(text) =>
-                                    setTimeBefore(parseInt(text || '0', 10))
+                                    setNotitificationConfig({
+                                        timeBefore: parseInt(text || '0', 10),
+                                    })
                                 }
                                 keyboardType={'numeric'}
                             />
                             <Text className=" mt-1 font-light">ngày</Text>
                         </View>
-                        {/* <Text className=" mt-1 font-light">
-                            trước khi đến hạn nộp bài
-                        </Text> */}
                     </View>
                 </View>
                 <View className=" h-10" style={{ height: 80 }} />

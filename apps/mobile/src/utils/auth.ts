@@ -28,7 +28,7 @@ export function useApolloLink() {
 
     useEffect(() => {
         try {
-            const decodedAccessToken = jwtDecode(authData?.access_token);
+            const decodedAccessToken = jwtDecode(authData?.refresh_token);
             const now = new Date().getTime() / 1000;
 
             if (decodedAccessToken.exp <= now) {
@@ -88,11 +88,13 @@ export function useApolloLink() {
                     const token = await refreshClient.mutate({
                         mutation: REFRESH_TOKEN,
                     });
+                    const accessToken = token.data.refreshToken.access_token;
+                    refreshAccessToken(accessToken);
                     return {
                         ok: true,
                         status: 200,
                         statusText: 'OK',
-                        text: async () => token.data.access_token,
+                        text: async () => token.data.refreshToken.access_token,
                     } as unknown as Response;
                 },
                 handleFetch: (accessToken) => {

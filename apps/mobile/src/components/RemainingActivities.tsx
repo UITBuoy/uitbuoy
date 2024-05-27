@@ -1,119 +1,92 @@
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Text, TouchableNativeFeedback, View } from 'react-native';
 import Animated, { FadeInLeft, FadeOutLeft } from 'react-native-reanimated';
 import EMPTY_REMAINING_ACTIVITIES from '../../assets/empty-remaining-activities.png';
 import REFRESH_ICON from '../../assets/white-refresh.png';
-import { useUserEventsQuery } from '../gql/graphql';
 import EventListSkeleton from '../skeletons/EventListSkeleton';
+import { useEvents } from '../stores/event.store';
 import { timeDiff } from '../utils/timeDiff';
 import NativeButton from './NativeButton/NativeButton';
+import NOTE_TEXT from '../../assets/note-text.png';
+import HeaderButton from './HeaderButton';
 
 export default function RemainingActivities() {
-    const { data, loading, error, refetch } = useUserEventsQuery();
-    const [isLoading, setIsLoading] = useState(false);
-
-    useEffect(() => {
-        refetch({ isNew: true });
-    }, []);
+    const { events, refetch, loading } = useEvents();
 
     return (
         <View className=" flex mt-0">
-            <View className=" mx-4 flex-row justify-between items-center">
-                <Text className=" text-base font-semibold">
-                    Các bài tập sắp đến hạn
-                </Text>
-                <NativeButton
-                    onPress={async () => {
-                        setIsLoading(true);
-                        await refetch({ isNew: true });
-                        setIsLoading(false);
-                    }}
-                >
-                    <View className=" flex-row gap-2 p-2 px-3 bg-primary-70 ">
-                        <Image
-                            style={{ width: 20, height: 20 }}
-                            source={REFRESH_ICON}
-                        />
-                        <Text className=" text-white text-sm font-medium">
-                            Reload
-                        </Text>
-                    </View>
-                </NativeButton>
-            </View>
-            <View className=" flex py-5">
-                {loading || isLoading ? (
+            <HeaderButton
+                icon={NOTE_TEXT}
+                title="Các bài tập sắp đến hạn"
+                subTitle="Danh sách các bài tập trong tất cả các lớp ở học kỳ này"
+            />
+            <View className=" flex py-0">
+                {loading ? (
                     <EventListSkeleton />
                 ) : (
-                    data?.userEvents.map(
-                        ({ id, activityname, timestart, course }, i) => (
-                            <Animated.View
-                                key={id}
-                                entering={FadeInLeft.delay((i + 1) * 100)}
-                                exiting={FadeOutLeft}
-                                className=" flex"
+                    events.map(({ id, activityname, timestart, course }, i) => (
+                        <Animated.View
+                            key={id}
+                            entering={FadeInLeft.delay((i + 1) * 100)}
+                            exiting={FadeOutLeft}
+                            className=" flex"
+                        >
+                            <TouchableNativeFeedback
+                                onPress={() => {
+                                    router.push({
+                                        pathname: '/modals/detail-activity',
+                                        params: {
+                                            id,
+                                            assignment_id: events[i].instance,
+                                            course_id: events[i].course.id,
+                                        },
+                                    });
+                                }}
                             >
-                                <TouchableNativeFeedback
-                                    onPress={() => {
-                                        router.push({
-                                            pathname: '/modals/detail-activity',
-                                            params: {
-                                                id,
-                                                assignment_id:
-                                                    data.userEvents[i].instance,
-                                                course_id:
-                                                    data.userEvents[i].course
-                                                        .id,
-                                            },
-                                        });
-                                    }}
+                                <View
+                                    style={{ borderColor: '#CFCFCF' }}
+                                    className=" flex px-4 py-4 border-[0.5px]"
                                 >
-                                    <View
-                                        style={{ borderColor: '#CFCFCF' }}
-                                        className=" flex px-4 py-4 border-[0.5px]"
-                                    >
-                                        <View className=" flex flex-col justify-between items-start gap-4">
-                                            <View className=" flex flex-row gap-2">
-                                                <Text
-                                                    className={` px-3 py-1 flex justify-center items-center rounded-lg bg-primary-70 text-white text-center font-medium text-sm`}
-                                                >
-                                                    {
-                                                        -timeDiff(
-                                                            new Date(
-                                                                timestart *
-                                                                    1000,
-                                                            ),
-                                                        ).time
-                                                    }{' '}
-                                                    {
-                                                        timeDiff(
-                                                            new Date(
-                                                                timestart *
-                                                                    1000,
-                                                            ),
-                                                        ).type
-                                                    }
-                                                </Text>
-                                            </View>
-                                            <View className=" flex flex-col gap-1">
-                                                <Text className=" text-sm text-zinc-500">
-                                                    {course.fullname
-                                                        .split(' - ')
-                                                        .at(0)}
-                                                </Text>
-                                                <Text className=" text-lg font-medium">
-                                                    {activityname}
-                                                </Text>
-                                            </View>
+                                    <View className=" flex flex-col justify-between items-start gap-4">
+                                        <View className=" flex flex-row gap-2">
+                                            <Text
+                                                className={` px-3 py-1 flex justify-center items-center rounded-lg bg-primary-70 text-white text-center font-medium text-sm`}
+                                            >
+                                                {
+                                                    -timeDiff(
+                                                        new Date(
+                                                            timestart * 1000,
+                                                        ),
+                                                    ).time
+                                                }{' '}
+                                                {
+                                                    timeDiff(
+                                                        new Date(
+                                                            timestart * 1000,
+                                                        ),
+                                                    ).type
+                                                }
+                                            </Text>
+                                        </View>
+                                        <View className=" flex flex-col gap-1">
+                                            <Text className=" text-sm text-zinc-500">
+                                                {course.fullname
+                                                    .split(' - ')
+                                                    .at(0)}
+                                            </Text>
+                                            <Text className=" text-lg font-medium">
+                                                {activityname}
+                                            </Text>
                                         </View>
                                     </View>
-                                </TouchableNativeFeedback>
-                            </Animated.View>
-                        ),
-                    )
+                                </View>
+                            </TouchableNativeFeedback>
+                        </Animated.View>
+                    ))
                 )}
-                {data?.userEvents.length === 0 && !loading ? (
+                {events.length === 0 && !loading ? (
                     <Image
                         style={{
                             flex: 1,

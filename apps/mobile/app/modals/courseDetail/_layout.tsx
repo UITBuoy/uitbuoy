@@ -1,7 +1,13 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useGlobalSearchParams, useNavigation } from 'expo-router';
-import { useEffect } from 'react';
-import { Animated, ScrollView, TouchableOpacity, View } from 'react-native';
+import { useEffect, useRef } from 'react';
+import {
+    Animated,
+    FlatList,
+    ScrollView,
+    TouchableOpacity,
+    View,
+} from 'react-native';
 import ActitivitiesPage from './activities';
 import GeneralPage from './general';
 import NoticePage from './notice';
@@ -60,92 +66,106 @@ export default function Layout() {
 }
 
 function MyTabBar({ state, descriptors, navigation, position }) {
+    const flatListRef = useRef<FlatList>(null);
+
+    useEffect(() => {
+        if (flatListRef.current) {
+            flatListRef.current.scrollToIndex({
+                index: state.index,
+                animated: true,
+                viewPosition: 0.5,
+            });
+        }
+    }, [state.index]);
     return (
-        <View>
-            <ScrollView horizontal>
-                <View className=" flex flex-row bg-[#039CCA] pt-6 pb-3 px-4 rounded-b-2xl">
-                    {state.routes.map((route, index) => {
-                        const { options } = descriptors[route.key];
-                        const label =
-                            options.tabBarLabel !== undefined
-                                ? options.tabBarLabel
-                                : options.title !== undefined
-                                  ? options.title
-                                  : route.name;
+        <View className=" flex flex-row bg-[#039CCA] pt-2 pb-3 px-4 rounded-b-2xl">
+            <FlatList
+                ref={flatListRef}
+                data={state.routes}
+                keyExtractor={(item, index) => index.toString()}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                renderItem={({ item: route, index }) => {
+                    const { options } = descriptors[route.key];
+                    const label =
+                        options.tabBarLabel !== undefined
+                            ? options.tabBarLabel
+                            : options.title !== undefined
+                              ? options.title
+                              : route.name;
 
-                        const isFocused = state.index === index;
+                    const isFocused = state.index === index;
 
-                        const onPress = () => {
-                            const event = navigation.emit({
-                                type: 'tabPress',
-                                target: route.key,
-                                canPreventDefault: true,
-                            });
+                    const onPress = () => {
+                        const event = navigation.emit({
+                            type: 'tabPress',
+                            target: route.key,
+                            canPreventDefault: true,
+                        });
 
-                            if (!isFocused && !event.defaultPrevented) {
-                                navigation.navigate(route.name, route.params);
+                        if (!isFocused && !event.defaultPrevented) {
+                            navigation.navigate(route.name, route.params);
+                        }
+                    };
+
+                    const onLongPress = () => {
+                        navigation.emit({
+                            type: 'tabLongPress',
+                            target: route.key,
+                        });
+                    };
+
+                    const inputRange = state.routes.map((_, i) => i);
+                    const opacity = position.interpolate({
+                        inputRange,
+                        outputRange: inputRange.map((i) =>
+                            i === index ? 1 : 0.7,
+                        ),
+                    });
+
+                    const backgroundColor = position.interpolate({
+                        inputRange,
+                        outputRange: inputRange.map((i) =>
+                            i === index ? '#ffffff44' : '#ffffff00',
+                        ),
+                    });
+
+                    return (
+                        <TouchableOpacity
+                            key={label}
+                            activeOpacity={0.5}
+                            accessibilityRole="button"
+                            accessibilityState={
+                                isFocused ? { selected: true } : {}
                             }
-                        };
-
-                        const onLongPress = () => {
-                            navigation.emit({
-                                type: 'tabLongPress',
-                                target: route.key,
-                            });
-                        };
-
-                        const inputRange = state.routes.map((_, i) => i);
-                        const opacity = position.interpolate({
-                            inputRange,
-                            outputRange: inputRange.map((i) =>
-                                i === index ? 1 : 0.7,
-                            ),
-                        });
-
-                        const backgroundColor = position.interpolate({
-                            inputRange,
-                            outputRange: inputRange.map((i) =>
-                                i === index ? '#ffffff44' : '#ffffff00',
-                            ),
-                        });
-
-                        return (
-                            <TouchableOpacity
-                                key={label}
-                                activeOpacity={0.5}
-                                accessibilityRole="button"
-                                accessibilityState={
-                                    isFocused ? { selected: true } : {}
-                                }
-                                accessibilityLabel={
-                                    options.tabBarAccessibilityLabel
-                                }
-                                testID={options.tabBarTestID}
-                                onPress={onPress}
-                                onLongPress={onLongPress}
+                            accessibilityLabel={
+                                options.tabBarAccessibilityLabel
+                            }
+                            testID={options.tabBarTestID}
+                            onPress={onPress}
+                            onLongPress={onLongPress}
+                            style={{
+                                backgroundColor,
+                                flex: 1,
+                                paddingVertical: 8,
+                                paddingHorizontal: 16,
+                                borderRadius: 14,
+                            }}
+                        >
+                            <Animated.Text
                                 style={{
-                                    backgroundColor,
-                                    flex: 1,
-                                    paddingVertical: 8,
-                                    paddingHorizontal: 25,
-                                    borderRadius: 14,
+                                    textAlign: 'center',
+                                    opacity,
+                                    color: 'white',
+                                    fontWeight: '500',
                                 }}
                             >
-                                <Animated.Text
-                                    style={{
-                                        textAlign: 'center',
-                                        opacity,
-                                        color: 'white',
-                                        fontWeight: '500',
-                                    }}
-                                >
-                                    {label}
-                                </Animated.Text>
-                            </TouchableOpacity>
-                        );
-                    })}
-                </View>
-            </ScrollView>
+                                {label}
+                            </Animated.Text>
+                        </TouchableOpacity>
+                    );
+                }}
+            />
         </View>
     );
 }

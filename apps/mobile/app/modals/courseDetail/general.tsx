@@ -38,7 +38,10 @@ export default function GeneralPage({ id }: Props) {
                 <RefreshControl
                     refreshing={loading}
                     onRefresh={() => {
-                        refetch({ variables: { id }, fetchPolicy: 'no-cache' });
+                        refetch({
+                            variables: { id },
+                            fetchPolicy: 'network-only',
+                        });
                     }}
                 />
             }

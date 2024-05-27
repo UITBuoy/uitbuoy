@@ -1,0 +1,7 @@
+mutation UploadNotificationConfig($beforeDay: Float, $token: String!) {
+    uploadNotificationConfig(config: { beforeDay: $beforeDay, token: $token }) {
+        beforeDay
+        lastNotificationDate
+        token
+    }
+}

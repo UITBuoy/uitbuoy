@@ -1,7 +1,7 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, useRootNavigationState } from 'expo-router';
 import LottieView from 'lottie-react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     RefreshControl,
     ScrollView,
@@ -12,54 +12,52 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MANAGE_COURSE_ANIMATION from '../../assets/animations/new-features/manage-courses.json';
 import CourseSearch from '../../src/components/CourseSearch/CourseSearch';
-import PageHeader from '../../src/components/PageHeader/PageHeader';
+import PageHeader from '../../src/components/PageHeader';
 import PreviewMakeupClass from '../../src/components/PreviewMakeupClass';
 import RemainingActivities from '../../src/components/RemainingActivities';
 import SyncCalendar from '../../src/components/SyncCalendar';
-import {
-    useUserEventsLazyQuery,
-    useUserMakeUpClassLazyQuery,
-} from '../../src/gql/graphql';
-import { useUpdateEventNotification } from '../../src/hooks/notifications/useUpdateEventNotification';
-import { useAuth } from '../../src/stores/auth.store';
 import { useSyncEvent } from '../../src/hooks/events/useSyncEvent';
+import { useAuth } from '../../src/stores/auth.store';
+import { useEvents } from '../../src/stores/event.store';
+import { useMakeupClass } from '../../src/stores/makeup-class.store';
+import { useMount } from '../../src/hooks/common/useMount';
 
 export default function Page() {
+    const isMount = useMount();
     const { isLogin } = useAuth();
 
-    const [
-        refetchUserEvents,
-        { data: userEvents, loading: userEventsLoading },
-    ] = useUserEventsLazyQuery();
-    const [refetchUserMakeupClasses, { loading: userMakeupClassesLoading }] =
-        useUserMakeUpClassLazyQuery();
-
-    useUpdateEventNotification(userEvents?.userEvents);
+    const {
+        events,
+        loading: eventsLoading,
+        refetch: refetchEvents,
+    } = useEvents();
+    const {
+        classes,
+        loading: makeupClassesLoading,
+        refetch: refetchMakeupClasses,
+    } = useMakeupClass();
 
     const { syncEvent } = useSyncEvent();
 
     function refetch() {
-        refetchUserEvents({
+        refetchEvents({
             variables: { isNew: true },
-            fetchPolicy: 'no-cache',
+            fetchPolicy: 'network-only',
         });
-        refetchUserMakeupClasses({
-            fetchPolicy: 'no-cache',
+        refetchMakeupClasses({
+            fetchPolicy: 'network-only',
         });
     }
 
-    const rootNavigationState = useRootNavigationState();
-
     useEffect(() => {
-        refetch();
-        if (!isLogin && rootNavigationState?.key) {
+        if (!isLogin && isMount) {
             router.replace('/modals/login');
         }
-    }, []);
+    }, [isMount]);
 
     useEffect(() => {
-        if (userEvents?.userEvents) syncEvent();
-    }, [JSON.stringify(userEvents)]);
+        if (events) syncEvent();
+    }, [JSON.stringify(events)]);
 
     return (
         <View className=" flex-1 bg-white">
@@ -70,9 +68,7 @@ export default function Page() {
                     className=" flex-1 flex-col gap-10"
                     refreshControl={
                         <RefreshControl
-                            refreshing={
-                                userEventsLoading || userMakeupClassesLoading
-                            }
+                            refreshing={eventsLoading || makeupClassesLoading}
                             onRefresh={() => {
                                 refetch();
                             }}
@@ -85,7 +81,7 @@ export default function Page() {
                         <View className=" flex flex-col gap-2">
                             <PreviewMakeupClass />
                         </View>
-                        <View className=" mt-10 flex flex-col gap-2">
+                        <View className=" mt-10 flex flex-col gap-0">
                             <RemainingActivities />
                             <SyncCalendar />
                         </View>

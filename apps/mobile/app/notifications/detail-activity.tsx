@@ -125,7 +125,7 @@ export default function DetailActivityNotification() {
                             <RefreshControl
                                 refreshing={loading}
                                 onRefresh={() =>
-                                    refetch({ fetchPolicy: 'no-cache' })
+                                    refetch({ fetchPolicy: 'network-only'})
                                 }
                             />
                         }

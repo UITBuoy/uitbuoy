@@ -21,13 +21,13 @@ export type Scalars = {
 export type Assignment = {
   __typename?: 'Assignment';
   /** Start date of the assignment (Must multiply by 1000 to convert to date) */
-  allowsubmissionsfromdate?: Maybe<Scalars['Int']['output']>;
+  allowsubmissionsfromdate?: Maybe<Scalars['Float']['output']>;
   /** Used this id to find in course/assignment */
   cmid?: Maybe<Scalars['Int']['output']>;
   /** Course detail information */
   course?: Maybe<Scalars['Int']['output']>;
   /** Deadline of the assignment (Must multiply by 1000 to convert to date) */
-  duedate?: Maybe<Scalars['Int']['output']>;
+  duedate?: Maybe<Scalars['Float']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
   /** Description about the assignment */
   intro?: Maybe<Scalars['String']['output']>;
@@ -38,7 +38,7 @@ export type Assignment = {
   /** Title of the assignment */
   name?: Maybe<Scalars['String']['output']>;
   /** Modified time (Must multiply by 1000 to convert to date) */
-  timemodified?: Maybe<Scalars['Int']['output']>;
+  timemodified?: Maybe<Scalars['Float']['output']>;
 };
 
 export type AuthEntity = {
@@ -383,14 +383,21 @@ export type Mutation = {
   /** Add new event reminder */
   addEventReminder: EventReminder;
   addGoogleUser: GoogleUser;
+  /** Crawl data for serving news feed */
+  crawlAllNewsFeed: Scalars['Boolean']['output'];
+  crawlMakeupClass: Scalars['Boolean']['output'];
   createNote: NoteEntity;
+  /** Crawl the most recent news */
+  dailyCrawlNewsFeed: Scalars['Boolean']['output'];
   findAllEventByCourseIds: Array<Calendar>;
   login: AuthEntity;
+  notifyEvents: Scalars['Boolean']['output'];
   refreshToken: AuthEntity;
   removeNote: Scalars['String']['output'];
+  removeNotificationPushToken: Scalars['Boolean']['output'];
   syncEvents: Array<GoogleCalendarEvent>;
-  updateMakeupClass: Scalars['Boolean']['output'];
   updateNote: Scalars['String']['output'];
+  uploadNotificationConfig: NotificationDevice;
 };
 
 
@@ -403,6 +410,18 @@ export type MutationAddEventReminderArgs = {
 export type MutationAddGoogleUserArgs = {
   accessToken: Scalars['String']['input'];
   googleUser: CreateGoogleUserInput;
+};
+
+
+export type MutationCrawlAllNewsFeedArgs = {
+  pageNum?: InputMaybe<Scalars['Int']['input']>;
+  startPage?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type MutationCrawlMakeupClassArgs = {
+  pageNum?: InputMaybe<Scalars['Int']['input']>;
+  startPage?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -427,19 +446,50 @@ export type MutationRemoveNoteArgs = {
 };
 
 
+export type MutationRemoveNotificationPushTokenArgs = {
+  token: Scalars['String']['input'];
+};
+
+
 export type MutationSyncEventsArgs = {
   accessToken: Scalars['String']['input'];
   googleUserId: Scalars['String']['input'];
 };
 
 
-export type MutationUpdateMakeupClassArgs = {
-  max_page?: InputMaybe<Scalars['Int']['input']>;
+export type MutationUpdateNoteArgs = {
+  updateNoteInput: UpdateNoteInput;
 };
 
 
-export type MutationUpdateNoteArgs = {
-  updateNoteInput: UpdateNoteInput;
+export type MutationUploadNotificationConfigArgs = {
+  config: UpdatedNotificationDevice;
+};
+
+export type NewsFeed = {
+  __typename?: 'NewsFeed';
+  date: Scalars['Float']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  files: Array<NewsFeedFile>;
+  htmlContent: Scalars['String']['output'];
+  imageUrl?: Maybe<Scalars['String']['output']>;
+  link: Scalars['String']['output'];
+  plainContent: Scalars['String']['output'];
+  tags: Array<NewsFeedTag>;
+  title: Scalars['String']['output'];
+  view?: Maybe<Scalars['Int']['output']>;
+};
+
+export type NewsFeedFile = {
+  __typename?: 'NewsFeedFile';
+  title?: Maybe<Scalars['String']['output']>;
+  url: Scalars['String']['output'];
+};
+
+export type NewsFeedTag = {
+  __typename?: 'NewsFeedTag';
+  description?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
 };
 
 export type NoteEntity = {
@@ -451,13 +501,30 @@ export type NoteEntity = {
   user: User;
 };
 
+export type NotificationDevice = {
+  __typename?: 'NotificationDevice';
+  /** How many days should we notify the user before the event? */
+  beforeDay?: Maybe<Scalars['Float']['output']>;
+  /** Date of the last notification */
+  lastNotificationDate?: Maybe<Scalars['Float']['output']>;
+  /** Push token */
+  token: Scalars['String']['output'];
+};
+
 export type Query = {
   __typename?: 'Query';
+  /** All assignments of current user */
+  assignments: Array<Assignment>;
   /** Get detail information about a specific course */
   course: Course;
   findAll: Array<Subject>;
+  findAllEducationProgram: Array<Subject>;
   findOne: Array<Subject>;
   makeUpClass: Array<MakeUpClass>;
+  /** Retrieving news feed item */
+  newsFeed: Array<NewsFeed>;
+  /** Retrieving news feed detail with title */
+  newsFeedDetail: NewsFeed;
   note: Array<NoteEntity>;
   profile: User;
   /** Return all course of current user */
@@ -480,6 +547,11 @@ export type QueryFindAllArgs = {
 };
 
 
+export type QueryFindAllEducationProgramArgs = {
+  major: Scalars['String']['input'];
+};
+
+
 export type QueryFindOneArgs = {
   code: Scalars['String']['input'];
 };
@@ -491,6 +563,18 @@ export type QueryMakeUpClassArgs = {
   inComing?: InputMaybe<Scalars['Boolean']['input']>;
   month?: InputMaybe<Scalars['Float']['input']>;
   year?: InputMaybe<Scalars['Float']['input']>;
+};
+
+
+export type QueryNewsFeedArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  tags?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+
+export type QueryNewsFeedDetailArgs = {
+  title: Scalars['String']['input'];
 };
 
 
@@ -535,6 +619,13 @@ export type UpdateNoteInput = {
   event_id?: InputMaybe<Scalars['Int']['input']>;
   id: Scalars['String']['input'];
   title?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdatedNotificationDevice = {
+  /** How many days should we notify the user before the event? */
+  beforeDay?: InputMaybe<Scalars['Float']['input']>;
+  /** Push token */
+  token: Scalars['String']['input'];
 };
 
 export type User = {
@@ -590,6 +681,14 @@ export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', auth?: string | null, city?: string | null, confirmed?: string | null, country?: string | null, department?: string | null, email: string, firstaccess?: number | null, fullname: string, id?: number | null, isIntegrateWithGoogle?: boolean | null, lang?: string | null, lastaccess?: number | null, mailformat?: string | null, profileimageurl?: string | null, profileimageurlsmall?: string | null, suspended?: string | null, theme?: string | null, timezone?: string | null, token: string, username: string } };
 
+export type UploadNotificationConfigMutationVariables = Exact<{
+  beforeDay?: InputMaybe<Scalars['Float']['input']>;
+  token: Scalars['String']['input'];
+}>;
+
+
+export type UploadNotificationConfigMutation = { __typename?: 'Mutation', uploadNotificationConfig: { __typename?: 'NotificationDevice', beforeDay?: number | null, lastNotificationDate?: number | null, token: string } };
+
 export type DetailAssignmentCourseQueryVariables = Exact<{
   id: Scalars['Int']['input'];
   assignment_id: Scalars['Int']['input'];
@@ -608,6 +707,7 @@ export type GeneralDetailCourseQuery = { __typename?: 'Query', course: { __typen
 export type SearchCoursesQueryVariables = Exact<{
   isNew?: InputMaybe<Scalars['Boolean']['input']>;
   keyword?: InputMaybe<Scalars['String']['input']>;
+  isRecent?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
@@ -628,6 +728,22 @@ export type UserEventsQueryVariables = Exact<{
 
 
 export type UserEventsQuery = { __typename?: 'Query', userEvents: Array<{ __typename?: 'EventEntity', activityname?: string | null, purpose?: string | null, overdue?: boolean | null, timeduration?: number | null, timeusermidnight?: number | null, timestart?: number | null, timesort?: number | null, timemodified?: number | null, name: string, id: number, instance?: number | null, course: { __typename?: 'Course', categoryid?: number | null, categoryname?: string | null, coursecategory?: string | null, courseimage?: string | null, display_name?: string | null, enddate?: number | null, fullname?: string | null, hiddenbynumsections?: number | null, id?: number | null, idnumber?: string | null, name?: string | null, pdfexportfont?: string | null, section?: number | null, shortname?: string | null, showactivitydates?: boolean | null, showcompletionconditions?: string | null, sortorder?: number | null, startdate?: number | null, uservisible?: boolean | null, viewurl?: string | null, visible?: boolean | null } }> };
+
+export type NewsFeedDetailQueryVariables = Exact<{
+  title: Scalars['String']['input'];
+}>;
+
+
+export type NewsFeedDetailQuery = { __typename?: 'Query', newsFeedDetail: { __typename?: 'NewsFeed', date: number, description?: string | null, htmlContent: string, imageUrl?: string | null, link: string, plainContent: string, title: string, view?: number | null, tags: Array<{ __typename?: 'NewsFeedTag', description?: string | null, name: string }>, files: Array<{ __typename?: 'NewsFeedFile', title?: string | null, url: string }> } };
+
+export type GeneralNewsFeedQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  tags?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+}>;
+
+
+export type GeneralNewsFeedQuery = { __typename?: 'Query', newsFeed: Array<{ __typename?: 'NewsFeed', date: number, description?: string | null, htmlContent: string, imageUrl?: string | null, link: string, plainContent: string, title: string, view?: number | null, tags: Array<{ __typename?: 'NewsFeedTag', description?: string | null, name: string }>, files: Array<{ __typename?: 'NewsFeedFile', title?: string | null, url: string }> }> };
 
 export type SyncEventMutationVariables = Exact<{
   accessToken: Scalars['String']['input'];
@@ -805,6 +921,42 @@ export type ProfileQueryResult = Apollo.QueryResult<ProfileQuery, ProfileQueryVa
 export function refetchProfileQuery(variables?: ProfileQueryVariables) {
       return { query: ProfileDocument, variables: variables }
     }
+export const UploadNotificationConfigDocument = gql`
+    mutation UploadNotificationConfig($beforeDay: Float, $token: String!) {
+  uploadNotificationConfig(config: {beforeDay: $beforeDay, token: $token}) {
+    beforeDay
+    lastNotificationDate
+    token
+  }
+}
+    `;
+export type UploadNotificationConfigMutationFn = Apollo.MutationFunction<UploadNotificationConfigMutation, UploadNotificationConfigMutationVariables>;
+
+/**
+ * __useUploadNotificationConfigMutation__
+ *
+ * To run a mutation, you first call `useUploadNotificationConfigMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUploadNotificationConfigMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [uploadNotificationConfigMutation, { data, loading, error }] = useUploadNotificationConfigMutation({
+ *   variables: {
+ *      beforeDay: // value for 'beforeDay'
+ *      token: // value for 'token'
+ *   },
+ * });
+ */
+export function useUploadNotificationConfigMutation(baseOptions?: Apollo.MutationHookOptions<UploadNotificationConfigMutation, UploadNotificationConfigMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UploadNotificationConfigMutation, UploadNotificationConfigMutationVariables>(UploadNotificationConfigDocument, options);
+      }
+export type UploadNotificationConfigMutationHookResult = ReturnType<typeof useUploadNotificationConfigMutation>;
+export type UploadNotificationConfigMutationResult = Apollo.MutationResult<UploadNotificationConfigMutation>;
+export type UploadNotificationConfigMutationOptions = Apollo.BaseMutationOptions<UploadNotificationConfigMutation, UploadNotificationConfigMutationVariables>;
 export const DetailAssignmentCourseDocument = gql`
     query DetailAssignmentCourse($id: Int!, $assignment_id: Int!) {
   assignmentCourse: course(course_id: $id) {
@@ -990,8 +1142,8 @@ export function refetchGeneralDetailCourseQuery(variables: GeneralDetailCourseQu
       return { query: GeneralDetailCourseDocument, variables: variables }
     }
 export const SearchCoursesDocument = gql`
-    query SearchCourses($isNew: Boolean, $keyword: String) {
-  userCourses(isNew: $isNew, isRecent: false, keyword: $keyword) {
+    query SearchCourses($isNew: Boolean, $keyword: String, $isRecent: Boolean) {
+  userCourses(isNew: $isNew, keyword: $keyword, isRecent: $isRecent) {
     coursecategory
     display_name
     enddate
@@ -1016,6 +1168,7 @@ export const SearchCoursesDocument = gql`
  *   variables: {
  *      isNew: // value for 'isNew'
  *      keyword: // value for 'keyword'
+ *      isRecent: // value for 'isRecent'
  *   },
  * });
  */
@@ -1169,6 +1322,124 @@ export type UserEventsSuspenseQueryHookResult = ReturnType<typeof useUserEventsS
 export type UserEventsQueryResult = Apollo.QueryResult<UserEventsQuery, UserEventsQueryVariables>;
 export function refetchUserEventsQuery(variables?: UserEventsQueryVariables) {
       return { query: UserEventsDocument, variables: variables }
+    }
+export const NewsFeedDetailDocument = gql`
+    query NewsFeedDetail($title: String!) {
+  newsFeedDetail(title: $title) {
+    date
+    description
+    htmlContent
+    imageUrl
+    link
+    plainContent
+    title
+    view
+    tags {
+      description
+      name
+    }
+    files {
+      title
+      url
+    }
+  }
+}
+    `;
+
+/**
+ * __useNewsFeedDetailQuery__
+ *
+ * To run a query within a React component, call `useNewsFeedDetailQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNewsFeedDetailQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNewsFeedDetailQuery({
+ *   variables: {
+ *      title: // value for 'title'
+ *   },
+ * });
+ */
+export function useNewsFeedDetailQuery(baseOptions: Apollo.QueryHookOptions<NewsFeedDetailQuery, NewsFeedDetailQueryVariables> & ({ variables: NewsFeedDetailQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<NewsFeedDetailQuery, NewsFeedDetailQueryVariables>(NewsFeedDetailDocument, options);
+      }
+export function useNewsFeedDetailLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NewsFeedDetailQuery, NewsFeedDetailQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<NewsFeedDetailQuery, NewsFeedDetailQueryVariables>(NewsFeedDetailDocument, options);
+        }
+export function useNewsFeedDetailSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<NewsFeedDetailQuery, NewsFeedDetailQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<NewsFeedDetailQuery, NewsFeedDetailQueryVariables>(NewsFeedDetailDocument, options);
+        }
+export type NewsFeedDetailQueryHookResult = ReturnType<typeof useNewsFeedDetailQuery>;
+export type NewsFeedDetailLazyQueryHookResult = ReturnType<typeof useNewsFeedDetailLazyQuery>;
+export type NewsFeedDetailSuspenseQueryHookResult = ReturnType<typeof useNewsFeedDetailSuspenseQuery>;
+export type NewsFeedDetailQueryResult = Apollo.QueryResult<NewsFeedDetailQuery, NewsFeedDetailQueryVariables>;
+export function refetchNewsFeedDetailQuery(variables: NewsFeedDetailQueryVariables) {
+      return { query: NewsFeedDetailDocument, variables: variables }
+    }
+export const GeneralNewsFeedDocument = gql`
+    query GeneralNewsFeed($limit: Int, $skip: Int, $tags: [String!]) {
+  newsFeed(limit: $limit, skip: $skip, tags: $tags) {
+    date
+    description
+    htmlContent
+    imageUrl
+    link
+    plainContent
+    title
+    view
+    tags {
+      description
+      name
+    }
+    files {
+      title
+      url
+    }
+  }
+}
+    `;
+
+/**
+ * __useGeneralNewsFeedQuery__
+ *
+ * To run a query within a React component, call `useGeneralNewsFeedQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGeneralNewsFeedQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGeneralNewsFeedQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      skip: // value for 'skip'
+ *      tags: // value for 'tags'
+ *   },
+ * });
+ */
+export function useGeneralNewsFeedQuery(baseOptions?: Apollo.QueryHookOptions<GeneralNewsFeedQuery, GeneralNewsFeedQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GeneralNewsFeedQuery, GeneralNewsFeedQueryVariables>(GeneralNewsFeedDocument, options);
+      }
+export function useGeneralNewsFeedLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GeneralNewsFeedQuery, GeneralNewsFeedQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GeneralNewsFeedQuery, GeneralNewsFeedQueryVariables>(GeneralNewsFeedDocument, options);
+        }
+export function useGeneralNewsFeedSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GeneralNewsFeedQuery, GeneralNewsFeedQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GeneralNewsFeedQuery, GeneralNewsFeedQueryVariables>(GeneralNewsFeedDocument, options);
+        }
+export type GeneralNewsFeedQueryHookResult = ReturnType<typeof useGeneralNewsFeedQuery>;
+export type GeneralNewsFeedLazyQueryHookResult = ReturnType<typeof useGeneralNewsFeedLazyQuery>;
+export type GeneralNewsFeedSuspenseQueryHookResult = ReturnType<typeof useGeneralNewsFeedSuspenseQuery>;
+export type GeneralNewsFeedQueryResult = Apollo.QueryResult<GeneralNewsFeedQuery, GeneralNewsFeedQueryVariables>;
+export function refetchGeneralNewsFeedQuery(variables?: GeneralNewsFeedQueryVariables) {
+      return { query: GeneralNewsFeedDocument, variables: variables }
     }
 export const SyncEventDocument = gql`
     mutation SyncEvent($accessToken: String!, $googleUserId: String!) {

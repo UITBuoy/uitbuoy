@@ -121,8 +121,52 @@ export class CourseResolver {
 
     @Query(() => [Course], { description: 'Return all course of current user' })
     @UseGuards(JwtAuthGuard)
+    // async userCourses(@CurrentUser() user: User, @Args() queryArgs: QueryArgs) {
+    //     return this.courseService.userCourses(user, queryArgs);
+    // }
     async userCourses(@CurrentUser() user: User, @Args() queryArgs: QueryArgs) {
-        return this.courseService.userCourses(user, queryArgs);
+        if (queryArgs.isNew) {
+            const apiCourses = (
+                await this.courseApiService.findAllCoursesOfUser({
+                    ...user,
+                    ...queryArgs,
+                })
+            ).map((course) => ({ ...course, users: [user] }));
+            await this.courseService.save(apiCourses);
+
+            return (
+                queryArgs.isRecent
+                    ? apiCourses.filter(
+                          ({ startdate }) =>
+                              moment().diff(
+                                  moment(new Date(startdate * 1000)),
+                                  'months',
+                                  true,
+                              ) < 5,
+                      )
+                    : apiCourses
+            ).map((course) => ({
+                ...course,
+                display_name: course.fullname.split(' - ').at(0),
+            }));
+        }
+
+        const courses = await this.courseService.findAllCoursesOfUser(
+            user,
+            queryArgs,
+        );
+
+        if (queryArgs.isRecent) {
+            return courses.filter(
+                ({ startdate }) =>
+                    moment().diff(
+                        moment(new Date(startdate * 1000)),
+                        'months',
+                        true,
+                    ) < 5,
+            );
+        }
+        return courses;
     }
 
     @Query(() => Course, {
@@ -146,6 +190,7 @@ export class CourseResolver {
                 apiCourse.contacts.map((contact) => contact.id),
             );
             await this.courseService.save(apiCourse);
+            apiCourse.display_name = apiCourse.fullname.split(' - ').at(0);
             return apiCourse;
         }
 

@@ -19,9 +19,9 @@ export class NewsFeedService {
         await this.uitNewsService.crawlData(startPage, pageNum);
     }
 
-    async findOne(id: string) {
+    async findOne(title: string) {
         return this.repo.findOne({
-            where: { id },
+            where: { title },
             relations: { tags: true, files: true },
         });
     }
