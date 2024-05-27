@@ -157,16 +157,24 @@ export class CourseResolver {
         );
 
         if (queryArgs.isRecent) {
-            return courses.filter(
-                ({ startdate }) =>
-                    moment().diff(
-                        moment(new Date(startdate * 1000)),
-                        'months',
-                        true,
-                    ) < 5,
-            );
+            return courses
+                .filter(
+                    ({ startdate }) =>
+                        moment().diff(
+                            moment(new Date(startdate * 1000)),
+                            'months',
+                            true,
+                        ) < 5,
+                )
+                .map((course) => ({
+                    ...course,
+                    display_name: course.fullname.split(' - ').at(0),
+                }));
         }
-        return courses;
+        return courses.map((course) => ({
+            ...course,
+            display_name: course.fullname.split(' - ').at(0),
+        }));
     }
 
     @Query(() => Course, {
