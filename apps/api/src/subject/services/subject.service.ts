@@ -25,6 +25,29 @@ export class SubjectService {
         private readonly courseService: CourseService,
     ) {}
 
+    // async test() {
+    //     const result = await this.educationProgramRepo.findOne({
+    //         where: {
+    //             year: 'CTĐT Khoá 2021',
+    //             majorName:
+    //                 'Cử nhân ngành Kỹ thuật Phần mềm (Áp dụng từ khóa 15 - 2020)',
+    //         },
+    //         relations: {
+    //             sections: {
+    //                 subjects: true,
+    //             },
+    //         },
+    //     });
+    //     result.sections.forEach((section) => console.log(section));
+    //     return result;
+    // }
+
+    async findSubjectInfo(code: string) {
+        const subject = await this.subjectRepo.findOne({ where: { code } });
+        console.log({ subject });
+        return subject;
+    }
+
     async findSubjectDataByCode(code: string) {
         return this.subjectRepo.findOneBy({ code });
     }

@@ -1,6 +1,6 @@
 import { CrawlArgs } from '@/common/args/crawl.arg';
 import { UseGuards } from '@nestjs/common';
-import { Args, Query, Resolver } from '@nestjs/graphql';
+import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { User } from 'src/user/entities/user.entity';
@@ -17,6 +17,38 @@ export class SubjectResolver {
         private readonly subjecConfig: SubjectConfiguration,
         private readonly educationProgramConfig: EducationProgramConfiguration,
     ) {}
+
+    // @Query(() => EducationProgram)
+    // async test() {
+    //     return this.subjecService.test();
+    // }
+
+    @Query(() => Subject)
+    async subject(
+        @Args('code', { type: () => String, nullable: false }) code: string,
+    ) {
+        return this.subjecService.findSubjectInfo(code);
+    }
+
+    @ResolveField(() => [Subject])
+    async requiredSubjects(@Parent() subject: Subject): Promise<Subject[]> {
+        const codes: string[] = JSON.parse(
+            subject.requiredCode.replace('{', '[').replace('}', ']'),
+        );
+        const subjects =
+            await this.subjecService.findSubjectsDataByCodes(codes);
+        return subjects;
+    }
+
+    @ResolveField(() => [Subject])
+    async previousSubjects(@Parent() subject: Subject): Promise<Subject[]> {
+        const codes: string[] = JSON.parse(
+            subject.previousCode.replace('{', '[').replace('}', ']'),
+        );
+        const subjects =
+            await this.subjecService.findSubjectsDataByCodes(codes);
+        return subjects;
+    }
 
     @Query(() => [EducationProgram], {
         description: 'Return all education programs of UIT students',
