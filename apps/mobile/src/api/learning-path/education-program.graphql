@@ -1,0 +1,34 @@
+query UserEducationProgram {
+    userEducationProgram {
+        link
+        majorName
+        totalCredit
+        trainingSystem
+        year
+        sections {
+            id
+            name
+            order
+            totalCredit
+            subjects {
+                code
+                department
+                equivalentCode
+                id
+                isActive
+                isFree
+                isRequired
+                minimumOptionalCredit
+                nameEN
+                nameVN
+                oldCode
+                practicalCredit
+                previousCode
+                requiredCode
+                summary
+                theoreticalCredit
+                type
+            }
+        }
+    }
+}

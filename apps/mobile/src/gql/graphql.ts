@@ -890,6 +890,11 @@ export type SyncEventMutationVariables = Exact<{
 
 export type SyncEventMutation = { __typename?: 'Mutation', syncEvents: Array<{ __typename?: 'GoogleCalendarEvent', id: string, lastSync: number }> };
 
+export type UserEducationProgramQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UserEducationProgramQuery = { __typename?: 'Query', userEducationProgram: { __typename?: 'EducationProgram', link?: string | null, majorName: string, totalCredit: number, trainingSystem?: string | null, year: string, sections: Array<{ __typename?: 'Section', id: string, name?: string | null, order?: number | null, totalCredit?: number | null, subjects: Array<{ __typename?: 'SectionSubject', code: string, department: string, equivalentCode?: string | null, id: string, isActive: boolean, isFree?: boolean | null, isRequired?: boolean | null, minimumOptionalCredit?: number | null, nameEN: string, nameVN: string, oldCode?: string | null, practicalCredit?: number | null, previousCode?: string | null, requiredCode?: string | null, summary?: string | null, theoreticalCredit?: number | null, type?: string | null }> }> } };
+
 export type UserMakeUpClassQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1615,6 +1620,77 @@ export function useSyncEventMutation(baseOptions?: Apollo.MutationHookOptions<Sy
 export type SyncEventMutationHookResult = ReturnType<typeof useSyncEventMutation>;
 export type SyncEventMutationResult = Apollo.MutationResult<SyncEventMutation>;
 export type SyncEventMutationOptions = Apollo.BaseMutationOptions<SyncEventMutation, SyncEventMutationVariables>;
+export const UserEducationProgramDocument = gql`
+    query UserEducationProgram {
+  userEducationProgram {
+    link
+    majorName
+    totalCredit
+    trainingSystem
+    year
+    sections {
+      id
+      name
+      order
+      totalCredit
+      subjects {
+        code
+        department
+        equivalentCode
+        id
+        isActive
+        isFree
+        isRequired
+        minimumOptionalCredit
+        nameEN
+        nameVN
+        oldCode
+        practicalCredit
+        previousCode
+        requiredCode
+        summary
+        theoreticalCredit
+        type
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useUserEducationProgramQuery__
+ *
+ * To run a query within a React component, call `useUserEducationProgramQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserEducationProgramQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserEducationProgramQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useUserEducationProgramQuery(baseOptions?: Apollo.QueryHookOptions<UserEducationProgramQuery, UserEducationProgramQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserEducationProgramQuery, UserEducationProgramQueryVariables>(UserEducationProgramDocument, options);
+      }
+export function useUserEducationProgramLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserEducationProgramQuery, UserEducationProgramQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserEducationProgramQuery, UserEducationProgramQueryVariables>(UserEducationProgramDocument, options);
+        }
+export function useUserEducationProgramSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<UserEducationProgramQuery, UserEducationProgramQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<UserEducationProgramQuery, UserEducationProgramQueryVariables>(UserEducationProgramDocument, options);
+        }
+export type UserEducationProgramQueryHookResult = ReturnType<typeof useUserEducationProgramQuery>;
+export type UserEducationProgramLazyQueryHookResult = ReturnType<typeof useUserEducationProgramLazyQuery>;
+export type UserEducationProgramSuspenseQueryHookResult = ReturnType<typeof useUserEducationProgramSuspenseQuery>;
+export type UserEducationProgramQueryResult = Apollo.QueryResult<UserEducationProgramQuery, UserEducationProgramQueryVariables>;
+export function refetchUserEducationProgramQuery(variables?: UserEducationProgramQueryVariables) {
+      return { query: UserEducationProgramDocument, variables: variables }
+    }
 export const UserMakeUpClassDocument = gql`
     query UserMakeUpClass {
   makeUpClass {
