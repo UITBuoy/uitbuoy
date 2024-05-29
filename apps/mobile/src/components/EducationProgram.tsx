@@ -1,6 +1,6 @@
 import { FlatList, View } from 'react-native';
 import { useUserEducationProgramQuery } from '../gql/graphql';
-import KnowledgeBlock from './KnowledgeBlock';
+import KnowledgeBlockAccordion from './Accordion/KnowledgeBlockAccordion';
 
 export default function EducationProgram() {
     const { data, loading } = useUserEducationProgramQuery();
@@ -14,8 +14,9 @@ export default function EducationProgram() {
                     <FlatList
                         data={data.userEducationProgram.sections}
                         renderItem={({ item }) => (
-                            <KnowledgeBlock section={item} />
+                            <KnowledgeBlockAccordion section={item} />
                         )}
+                        keyExtractor={(item) => item.id}
                     />
                 </View>
             )}
