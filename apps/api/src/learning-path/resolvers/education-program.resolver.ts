@@ -44,7 +44,7 @@ export class SectionResolver {
         );
         return section.subjects.map((subject) => ({
             ...subject,
-            ...subjects.find((s) => (s.code = subject.code)),
+            ...subjects.find((s) => (s.code == subject.code)),
         }));
     }
 }
