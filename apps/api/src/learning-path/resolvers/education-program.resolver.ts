@@ -46,13 +46,20 @@ export class SectionResolver {
     ) {}
 
     @ResolveField(() => [SectionSubject])
-    async subjects(@Parent() section: Section): Promise<SectionSubject[]> {
+    @UseGuards(JwtAuthGuard)
+    async subjects(
+        @Parent() section: Section,
+        @CurrentUser() user: User,
+    ): Promise<SectionSubject[]> {
+        const learnedSubjectCodes =
+            await this.courseService.findLearnedSubjects(user);
         const subjects = await this.subjectService.findSubjectsDataByCodes(
             section.subjects.map((subject) => subject.code),
         );
         return section.subjects.map((subject) => ({
             ...subject,
             ...subjects.find((s) => s.code == subject.code),
+            isLearned: learnedSubjectCodes.includes(subject.code),
         }));
     }
 
@@ -98,7 +105,22 @@ export class SectionResolver {
 
 @Resolver(() => SectionSubject)
 export class SectionSubjectResolver {
-    constructor(private readonly subjectService: SubjectService) {}
+    constructor(
+        private readonly subjectService: SubjectService,
+        private readonly courseService: CourseService,
+    ) {}
+
+    // @ResolveField(() => Boolean)
+    // @UseGuards(JwtAuthGuard)
+    // async isLearned(
+    //     @CurrentUser() user: User,
+    //     @Parent() subject: SectionSubject,
+    // ): Promise<boolean> {
+    //     const learnedSubjectCodes =
+    //         await this.courseService.findLearnedSubjects(user);
+
+    //     return learnedSubjectCodes.includes(subject.code);
+    // }
 
     @ResolveField(() => [Subject])
     async requiredSubjects(
