@@ -20,5 +20,7 @@ query Profile {
         timezone
         token
         username
+        year
+        majorName
     }
 }

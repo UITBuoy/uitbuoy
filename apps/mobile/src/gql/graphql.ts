@@ -60,6 +60,8 @@ export type AuthEntity = {
   lang?: Maybe<Scalars['String']['output']>;
   lastaccess?: Maybe<Scalars['Int']['output']>;
   mailformat?: Maybe<Scalars['String']['output']>;
+  /** Major's fullname of current user */
+  majorName: Scalars['String']['output'];
   preferences: Array<UserPreference>;
   profileimageurl?: Maybe<Scalars['String']['output']>;
   profileimageurlsmall?: Maybe<Scalars['String']['output']>;
@@ -70,6 +72,8 @@ export type AuthEntity = {
   timezone?: Maybe<Scalars['String']['output']>;
   token: Scalars['String']['output'];
   username: Scalars['String']['output'];
+  /** Entrance year of current user */
+  year: Scalars['String']['output'];
 };
 
 export type Calendar = {
@@ -240,6 +244,31 @@ export type CreateNoteInput = {
   title: Scalars['String']['input'];
 };
 
+export type EducationProgram = {
+  __typename?: 'EducationProgram';
+  knowledgeBlocks: Array<Section>;
+  link?: Maybe<Scalars['String']['output']>;
+  majorName: Scalars['String']['output'];
+  sections: Array<Section>;
+  totalCredit: Scalars['Int']['output'];
+  trainingSystem?: Maybe<Scalars['String']['output']>;
+  year: Scalars['String']['output'];
+};
+
+export type ElectiveSubjectsArgs = {
+  /** The keyword to get suitable subject codes */
+  credits?: InputMaybe<Scalars['String']['input']>;
+  /** The keyword to get suitable subject codes */
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type ElectiveSubjectsResult = {
+  __typename?: 'ElectiveSubjectsResult';
+  codes: Array<Scalars['String']['output']>;
+  credits: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+};
+
 export type EventEntity = {
   __typename?: 'EventEntity';
   /** Title of the event (the main title) */
@@ -313,6 +342,12 @@ export type EventReminderInput = {
   minutes?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type GiveLearningPathSubjectCodesResult = {
+  __typename?: 'GiveLearningPathSubjectCodesResult';
+  electiveSubjects: Array<Scalars['String']['output']>;
+  requiredSubjects: Array<Scalars['String']['output']>;
+};
+
 export type GoogleCalendarEvent = {
   __typename?: 'GoogleCalendarEvent';
   event: EventEntity;
@@ -348,6 +383,11 @@ export type IntroFile = {
   /** Time modified */
   timemodified?: Maybe<Scalars['Int']['output']>;
 };
+
+export enum LearningPathOptionEnum {
+  ElectiveSubjects = 'electiveSubjects',
+  RequiredSubjects = 'requiredSubjects'
+}
 
 export type Lecturer = {
   __typename?: 'Lecturer';
@@ -391,7 +431,7 @@ export type Mutation = {
   dailyCrawlNewsFeed: Scalars['Boolean']['output'];
   findAllEventByCourseIds: Array<Calendar>;
   login: AuthEntity;
-  notifyEvents: Scalars['Boolean']['output'];
+  notifyEvents: Scalars['Int']['output'];
   refreshToken: AuthEntity;
   removeNote: Scalars['String']['output'];
   removeNotificationPushToken: Scalars['Boolean']['output'];
@@ -517,9 +557,17 @@ export type Query = {
   assignments: Array<Assignment>;
   /** Get detail information about a specific course */
   course: Course;
+  /** Return all education programs of UIT students */
+  crawlEducationProgram: Array<EducationProgram>;
+  /** Return all subjects of UIT students */
+  crawlSubject: Array<Subject>;
   findAll: Array<Subject>;
   findAllEducationProgram: Array<Subject>;
   findOne: Array<Subject>;
+  /** Return string array is [class,major] of user */
+  findUserMajorByCourse: Array<Scalars['String']['output']>;
+  /** Return learning code of elective subjects */
+  giveLearningPathSubjectCodes: GiveLearningPathSubjectCodesResult;
   makeUpClass: Array<MakeUpClass>;
   /** Retrieving news feed item */
   newsFeed: Array<NewsFeed>;
@@ -527,10 +575,19 @@ export type Query = {
   newsFeedDetail: NewsFeed;
   note: Array<NoteEntity>;
   profile: User;
+  /** Return all elective subjects recommend for user */
+  recommendElectiveSubject: Array<ElectiveSubjectsResult>;
+  /** Return all subjects recommend for user */
+  recommendSubject: Array<Subject>;
+  sections: Array<Section>;
+  subject: Subject;
   /** Return all course of current user */
   userCourses: Array<Course>;
+  /** Current user's education program */
+  userEducationProgram: EducationProgram;
   /** All events of current user */
   userEvents: Array<EventEntity>;
+  year: Scalars['String']['output'];
 };
 
 
@@ -539,6 +596,11 @@ export type QueryCourseArgs = {
   isNew?: InputMaybe<Scalars['Boolean']['input']>;
   isRecent?: InputMaybe<Scalars['Boolean']['input']>;
   keyword?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryCrawlEducationProgramArgs = {
+  years?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 
@@ -554,6 +616,20 @@ export type QueryFindAllEducationProgramArgs = {
 
 export type QueryFindOneArgs = {
   code: Scalars['String']['input'];
+};
+
+
+export type QueryFindUserMajorByCourseArgs = {
+  isNew?: InputMaybe<Scalars['Boolean']['input']>;
+  isRecent?: InputMaybe<Scalars['Boolean']['input']>;
+  keyword?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryGiveLearningPathSubjectCodesArgs = {
+  isNew?: InputMaybe<Scalars['Boolean']['input']>;
+  isRecent?: InputMaybe<Scalars['Boolean']['input']>;
+  keyword?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -583,6 +659,27 @@ export type QueryNoteArgs = {
 };
 
 
+export type QueryRecommendElectiveSubjectArgs = {
+  isNew?: InputMaybe<Scalars['Boolean']['input']>;
+  isRecent?: InputMaybe<Scalars['Boolean']['input']>;
+  keyword?: InputMaybe<Scalars['String']['input']>;
+  options: Array<ElectiveSubjectsArgs>;
+};
+
+
+export type QueryRecommendSubjectArgs = {
+  isNew?: InputMaybe<Scalars['Boolean']['input']>;
+  isRecent?: InputMaybe<Scalars['Boolean']['input']>;
+  keyword?: InputMaybe<Scalars['String']['input']>;
+  option: LearningPathOptionEnum;
+};
+
+
+export type QuerySubjectArgs = {
+  code: Scalars['String']['input'];
+};
+
+
 export type QueryUserCoursesArgs = {
   isNew?: InputMaybe<Scalars['Boolean']['input']>;
   isRecent?: InputMaybe<Scalars['Boolean']['input']>;
@@ -597,18 +694,54 @@ export type QueryUserEventsArgs = {
   keyword?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type Section = {
+  __typename?: 'Section';
+  id: Scalars['String']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+  order?: Maybe<Scalars['Int']['output']>;
+  subjects: Array<SectionSubject>;
+  totalCredit?: Maybe<Scalars['Int']['output']>;
+};
+
+export type SectionSubject = {
+  __typename?: 'SectionSubject';
+  code: Scalars['String']['output'];
+  department: Scalars['String']['output'];
+  equivalentCode?: Maybe<Scalars['String']['output']>;
+  equivalentSubjects: Array<Subject>;
+  id: Scalars['String']['output'];
+  isActive: Scalars['Boolean']['output'];
+  isFree?: Maybe<Scalars['Boolean']['output']>;
+  isRequired?: Maybe<Scalars['Boolean']['output']>;
+  minimumOptionalCredit?: Maybe<Scalars['Int']['output']>;
+  nameEN: Scalars['String']['output'];
+  nameVN: Scalars['String']['output'];
+  oldCode?: Maybe<Scalars['String']['output']>;
+  practicalCredit?: Maybe<Scalars['Int']['output']>;
+  previousCode?: Maybe<Scalars['String']['output']>;
+  previousSubjects: Array<Subject>;
+  requiredCode?: Maybe<Scalars['String']['output']>;
+  requiredSubjects: Array<Subject>;
+  summary?: Maybe<Scalars['String']['output']>;
+  theoreticalCredit?: Maybe<Scalars['Int']['output']>;
+  type?: Maybe<Scalars['String']['output']>;
+};
+
 export type Subject = {
   __typename?: 'Subject';
   code: Scalars['String']['output'];
   department: Scalars['String']['output'];
   equivalentCode?: Maybe<Scalars['String']['output']>;
+  equivalentSubjects: Array<Subject>;
   isActive: Scalars['Boolean']['output'];
   nameEN: Scalars['String']['output'];
   nameVN: Scalars['String']['output'];
   oldCode?: Maybe<Scalars['String']['output']>;
   practicalCredit: Scalars['Int']['output'];
   previousCode?: Maybe<Scalars['String']['output']>;
+  previousSubjects: Array<Subject>;
   requiredCode?: Maybe<Scalars['String']['output']>;
+  requiredSubjects: Array<Subject>;
   summary?: Maybe<Scalars['String']['output']>;
   theoreticalCredit: Scalars['Int']['output'];
   type: Scalars['String']['output'];
@@ -644,6 +777,8 @@ export type User = {
   lang?: Maybe<Scalars['String']['output']>;
   lastaccess?: Maybe<Scalars['Int']['output']>;
   mailformat?: Maybe<Scalars['String']['output']>;
+  /** Major's fullname of current user */
+  majorName: Scalars['String']['output'];
   preferences: Array<UserPreference>;
   profileimageurl?: Maybe<Scalars['String']['output']>;
   profileimageurlsmall?: Maybe<Scalars['String']['output']>;
@@ -652,6 +787,8 @@ export type User = {
   timezone?: Maybe<Scalars['String']['output']>;
   token: Scalars['String']['output'];
   username: Scalars['String']['output'];
+  /** Entrance year of current user */
+  year: Scalars['String']['output'];
 };
 
 export type UserPreference = {
@@ -679,7 +816,7 @@ export type LoginApiMutation = { __typename?: 'Mutation', login: { __typename?: 
 export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', auth?: string | null, city?: string | null, confirmed?: string | null, country?: string | null, department?: string | null, email: string, firstaccess?: number | null, fullname: string, id?: number | null, isIntegrateWithGoogle?: boolean | null, lang?: string | null, lastaccess?: number | null, mailformat?: string | null, profileimageurl?: string | null, profileimageurlsmall?: string | null, suspended?: string | null, theme?: string | null, timezone?: string | null, token: string, username: string } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', auth?: string | null, city?: string | null, confirmed?: string | null, country?: string | null, department?: string | null, email: string, firstaccess?: number | null, fullname: string, id?: number | null, isIntegrateWithGoogle?: boolean | null, lang?: string | null, lastaccess?: number | null, mailformat?: string | null, profileimageurl?: string | null, profileimageurlsmall?: string | null, suspended?: string | null, theme?: string | null, timezone?: string | null, token: string, username: string, year: string, majorName: string } };
 
 export type UploadNotificationConfigMutationVariables = Exact<{
   beforeDay?: InputMaybe<Scalars['Float']['input']>;
@@ -883,6 +1020,8 @@ export const ProfileDocument = gql`
     timezone
     token
     username
+    year
+    majorName
   }
 }
     `;
