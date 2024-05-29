@@ -91,7 +91,10 @@ const KnowledgeBlockAccordion = ({ section }: Props) => {
             <Animated.View style={heightAnimationStyle}>
                 <Animated.View style={styles.contentContainer} ref={listRef}>
                     <FlatList
-                        data={section.subjects}
+                        data={[...section.subjects].sort(
+                            (a, b) =>
+                                (a.isLearned ? 1 : 0) - (b.isLearned ? 1 : 0),
+                        )}
                         renderItem={({ item }) => (
                             <SubjectItem subject={item} />
                         )}

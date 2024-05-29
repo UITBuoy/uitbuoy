@@ -10,7 +10,13 @@ type Props = {
 
 export default function SubjectItem({ subject }: Props) {
     return (
-        <View className="border-[0.5px]" style={{ borderColor: '#CFCFCF' }}>
+        <View
+            className="border-[0.5px]"
+            style={{
+                borderColor: '#CFCFCF',
+                opacity: subject.isLearned ? 0.3 : 1,
+            }}
+        >
             <NativeButton borderRadius={0}>
                 <View className=" px-4 py-2 flex-row justify-between items-start">
                     <View
@@ -21,12 +27,16 @@ export default function SubjectItem({ subject }: Props) {
                         <Text className=" text-neutral-40">{subject.code}</Text>
                     </View>
                     <View className=" flex-row gap-2">
-                        <Chip>
-                            {`${
-                                subject.theoreticalCredit +
-                                subject.practicalCredit
-                            } tín chỉ`}
-                        </Chip>
+                        {subject.isLearned ? (
+                            <Text className=" font-medium px-2">Đã học</Text>
+                        ) : (
+                            <Chip>
+                                {`${
+                                    subject.theoreticalCredit +
+                                    subject.practicalCredit
+                                } tín chỉ`}
+                            </Chip>
+                        )}
                     </View>
                 </View>
             </NativeButton>

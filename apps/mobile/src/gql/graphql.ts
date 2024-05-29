@@ -697,6 +697,7 @@ export type QueryUserEventsArgs = {
 export type Section = {
   __typename?: 'Section';
   id: Scalars['String']['output'];
+  learnedCredit: Scalars['Int']['output'];
   name?: Maybe<Scalars['String']['output']>;
   order?: Maybe<Scalars['Int']['output']>;
   subjects: Array<SectionSubject>;
@@ -712,6 +713,7 @@ export type SectionSubject = {
   id: Scalars['String']['output'];
   isActive: Scalars['Boolean']['output'];
   isFree?: Maybe<Scalars['Boolean']['output']>;
+  isLearned: Scalars['Boolean']['output'];
   isRequired?: Maybe<Scalars['Boolean']['output']>;
   minimumOptionalCredit?: Maybe<Scalars['Int']['output']>;
   nameEN: Scalars['String']['output'];
@@ -893,7 +895,7 @@ export type SyncEventMutation = { __typename?: 'Mutation', syncEvents: Array<{ _
 export type UserEducationProgramQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserEducationProgramQuery = { __typename?: 'Query', userEducationProgram: { __typename?: 'EducationProgram', link?: string | null, majorName: string, totalCredit: number, trainingSystem?: string | null, year: string, sections: Array<{ __typename?: 'Section', id: string, name?: string | null, order?: number | null, totalCredit?: number | null, subjects: Array<{ __typename?: 'SectionSubject', code: string, department: string, equivalentCode?: string | null, id: string, isActive: boolean, isFree?: boolean | null, isRequired?: boolean | null, minimumOptionalCredit?: number | null, nameEN: string, nameVN: string, oldCode?: string | null, practicalCredit?: number | null, previousCode?: string | null, requiredCode?: string | null, summary?: string | null, theoreticalCredit?: number | null, type?: string | null }> }> } };
+export type UserEducationProgramQuery = { __typename?: 'Query', userEducationProgram: { __typename?: 'EducationProgram', link?: string | null, majorName: string, totalCredit: number, trainingSystem?: string | null, year: string, sections: Array<{ __typename?: 'Section', id: string, name?: string | null, order?: number | null, totalCredit?: number | null, learnedCredit: number, subjects: Array<{ __typename?: 'SectionSubject', code: string, department: string, equivalentCode?: string | null, id: string, isActive: boolean, isFree?: boolean | null, isRequired?: boolean | null, minimumOptionalCredit?: number | null, nameEN: string, nameVN: string, oldCode?: string | null, practicalCredit?: number | null, previousCode?: string | null, requiredCode?: string | null, summary?: string | null, theoreticalCredit?: number | null, type?: string | null, isLearned: boolean }> }> } };
 
 export type UserMakeUpClassQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1633,6 +1635,7 @@ export const UserEducationProgramDocument = gql`
       name
       order
       totalCredit
+      learnedCredit
       subjects {
         code
         department
@@ -1651,6 +1654,7 @@ export const UserEducationProgramDocument = gql`
         summary
         theoreticalCredit
         type
+        isLearned
       }
     }
   }

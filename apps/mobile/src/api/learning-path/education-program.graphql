@@ -10,6 +10,7 @@ query UserEducationProgram {
             name
             order
             totalCredit
+            learnedCredit
             subjects {
                 code
                 department
@@ -28,6 +29,7 @@ query UserEducationProgram {
                 summary
                 theoreticalCredit
                 type
+                isLearned
             }
         }
     }
