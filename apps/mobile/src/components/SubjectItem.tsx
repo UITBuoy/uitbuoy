@@ -9,9 +9,9 @@ type Props = {
 
 export default function SubjectItem({ subject }: Props) {
     return (
-        <View className=" mx-2">
-            <NativeButton>
-                <View className=" px-2 py-1">
+        <View className="border-[0.5px]" style={{ borderColor: '#CFCFCF' }}>
+            <NativeButton borderRadius={0}>
+                <View className=" px-4 py-2">
                     <Text className=" font-medium">{subject.nameVN}</Text>
                     <Text className=" text-neutral-70">{subject.code}</Text>
                 </View>
