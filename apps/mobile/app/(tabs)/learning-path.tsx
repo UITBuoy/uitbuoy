@@ -13,7 +13,7 @@ export default function Page() {
                 {loading ? (
                     <></>
                 ) : (
-                    <View>
+                    <View style={{ paddingBottom: 220 }}>
                         <View className=" m-2 rounded-xl ">
                             <NativeButton>
                                 <View className=" p-2">

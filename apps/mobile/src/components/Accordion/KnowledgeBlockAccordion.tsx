@@ -47,14 +47,16 @@ const KnowledgeBlockAccordion = ({ section }: Props) => {
 
     return (
         <View
-            className=" border-neutral-70 border-[0.5px] rounded-2xl overflow-hidden"
+            className=" border-neutral-70 border-[0.5px] rounded-xl overflow-hidden"
             style={{
                 marginBottom: 8,
+                borderLeftWidth: 7,
+                borderLeftColor: '#3FB7E6',
                 // borderTopWidth: 7,
                 // borderTopColor: '#3FB7E6',
                 borderTopColor: '#CFCFCF',
                 borderRightColor: '#CFCFCF',
-                borderLeftColor: '#CFCFCF',
+                // borderLeftColor: '#CFCFCF',
                 borderBottomColor: '#CFCFCF',
             }}
         >
@@ -74,7 +76,7 @@ const KnowledgeBlockAccordion = ({ section }: Props) => {
                 }}
             >
                 <View className=" p-2 flex-row justify-between items-center">
-                    <View className="">
+                    <View className=" flex-1">
                         <Text className=" text-lg font-medium">
                             {capitalizeFirstLetter(section.name)}
                         </Text>
@@ -83,6 +85,26 @@ const KnowledgeBlockAccordion = ({ section }: Props) => {
                             <Chip
                                 style={{ backgroundColor: '#44E187' }}
                             >{`${section.subjects.length || 0} môn học`}</Chip>
+                        </View>
+                        <Text className=" mt-4 font-medium">Đã học</Text>
+                        <View className="mt-2 flex-1 flex-row items-center gap-2">
+                            <Text className=" font-medium">{`${section.learnedCredit}/${section.totalCredit}`}</Text>
+                            <View
+                                className=" flex-1 rounded-2xl"
+                                style={{
+                                    backgroundColor: '#E6E6E6',
+                                    height: 8,
+                                    overflow: 'hidden',
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        width: `${(section.learnedCredit / section.totalCredit) * 100}%`,
+                                        backgroundColor: '#3FB7E6',
+                                        height: 10,
+                                    }}
+                                />
+                            </View>
                         </View>
                     </View>
                     <Chevron progress={progress} />
