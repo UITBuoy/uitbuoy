@@ -2,9 +2,14 @@ import { EducationProgram } from '@/subject/entities/educationProgram.entity';
 import { MajorSubject } from '@/subject/entities/majorSubject.entity';
 import { Section } from '@/subject/entities/section.entity';
 import { SubjectService } from '@/subject/services/subject.service';
-import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import { Int, Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { SectionSubject } from '../dto/section-subject.dto';
 import { Subject } from '@/subject/entities/subject.entity';
+import { CourseService } from '@/course/services/course.service';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
+import { CurrentUser } from '@/auth/decorators/current-user.decorator';
+import { User } from '@/user/entities/user.entity';
 
 @Resolver(() => EducationProgram)
 export class EducationProgramResolver {
@@ -35,7 +40,10 @@ export class EducationProgramResolver {
 
 @Resolver(() => Section)
 export class SectionResolver {
-    constructor(private readonly subjectService: SubjectService) {}
+    constructor(
+        private readonly subjectService: SubjectService,
+        private readonly courseService: CourseService,
+    ) {}
 
     @ResolveField(() => [SectionSubject])
     async subjects(@Parent() section: Section): Promise<SectionSubject[]> {
@@ -58,8 +66,33 @@ export class SectionResolver {
                 total + subject.practicalCredit + subject.theoreticalCredit,
             0,
         );
-        console.log({ totalCredit });
         return totalCredit;
+    }
+
+    @ResolveField(() => Int)
+    @UseGuards(JwtAuthGuard)
+    async learnedCredit(
+        @CurrentUser() user: User,
+        @Parent() section: Section,
+    ): Promise<number> {
+        const learnedSubjectCodes =
+            await this.courseService.findLearnedSubjects(user);
+
+        const learnedSubjectCodesInSection = section.subjects.filter(
+            (subject) => learnedSubjectCodes.includes(subject.code),
+        );
+
+        if (learnedSubjectCodesInSection.length === 0) return 0;
+
+        const subjects = await this.subjectService.findSubjectsDataByCodes(
+            learnedSubjectCodesInSection.map((subject) => subject.code),
+        );
+        const learnedCredit = subjects.reduce(
+            (total, subject) =>
+                total + subject.practicalCredit + subject.theoreticalCredit,
+            0,
+        );
+        return learnedCredit;
     }
 }
 

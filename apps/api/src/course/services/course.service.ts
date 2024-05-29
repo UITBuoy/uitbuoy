@@ -147,7 +147,7 @@ export class CourseService {
         user: User,
         queryArgs?: QueryArgs,
     ): Promise<string[]> {
-        if (!queryArgs) queryArgs = {}
+        if (!queryArgs) queryArgs = {};
         queryArgs.keyword = 'CVHT';
         queryArgs.isRecent = false;
         queryArgs.isNew = false;
@@ -242,6 +242,20 @@ export class CourseService {
         console.log({ electiveSubjects });
 
         return electiveSubjects;
+    }
+
+    async findLearnedSubjects(user: User) {
+        const queryArgs: QueryArgs = {};
+        queryArgs.isRecent = false;
+        queryArgs.isNew = false;
+
+        const courses = await this.userCourses(user, queryArgs);
+
+        const learnedSubjectCodes = courses.map((course) =>
+            course.shortname.split('.').at(0),
+        );
+
+        return learnedSubjectCodes;
     }
 
     async giveLearningPathSubjectCodes(
