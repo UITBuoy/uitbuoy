@@ -44,8 +44,22 @@ export class SectionResolver {
         );
         return section.subjects.map((subject) => ({
             ...subject,
-            ...subjects.find((s) => (s.code == subject.code)),
+            ...subjects.find((s) => s.code == subject.code),
         }));
+    }
+
+    @ResolveField(() => [SectionSubject])
+    async totalCredit(@Parent() section: Section): Promise<number> {
+        const subjects = await this.subjectService.findSubjectsDataByCodes(
+            section.subjects.map((subject) => subject.code),
+        );
+        const totalCredit = subjects.reduce(
+            (total, subject) =>
+                total + subject.practicalCredit + subject.theoreticalCredit,
+            0,
+        );
+        console.log({ totalCredit });
+        return totalCredit;
     }
 }
 

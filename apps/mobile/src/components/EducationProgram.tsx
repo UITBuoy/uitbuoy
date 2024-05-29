@@ -3,7 +3,9 @@ import { useUserEducationProgramQuery } from '../gql/graphql';
 import KnowledgeBlockAccordion from './Accordion/KnowledgeBlockAccordion';
 
 export default function EducationProgram() {
-    const { data, loading } = useUserEducationProgramQuery();
+    const { data, loading } = useUserEducationProgramQuery({
+        fetchPolicy: 'network-only',
+    });
 
     return (
         <View>
