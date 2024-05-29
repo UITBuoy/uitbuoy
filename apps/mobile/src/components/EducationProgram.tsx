@@ -6,11 +6,11 @@ export default function EducationProgram() {
     const { data, loading } = useUserEducationProgramQuery();
 
     return (
-        <View>
+        <View className=" flex-1">
             {loading ? (
                 <></>
             ) : (
-                <View className="m-2">
+                <View className=" flex-1 m-2">
                     <FlatList
                         data={data.userEducationProgram.sections}
                         renderItem={({ item }) => (
