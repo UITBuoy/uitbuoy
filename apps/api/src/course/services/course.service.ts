@@ -145,8 +145,9 @@ export class CourseService {
 
     async findUserMajorByCourse(
         user: User,
-        queryArgs: QueryArgs,
+        queryArgs?: QueryArgs,
     ): Promise<string[]> {
+        if (!queryArgs) queryArgs = {}
         queryArgs.keyword = 'CVHT';
         queryArgs.isRecent = false;
         queryArgs.isNew = false;

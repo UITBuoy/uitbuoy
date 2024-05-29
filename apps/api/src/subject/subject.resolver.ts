@@ -14,7 +14,7 @@ import { Section } from './entities/section.entity';
 @Resolver(() => Subject)
 export class SubjectResolver {
     constructor(
-        private readonly subjecService: SubjectService,
+        private readonly subjectService: SubjectService,
         private readonly subjecConfig: SubjectConfiguration,
         private readonly educationProgramConfig: EducationProgramConfiguration,
     ) {}
@@ -28,7 +28,7 @@ export class SubjectResolver {
     async subject(
         @Args('code', { type: () => String, nullable: false }) code: string,
     ) {
-        return this.subjecService.findSubjectInfo(code);
+        return this.subjectService.findSubjectInfo(code);
     }
 
     @Query(() => [Section])
@@ -41,7 +41,7 @@ export class SubjectResolver {
             subject.requiredCode.replace('{', '[').replace('}', ']'),
         );
         const subjects =
-            await this.subjecService.findSubjectsDataByCodes(codes);
+            await this.subjectService.findSubjectsDataByCodes(codes);
         return subjects;
     }
 
@@ -51,7 +51,17 @@ export class SubjectResolver {
             subject.previousCode.replace('{', '[').replace('}', ']'),
         );
         const subjects =
-            await this.subjecService.findSubjectsDataByCodes(codes);
+            await this.subjectService.findSubjectsDataByCodes(codes);
+        return subjects;
+    }
+
+    @ResolveField(() => [Subject])
+    async equivalentSubjects(@Parent() subject: Subject): Promise<Subject[]> {
+        const codes: string[] = JSON.parse(
+            subject.equivalentCode.replace('{', '[').replace('}', ']'),
+        );
+        const subjects =
+            await this.subjectService.findSubjectsDataByCodes(codes);
         return subjects;
     }
 
@@ -74,13 +84,13 @@ export class SubjectResolver {
     @Query(() => [Subject])
     @UseGuards(JwtAuthGuard)
     findOne(@Args('code') code: string) {
-        return this.subjecService.findSubjectDataByCode(code);
+        return this.subjectService.findSubjectDataByCode(code);
     }
 
     @Query(() => [Subject])
     @UseGuards(JwtAuthGuard)
     findAll(@CurrentUser() user: User, @Args('nameVN') nameVN: string) {
-        return this.subjecService.findSubjectData(user.token, nameVN);
+        return this.subjectService.findSubjectData(user.token, nameVN);
     }
 
     @Query(() => [Subject])
@@ -89,6 +99,6 @@ export class SubjectResolver {
         @CurrentUser() user: User,
         @Args('major') major: string,
     ) {
-        return this.subjecService.findEducationProgram(user.token, major);
+        return this.subjectService.findEducationProgram(user.token, major);
     }
 }

@@ -52,7 +52,7 @@ export class SubjectService {
         return this.subjectRepo.findOneBy({ code });
     }
 
-    async findSubjectsDataByCodes(codes: string[]) {
+    async findSubjectsDataByCodes(codes: string[]): Promise<Subject[]> {
         return this.subjectRepo.findBy({ code: In(codes) });
     }
 
@@ -129,8 +129,7 @@ export class SubjectService {
     async findSubjectEducationByYearAndMajorName(
         year: string,
         majorName: string,
-    ) {
-        console.log({ year, majorName });
+    ): Promise<EducationProgram> {
         return this.educationProgramRepo.findOne({
             where: {
                 year: ILike(`%20${year}%`),

@@ -32,6 +32,7 @@ import { SubjectModule } from './subject/subject.module';
 import { UserModule } from './user/user.module';
 import { NewsFeedModule } from './news-feed/news-feed.module';
 import { NotificationModule } from './notification/notification.module';
+import { LearningPathModule } from './learning-path/learning-path.module';
 
 @Module({
     imports: [
@@ -182,6 +183,7 @@ import { NotificationModule } from './notification/notification.module';
         NoteModule,
         NewsFeedModule,
         NotificationModule,
+        LearningPathModule,
     ],
     controllers: [AppController],
     providers: [

@@ -35,8 +35,6 @@ export class UserService {
 
     async findYear(user: User) {
         const responseUser = await this.findById(user.id);
-        return Math.floor(
-            parseInt(responseUser.username) / 1000000,
-        ).toString();
+        return Math.floor(parseInt(responseUser.username) / 1000000).toString();
     }
 }
