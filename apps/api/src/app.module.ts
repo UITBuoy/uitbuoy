@@ -33,6 +33,7 @@ import { UserModule } from './user/user.module';
 import { NewsFeedModule } from './news-feed/news-feed.module';
 import { NotificationModule } from './notification/notification.module';
 import { LearningPathModule } from './learning-path/learning-path.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
     imports: [
@@ -184,6 +185,7 @@ import { LearningPathModule } from './learning-path/learning-path.module';
         NewsFeedModule,
         NotificationModule,
         LearningPathModule,
+        ChatModule,
     ],
     controllers: [AppController],
     providers: [
