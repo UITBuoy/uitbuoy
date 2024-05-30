@@ -3,22 +3,33 @@ import { Text, View } from 'react-native';
 import { SectionSubject } from '../gql/graphql';
 import NativeButton from './NativeButton/NativeButton';
 import Chip from './Chip';
+import { useSubjectSelection } from '../stores/subject-selection.store';
 
 type Props = {
     subject: DeepPartial<SectionSubject>;
     onPress?: () => any;
 };
 
-export default function SubjectItem({ subject, onPress }: Props) {
+export default function SelectionSubjectItem({ subject, onPress }: Props) {
+    const { subjects, addSubject, removeSubject } = useSubjectSelection();
+    const isSelected = subjects.some((s) => s.code === subject.code);
+
     return (
         <View
             className="border-[0.5px]"
             style={{
                 borderColor: '#CFCFCF',
-                opacity: subject.isLearned ? 0.3 : 1,
+                backgroundColor: isSelected ? '#6BD2FF' : 'white',
             }}
         >
-            <NativeButton onPress={onPress} borderRadius={0}>
+            <NativeButton
+                onPress={() =>
+                    isSelected
+                        ? removeSubject(subject.code)
+                        : addSubject(subject)
+                }
+                borderRadius={0}
+            >
                 <View className=" px-4 py-2 flex-row justify-between items-start">
                     <View
                         className=" flex-1 flex-col gap-1"

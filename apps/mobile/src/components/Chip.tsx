@@ -16,11 +16,15 @@ export default function Chip({
             {...props}
             className={` w-fit rounded-lg px-2 py-1 bg-primary-70 ${className}`}
         >
-            <Text
-                className={`text-white font-semibold text-sm ${textClassName}`}
-            >
-                {children}
-            </Text>
+            {typeof children === 'string' ? (
+                <Text
+                    className={`text-white font-semibold text-sm ${textClassName}`}
+                >
+                    {children}
+                </Text>
+            ) : (
+                children
+            )}
         </View>
     );
 }
