@@ -241,7 +241,9 @@ export class EducationProgramConfiguration {
                         name: 'cơ sở ngành',
                         subjects: [],
                     });
-                else if (typeTitles.includes('cơ sở nhóm ngành'.normalize('NFD')))
+                else if (
+                    typeTitles.includes('cơ sở nhóm ngành'.normalize('NFD'))
+                )
                     sections.push({
                         name: 'cơ sở nhóm ngành',
                         subjects: [],
@@ -319,9 +321,24 @@ export class EducationProgramConfiguration {
                         .trim();
 
                     if (code.match(RegEx.subjectRegex)) {
+                        let minimumOptionalCredit = null;
+                        if (
+                            type
+                                .toLowerCase()
+                                .normalize('NFD')
+                                .includes('tự chọn'.normalize('NFD'))
+                        ) {
+                            const creditRegex = /(\d+)\s?(TC|tc)/i;
+                            minimumOptionalCredit = parseInt(
+                                type.match(creditRegex)?.at(1) || '0',
+                            );
+                            // console.log({ type, minimumOptionalCredit });
+                        }
+
                         sections.at(-1).subjects.push({
                             code,
                             type,
+                            minimumOptionalCredit,
                             isRequired: false,
                         });
                     }

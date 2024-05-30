@@ -16,7 +16,9 @@ export class EducationProgramResolver {
     constructor() {}
 
     @ResolveField(() => [Section])
-    async sections(@Parent() educationProgram: EducationProgram) {
+    async sections(
+        @Parent() educationProgram: EducationProgram,
+    ): Promise<Section[]> {
         const sectionMap = new Map<string, Section>();
         educationProgram.sections.forEach((section) => {
             const defaultSection = sectionMap.get(section.name);
@@ -29,7 +31,9 @@ export class EducationProgramResolver {
                 });
             }
         });
-        return Array.from(sectionMap.values());
+        return Array.from(sectionMap.values()).sort(
+            (a, b) => (b.order || 0) - (a.order || 0),
+        );
     }
 
     @ResolveField(() => [Section])
@@ -60,6 +64,7 @@ export class SectionResolver {
             ...subject,
             ...subjects.find((s) => s.code == subject.code),
             isLearned: learnedSubjectCodes.includes(subject.code),
+            type: subject.type,
         }));
     }
 

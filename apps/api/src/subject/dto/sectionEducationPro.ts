@@ -3,6 +3,7 @@ export type SectionEducationProgram = {
     subjects: {
         code: string;
         type?: string;
+        minimumOptionalCredit?: number;
         isRequired: boolean;
     }[];
 };
