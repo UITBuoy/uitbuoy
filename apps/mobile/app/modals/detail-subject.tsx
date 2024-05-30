@@ -1,5 +1,5 @@
 import { useNavigation } from 'expo-router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import SubjectAccordion from '../../src/components/Accordion/SubjectAccordion';
 import { useSubjectQuery } from '../../src/gql/graphql';
@@ -10,12 +10,12 @@ export default function DetailActivity() {
 
     const { subject: defaultSubject } = useDetailSubjectRouter();
 
-    const { data } = useSubjectQuery({
+    const { data, loading, refetch } = useSubjectQuery({
         variables: { code: defaultSubject.code },
-        fetchPolicy: 'network-only',
+        fetchPolicy: 'no-cache',
     });
 
-    const subject = data?.subject || defaultSubject;
+    const subject = useMemo(() => data?.subject || defaultSubject, [loading]);
 
     useEffect(() => {
         navigation.setOptions({ title: defaultSubject.nameVN });
