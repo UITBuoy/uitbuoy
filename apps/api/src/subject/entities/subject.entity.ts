@@ -55,4 +55,9 @@ export class Subject {
     @Field(() => String, { nullable: true }) // Graphql
     @Column({ nullable: true })
     summary: string;
+
+    @Field(() => Int)
+    priority?: number;
+
+    additionSubjects?: string[];
 }

@@ -25,10 +25,10 @@ export default function Page() {
                                     </Text>
                                     <View className=" flex-row items-center gap-2">
                                         <Text className=" mt-1 text-lg font-semibold ">
-                                            {data.profile.majorName} -
+                                            {data?.profile.majorName} -
                                         </Text>
                                         <Text className=" rounded-lg bg-primary-70 px-2 py-1 mt-1 font-semibold text-white">
-                                            {`Khóa ${parseInt(data.profile.year) - 5}`}
+                                            {`Khóa ${parseInt(data?.profile.year || '0') - 5}`}
                                         </Text>
                                     </View>
                                 </View>

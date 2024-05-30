@@ -3,7 +3,7 @@ import { useUserEducationProgramQuery } from '../gql/graphql';
 import KnowledgeBlockAccordion from './Accordion/KnowledgeBlockAccordion';
 
 export default function EducationProgram() {
-    const { data, loading } = useUserEducationProgramQuery();
+    const { data, loading, error } = useUserEducationProgramQuery();
 
     return (
         <View className=" flex-1">
