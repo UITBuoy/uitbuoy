@@ -167,6 +167,22 @@ function Layout() {
                             animation: 'simple_push',
                         }}
                     />
+                    <Stack.Screen
+                        name="modals/recommend-path/home"
+                        options={{
+                            headerShown: false,
+                            presentation: 'modal',
+                            animation: 'slide_from_right',
+                        }}
+                    />
+                    <Stack.Screen
+                        name="modals/recommend-path/result"
+                        options={{
+                            headerShown: false,
+                            presentation: 'modal',
+                            animation: 'slide_from_right',
+                        }}
+                    />
                 </Stack>
             </ThemeProvider>
         </GluestackUIProvider>

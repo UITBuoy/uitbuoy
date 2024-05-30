@@ -5,6 +5,7 @@ import NativeButton from '../../src/components/NativeButton/NativeButton';
 import EducationProgram from '../../src/components/EducationProgram';
 import Chevron from '../../src/components/Accordion/Chevron';
 import ChevronIcon from '../../src/icons/chevron';
+import { router } from 'expo-router';
 
 export default function Page() {
     const { data, loading, error } = useProfileQuery();
@@ -34,7 +35,12 @@ export default function Page() {
                             </NativeButton>
                         </View>
                         <View className=" m-2 rounded-lg ">
-                            <NativeButton borderRadius={8}>
+                            <NativeButton
+                                borderRadius={8}
+                                onPress={() => {
+                                    router.push('/modals/recommend-path/home');
+                                }}
+                            >
                                 <View className=" p-2 bg-primary-70 flex-row justify-between">
                                     <Text className="font-medium text-white">
                                         Gợi ý lộ trình học
