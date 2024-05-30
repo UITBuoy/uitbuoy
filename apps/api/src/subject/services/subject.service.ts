@@ -72,6 +72,10 @@ export class SubjectService {
         return subjectCodes;
     }
 
+    async findAllEducationSubjectsOfUser(user: User) {
+
+    }
+
     async findMajorSubjectByCodeList(
         codes: string[],
         majorName: string,

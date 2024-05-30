@@ -1,15 +1,14 @@
+import { CurrentUser } from '@/auth/decorators/current-user.decorator';
+import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
+import { CourseService } from '@/course/services/course.service';
 import { EducationProgram } from '@/subject/entities/educationProgram.entity';
-import { MajorSubject } from '@/subject/entities/majorSubject.entity';
 import { Section } from '@/subject/entities/section.entity';
+import { Subject } from '@/subject/entities/subject.entity';
 import { SubjectService } from '@/subject/services/subject.service';
+import { User } from '@/user/entities/user.entity';
+import { UseGuards } from '@nestjs/common';
 import { Int, Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { SectionSubject } from '../dto/section-subject.dto';
-import { Subject } from '@/subject/entities/subject.entity';
-import { CourseService } from '@/course/services/course.service';
-import { UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
-import { CurrentUser } from '@/auth/decorators/current-user.decorator';
-import { User } from '@/user/entities/user.entity';
 
 @Resolver(() => EducationProgram)
 export class EducationProgramResolver {
@@ -126,18 +125,6 @@ export class SectionSubjectResolver {
         private readonly subjectService: SubjectService,
         private readonly courseService: CourseService,
     ) {}
-
-    // @ResolveField(() => Boolean)
-    // @UseGuards(JwtAuthGuard)
-    // async isLearned(
-    //     @CurrentUser() user: User,
-    //     @Parent() subject: SectionSubject,
-    // ): Promise<boolean> {
-    //     const learnedSubjectCodes =
-    //         await this.courseService.findLearnedSubjects(user);
-
-    //     return learnedSubjectCodes.includes(subject.code);
-    // }
 
     @ResolveField(() => [Subject])
     async requiredSubjects(

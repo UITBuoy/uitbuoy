@@ -5,8 +5,9 @@ import { SubjectService } from '@/subject/services/subject.service';
 import { User } from '@/user/entities/user.entity';
 import { UserService } from '@/user/services/user.service';
 import { UseGuards } from '@nestjs/common';
-import { Query, Resolver } from '@nestjs/graphql';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { LearningPathService } from '../learning-path.service';
+import { SemesterProgram } from '../dto/semester-program.dto';
 
 @Resolver()
 export class LearningPathResolver {
@@ -15,6 +16,26 @@ export class LearningPathResolver {
         private readonly userService: UserService,
         private readonly subjectService: SubjectService,
     ) {}
+
+    @Mutation(() => [SemesterProgram])
+    @UseGuards(JwtAuthGuard)
+    async recommendLearningPath(
+        @CurrentUser() user: User,
+        @Args('selectedSubjectCodes', {
+            type: () => [String],
+            nullable: true,
+            defaultValue: [],
+        })
+        selectedSubjectCodes: string[],
+        @Args('expectedSemesterNum', { type: () => Int, nullable: true })
+        expectedSemesterNum?: number,
+    ): Promise<SemesterProgram[]> {
+        return this.learningPathService.recommendLearningPath(
+            user,
+            selectedSubjectCodes,
+            expectedSemesterNum,
+        );
+    }
 
     @Query(() => EducationProgram, {
         description: "Current user's education program",

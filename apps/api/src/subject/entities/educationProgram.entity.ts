@@ -1,11 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import {
-    Column,
-    Entity,
-    OneToMany,
-    PrimaryColumn,
-    Relation
-} from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn, Relation } from 'typeorm';
 import { KnowledgeBlock } from './knowledgeBlock';
 import type { Section } from './section.entity';
 
@@ -27,6 +21,10 @@ export class EducationProgram {
     @Field(() => Int)
     @Column({ nullable: true })
     totalCredit: number;
+
+    @Field(() => Int)
+    @Column({ nullable: true })
+    semesterNum: number;
 
     @Field({ nullable: true })
     @Column({ nullable: true })
