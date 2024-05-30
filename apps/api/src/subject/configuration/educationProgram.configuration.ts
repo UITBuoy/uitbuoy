@@ -194,6 +194,7 @@ export class EducationProgramConfiguration {
             let textIndex = await this.getTextIndex(0, tableIndex, $data);
             if (textIndex.match(RegEx.typeRegex)) {
                 sections.push({
+                    order: sections.length,
                     name: 'đại cương',
                     subjects: [],
                 });
@@ -238,6 +239,7 @@ export class EducationProgramConfiguration {
                 //
                 if (typeTitles.includes('cơ sở ngành'.normalize('NFD')))
                     sections.push({
+                        order: sections.length,
                         name: 'cơ sở ngành',
                         subjects: [],
                     });
@@ -245,31 +247,37 @@ export class EducationProgramConfiguration {
                     typeTitles.includes('cơ sở nhóm ngành'.normalize('NFD'))
                 )
                     sections.push({
+                        order: sections.length,
                         name: 'cơ sở nhóm ngành',
                         subjects: [],
                     });
                 else if (typeTitles.includes('chuyên ngành'.normalize('NFD')))
                     sections.push({
+                        order: sections.length,
                         name: 'chuyên ngành',
                         subjects: [],
                     });
                 else if (typeTitles.includes('khác'.normalize('NFD')))
                     sections.push({
+                        order: sections.length,
                         name: 'khác',
                         subjects: [],
                     });
                 else if (typeTitles.includes('Thực tập'.normalize('NFD')))
                     sections.push({
+                        order: sections.length,
                         name: 'thực tập',
                         subjects: [],
                     });
                 else if (typeTitles.includes('đồ án'.normalize('NFD')))
                     sections.push({
+                        order: sections.length,
                         name: 'đồ án',
                         subjects: [],
                     });
                 else if (typeTitles.includes('Khóa luận'.normalize('NFD')))
                     sections.push({
+                        order: sections.length,
                         name: 'khoá luận',
                         subjects: [],
                     });
@@ -279,12 +287,14 @@ export class EducationProgramConfiguration {
                     )
                 )
                     sections.push({
+                        order: sections.length,
                         name: 'chuyên đề tốt nghiệp',
                         subjects: [],
                     });
                 //
                 else
                     sections.push({
+                        order: sections.length,
                         name: typeTitles + 1,
                         subjects: [],
                     });
