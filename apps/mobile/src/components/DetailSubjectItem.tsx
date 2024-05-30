@@ -1,19 +1,16 @@
 import { DeepPartial } from '@apollo/client/utilities';
 import { Text, View } from 'react-native';
-import { SectionSubject } from '../gql/graphql';
+import { SectionSubject, Subject } from '../gql/graphql';
 import NativeButton from './NativeButton/NativeButton';
 import Chip from './Chip';
-import { useSubjectSelection } from '../stores/subject-selection.store';
 import { useDetailSubjectRouter } from '../stores/subject-detail.store';
 
 type Props = {
-    subject: DeepPartial<SectionSubject>;
+    subject: DeepPartial<Subject>;
     onPress?: () => any;
 };
 
-export default function SelectionSubjectItem({ subject, onPress }: Props) {
-    const { subjects, addSubject, removeSubject } = useSubjectSelection();
-    const isSelected = subjects.some((s) => s.code === subject.code);
+export default function DetailSubjectItem({ subject, onPress }: Props) {
     const { navigateSubject } = useDetailSubjectRouter();
 
     return (
@@ -21,16 +18,10 @@ export default function SelectionSubjectItem({ subject, onPress }: Props) {
             className="border-[0.5px]"
             style={{
                 borderColor: '#CFCFCF',
-                backgroundColor: isSelected ? '#6BD2FF' : 'white',
             }}
         >
             <NativeButton
-                onPress={() =>
-                    isSelected
-                        ? removeSubject(subject.code)
-                        : addSubject(subject)
-                }
-                onLongPress={() => navigateSubject(subject)}
+                onPress={() => navigateSubject(subject)}
                 borderRadius={0}
             >
                 <View className=" px-4 py-2 flex-row justify-between items-start">
@@ -42,16 +33,12 @@ export default function SelectionSubjectItem({ subject, onPress }: Props) {
                         <Text className=" text-neutral-40">{subject.code}</Text>
                     </View>
                     <View className=" flex-row gap-2">
-                        {subject.isLearned ? (
-                            <Text className=" font-medium px-2">Đã học</Text>
-                        ) : (
-                            <Chip>
-                                {`${
-                                    subject.theoreticalCredit +
-                                    subject.practicalCredit
-                                } tín chỉ`}
-                            </Chip>
-                        )}
+                        <Chip>
+                            {`${
+                                subject.theoreticalCredit +
+                                subject.practicalCredit
+                            } tín chỉ`}
+                        </Chip>
                     </View>
                 </View>
             </NativeButton>

@@ -119,12 +119,41 @@ export class SectionResolver {
     }
 }
 
+@Resolver(() => Subject)
+export class SubjectResolver {
+    constructor(private readonly courseService: CourseService) {}
+
+    @ResolveField(() => Boolean)
+    @UseGuards(JwtAuthGuard)
+    async isLearned(
+        @CurrentUser() user: User,
+        @Parent() subject: Subject,
+    ): Promise<boolean> {
+        const learnedSubjectCodes =
+            await this.courseService.findLearnedSubjects(user);
+
+        return learnedSubjectCodes.includes(subject.code);
+    }
+}
+
 @Resolver(() => SectionSubject)
 export class SectionSubjectResolver {
     constructor(
         private readonly subjectService: SubjectService,
         private readonly courseService: CourseService,
     ) {}
+
+    @ResolveField(() => Boolean)
+    @UseGuards(JwtAuthGuard)
+    async isLearned(
+        @CurrentUser() user: User,
+        @Parent() subject: SectionSubject,
+    ): Promise<boolean> {
+        const learnedSubjectCodes =
+            await this.courseService.findLearnedSubjects(user);
+
+        return learnedSubjectCodes.includes(subject.code);
+    }
 
     @ResolveField(() => [Subject])
     async requiredSubjects(

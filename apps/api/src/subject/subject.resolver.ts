@@ -24,7 +24,8 @@ export class SubjectResolver {
     //     return this.subjecService.test();
     // }
 
-    @Query(() => Subject)
+    @Query(() => Subject, { nullable: true })
+    @UseGuards(JwtAuthGuard)
     async subject(
         @Args('code', { type: () => String, nullable: false }) code: string,
     ) {

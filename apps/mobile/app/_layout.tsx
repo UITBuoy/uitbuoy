@@ -105,6 +105,19 @@ function Layout() {
                         }}
                     />
                     <Stack.Screen
+                        name="modals/detail-subject"
+                        options={{
+                            title: 'Subject',
+                            presentation: 'modal',
+                            animation: 'simple_push',
+                            headerShadowVisible: false,
+                            headerStyle: { backgroundColor: 'white' },
+                            headerTintColor: 'black',
+                            headerTitleStyle: { fontSize: 16 },
+                            headerTitleAlign: 'center',
+                        }}
+                    />
+                    <Stack.Screen
                         name="modals/google-integration"
                         options={{
                             title: 'Google integration',

@@ -3,6 +3,7 @@ import { Text, View } from 'react-native';
 import { SectionSubject } from '../gql/graphql';
 import NativeButton from './NativeButton/NativeButton';
 import Chip from './Chip';
+import { useDetailSubjectRouter } from '../stores/subject-detail.store';
 
 type Props = {
     subject: DeepPartial<SectionSubject>;
@@ -10,6 +11,8 @@ type Props = {
 };
 
 export default function SubjectItem({ subject, onPress }: Props) {
+    const { navigateSubject } = useDetailSubjectRouter();
+
     return (
         <View
             className="border-[0.5px]"
@@ -18,7 +21,10 @@ export default function SubjectItem({ subject, onPress }: Props) {
                 opacity: subject.isLearned ? 0.3 : 1,
             }}
         >
-            <NativeButton onPress={onPress} borderRadius={0}>
+            <NativeButton
+                onPress={() => navigateSubject(subject)}
+                borderRadius={0}
+            >
                 <View className=" px-4 py-2 flex-row justify-between items-start">
                     <View
                         className=" flex-1 flex-col gap-1"

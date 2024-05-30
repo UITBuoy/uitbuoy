@@ -7,6 +7,7 @@ import {
     EducationProgramResolver,
     SectionResolver,
     SectionSubjectResolver,
+    SubjectResolver,
 } from './resolvers/education-program.resolver';
 import { LearningPathResolver } from './resolvers/learning-path.resolver';
 import { UserLearningPathResolver } from './resolvers/user-learning-path.resolver';
@@ -17,6 +18,7 @@ import { UserLearningPathResolver } from './resolvers/user-learning-path.resolve
         UserLearningPathResolver,
         LearningPathResolver,
         EducationProgramResolver,
+        SubjectResolver,
         SectionResolver,
         SectionSubjectResolver,
         LearningPathService,
