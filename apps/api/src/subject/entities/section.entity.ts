@@ -7,7 +7,7 @@ import {
     ManyToMany,
     ManyToOne,
     PrimaryGeneratedColumn,
-    Relation
+    Relation,
 } from 'typeorm';
 import type { EducationProgram } from './educationProgram.entity';
 import type { MajorSubject } from './majorSubject.entity';
@@ -30,6 +30,14 @@ export class Section {
     @Field(() => Int, { nullable: true })
     @Column({ nullable: true })
     totalCredit: number;
+
+    @Field(() => Int, { nullable: true })
+    @Column({ nullable: true })
+    minimumCredit: number;
+
+    @Field(() => Boolean, { nullable: true, defaultValue: false })
+    @Column({ nullable: true, default: false })
+    isOptional: boolean;
 
     @ManyToMany('MajorSubject', 'sections', { cascade: true })
     @JoinTable()

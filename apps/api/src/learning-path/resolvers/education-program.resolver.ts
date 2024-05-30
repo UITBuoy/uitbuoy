@@ -73,12 +73,24 @@ export class SectionResolver {
         const subjects = await this.subjectService.findSubjectsDataByCodes(
             section.subjects.map((subject) => subject.code),
         );
-        const totalCredit = subjects.reduce(
-            (total, subject) =>
-                total + subject.practicalCredit + subject.theoreticalCredit,
-            0,
+        const totalCredit = subjects
+            .filter((subject) =>
+                section.subjects.every(
+                    (s) =>
+                        s.code !== subject.code ||
+                        s.minimumOptionalCredit == null,
+                ),
+            )
+            .reduce(
+                (total, subject) =>
+                    total + subject.practicalCredit + subject.theoreticalCredit,
+                0,
+            );
+        return (
+            totalCredit +
+            (section.subjects.find((s) => s.minimumOptionalCredit != null)
+                ?.minimumOptionalCredit || 0)
         );
-        return totalCredit;
     }
 
     @ResolveField(() => Int)
