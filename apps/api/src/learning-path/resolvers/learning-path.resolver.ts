@@ -17,7 +17,7 @@ export class LearningPathResolver {
         private readonly subjectService: SubjectService,
     ) {}
 
-    @Mutation(() => [SemesterProgram])
+    @Query(() => [SemesterProgram])
     @UseGuards(JwtAuthGuard)
     async recommendLearningPath(
         @CurrentUser() user: User,

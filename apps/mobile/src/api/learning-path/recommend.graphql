@@ -1,0 +1,26 @@
+query RecommendLearningPath(
+    $expectedSemesterNum: Int
+    $selectedSubjectCodes: [String!]
+) {
+    recommendLearningPath(
+        expectedSemesterNum: $expectedSemesterNum
+        selectedSubjectCodes: $selectedSubjectCodes
+    ) {
+        index
+        subjects {
+            code
+            department
+            equivalentCode
+            isActive
+            nameEN
+            nameVN
+            oldCode
+            practicalCredit
+            previousCode
+            requiredCode
+            summary
+            theoreticalCredit
+            type
+        }
+    }
+}

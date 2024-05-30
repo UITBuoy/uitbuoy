@@ -67,6 +67,8 @@ export type AuthEntity = {
   profileimageurlsmall?: Maybe<Scalars['String']['output']>;
   refreshTokenExpiredDate?: Maybe<Scalars['Date']['output']>;
   refresh_token?: Maybe<Scalars['String']['output']>;
+  /** Current semester of the user */
+  semester: Scalars['Int']['output'];
   suspended?: Maybe<Scalars['String']['output']>;
   theme?: Maybe<Scalars['String']['output']>;
   timezone?: Maybe<Scalars['String']['output']>;
@@ -250,6 +252,7 @@ export type EducationProgram = {
   link?: Maybe<Scalars['String']['output']>;
   majorName: Scalars['String']['output'];
   sections: Array<Section>;
+  semesterNum: Scalars['Int']['output'];
   totalCredit: Scalars['Int']['output'];
   trainingSystem?: Maybe<Scalars['String']['output']>;
   year: Scalars['String']['output'];
@@ -577,6 +580,7 @@ export type Query = {
   profile: User;
   /** Return all elective subjects recommend for user */
   recommendElectiveSubject: Array<ElectiveSubjectsResult>;
+  recommendLearningPath: Array<SemesterProgram>;
   /** Return all subjects recommend for user */
   recommendSubject: Array<Subject>;
   sections: Array<Section>;
@@ -667,6 +671,12 @@ export type QueryRecommendElectiveSubjectArgs = {
 };
 
 
+export type QueryRecommendLearningPathArgs = {
+  expectedSemesterNum?: InputMaybe<Scalars['Int']['input']>;
+  selectedSubjectCodes?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+
 export type QueryRecommendSubjectArgs = {
   isNew?: InputMaybe<Scalars['Boolean']['input']>;
   isRecent?: InputMaybe<Scalars['Boolean']['input']>;
@@ -697,7 +707,9 @@ export type QueryUserEventsArgs = {
 export type Section = {
   __typename?: 'Section';
   id: Scalars['String']['output'];
+  isOptional?: Maybe<Scalars['Boolean']['output']>;
   learnedCredit: Scalars['Int']['output'];
+  minimumCredit?: Maybe<Scalars['Int']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   order?: Maybe<Scalars['Int']['output']>;
   subjects: Array<SectionSubject>;
@@ -727,6 +739,12 @@ export type SectionSubject = {
   summary?: Maybe<Scalars['String']['output']>;
   theoreticalCredit?: Maybe<Scalars['Int']['output']>;
   type?: Maybe<Scalars['String']['output']>;
+};
+
+export type SemesterProgram = {
+  __typename?: 'SemesterProgram';
+  index: Scalars['Int']['output'];
+  subjects: Array<Subject>;
 };
 
 export type Subject = {
@@ -784,6 +802,8 @@ export type User = {
   preferences: Array<UserPreference>;
   profileimageurl?: Maybe<Scalars['String']['output']>;
   profileimageurlsmall?: Maybe<Scalars['String']['output']>;
+  /** Current semester of the user */
+  semester: Scalars['Int']['output'];
   suspended?: Maybe<Scalars['String']['output']>;
   theme?: Maybe<Scalars['String']['output']>;
   timezone?: Maybe<Scalars['String']['output']>;
@@ -818,7 +838,7 @@ export type LoginApiMutation = { __typename?: 'Mutation', login: { __typename?: 
 export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', auth?: string | null, city?: string | null, confirmed?: string | null, country?: string | null, department?: string | null, email: string, firstaccess?: number | null, fullname: string, id?: number | null, isIntegrateWithGoogle?: boolean | null, lang?: string | null, lastaccess?: number | null, mailformat?: string | null, profileimageurl?: string | null, profileimageurlsmall?: string | null, suspended?: string | null, theme?: string | null, timezone?: string | null, token: string, username: string, year: string, majorName: string } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', auth?: string | null, city?: string | null, confirmed?: string | null, country?: string | null, department?: string | null, email: string, firstaccess?: number | null, fullname: string, id?: number | null, isIntegrateWithGoogle?: boolean | null, lang?: string | null, lastaccess?: number | null, mailformat?: string | null, profileimageurl?: string | null, profileimageurlsmall?: string | null, suspended?: string | null, theme?: string | null, timezone?: string | null, token: string, username: string, year: string, majorName: string, semester: number } };
 
 export type UploadNotificationConfigMutationVariables = Exact<{
   beforeDay?: InputMaybe<Scalars['Float']['input']>;
@@ -897,6 +917,14 @@ export type UserEducationProgramQueryVariables = Exact<{ [key: string]: never; }
 
 export type UserEducationProgramQuery = { __typename?: 'Query', userEducationProgram: { __typename?: 'EducationProgram', link?: string | null, majorName: string, totalCredit: number, trainingSystem?: string | null, year: string, sections: Array<{ __typename?: 'Section', id: string, name?: string | null, order?: number | null, totalCredit?: number | null, learnedCredit: number, subjects: Array<{ __typename?: 'SectionSubject', code: string, department: string, equivalentCode?: string | null, id: string, isActive: boolean, isFree?: boolean | null, isRequired?: boolean | null, minimumOptionalCredit?: number | null, nameEN: string, nameVN: string, oldCode?: string | null, practicalCredit?: number | null, previousCode?: string | null, requiredCode?: string | null, summary?: string | null, theoreticalCredit?: number | null, type?: string | null, isLearned: boolean }> }> } };
 
+export type RecommendLearningPathQueryVariables = Exact<{
+  expectedSemesterNum?: InputMaybe<Scalars['Int']['input']>;
+  selectedSubjectCodes?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+}>;
+
+
+export type RecommendLearningPathQuery = { __typename?: 'Query', recommendLearningPath: Array<{ __typename?: 'SemesterProgram', index: number, subjects: Array<{ __typename?: 'Subject', code: string, department: string, equivalentCode?: string | null, isActive: boolean, nameEN: string, nameVN: string, oldCode?: string | null, practicalCredit: number, previousCode?: string | null, requiredCode?: string | null, summary?: string | null, theoreticalCredit: number, type: string }> }> };
+
 export type UserMakeUpClassQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -908,6 +936,13 @@ export type CourseMakeUpClassQueryVariables = Exact<{
 
 
 export type CourseMakeUpClassQuery = { __typename?: 'Query', makeUpClass: Array<{ __typename?: 'MakeUpClass', classId: string, classroom?: string | null, courseCode: string, createdDate: number, end: number, start: number, time: number, title: string }> };
+
+export type SubjectQueryVariables = Exact<{
+  code: Scalars['String']['input'];
+}>;
+
+
+export type SubjectQuery = { __typename?: 'Query', subject: { __typename?: 'Subject', code: string, department: string, equivalentCode?: string | null, isActive: boolean, nameEN: string, nameVN: string, oldCode?: string | null, practicalCredit: number, previousCode?: string | null, requiredCode?: string | null, summary?: string | null, theoreticalCredit: number, type: string, equivalentSubjects: Array<{ __typename?: 'Subject', code: string, department: string, equivalentCode?: string | null, isActive: boolean, nameEN: string, nameVN: string, oldCode?: string | null, practicalCredit: number, previousCode?: string | null, requiredCode?: string | null, summary?: string | null, theoreticalCredit: number, type: string }>, previousSubjects: Array<{ __typename?: 'Subject', code: string, department: string, equivalentCode?: string | null, isActive: boolean, nameEN: string, nameVN: string, oldCode?: string | null, practicalCredit: number, previousCode?: string | null, requiredCode?: string | null, summary?: string | null, theoreticalCredit: number, type: string }>, requiredSubjects: Array<{ __typename?: 'Subject', code: string, department: string, equivalentCode?: string | null, isActive: boolean, nameEN: string, nameVN: string, oldCode?: string | null, practicalCredit: number, previousCode?: string | null, requiredCode?: string | null, summary?: string | null, theoreticalCredit: number, type: string }> } };
 
 
 export const AddGoogleUserDocument = gql`
@@ -1029,6 +1064,7 @@ export const ProfileDocument = gql`
     username
     year
     majorName
+    semester
   }
 }
     `;
@@ -1695,6 +1731,68 @@ export type UserEducationProgramQueryResult = Apollo.QueryResult<UserEducationPr
 export function refetchUserEducationProgramQuery(variables?: UserEducationProgramQueryVariables) {
       return { query: UserEducationProgramDocument, variables: variables }
     }
+export const RecommendLearningPathDocument = gql`
+    query RecommendLearningPath($expectedSemesterNum: Int, $selectedSubjectCodes: [String!]) {
+  recommendLearningPath(
+    expectedSemesterNum: $expectedSemesterNum
+    selectedSubjectCodes: $selectedSubjectCodes
+  ) {
+    index
+    subjects {
+      code
+      department
+      equivalentCode
+      isActive
+      nameEN
+      nameVN
+      oldCode
+      practicalCredit
+      previousCode
+      requiredCode
+      summary
+      theoreticalCredit
+      type
+    }
+  }
+}
+    `;
+
+/**
+ * __useRecommendLearningPathQuery__
+ *
+ * To run a query within a React component, call `useRecommendLearningPathQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRecommendLearningPathQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRecommendLearningPathQuery({
+ *   variables: {
+ *      expectedSemesterNum: // value for 'expectedSemesterNum'
+ *      selectedSubjectCodes: // value for 'selectedSubjectCodes'
+ *   },
+ * });
+ */
+export function useRecommendLearningPathQuery(baseOptions?: Apollo.QueryHookOptions<RecommendLearningPathQuery, RecommendLearningPathQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RecommendLearningPathQuery, RecommendLearningPathQueryVariables>(RecommendLearningPathDocument, options);
+      }
+export function useRecommendLearningPathLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RecommendLearningPathQuery, RecommendLearningPathQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RecommendLearningPathQuery, RecommendLearningPathQueryVariables>(RecommendLearningPathDocument, options);
+        }
+export function useRecommendLearningPathSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<RecommendLearningPathQuery, RecommendLearningPathQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<RecommendLearningPathQuery, RecommendLearningPathQueryVariables>(RecommendLearningPathDocument, options);
+        }
+export type RecommendLearningPathQueryHookResult = ReturnType<typeof useRecommendLearningPathQuery>;
+export type RecommendLearningPathLazyQueryHookResult = ReturnType<typeof useRecommendLearningPathLazyQuery>;
+export type RecommendLearningPathSuspenseQueryHookResult = ReturnType<typeof useRecommendLearningPathSuspenseQuery>;
+export type RecommendLearningPathQueryResult = Apollo.QueryResult<RecommendLearningPathQuery, RecommendLearningPathQueryVariables>;
+export function refetchRecommendLearningPathQuery(variables?: RecommendLearningPathQueryVariables) {
+      return { query: RecommendLearningPathDocument, variables: variables }
+    }
 export const UserMakeUpClassDocument = gql`
     query UserMakeUpClass {
   makeUpClass {
@@ -1793,4 +1891,104 @@ export type CourseMakeUpClassSuspenseQueryHookResult = ReturnType<typeof useCour
 export type CourseMakeUpClassQueryResult = Apollo.QueryResult<CourseMakeUpClassQuery, CourseMakeUpClassQueryVariables>;
 export function refetchCourseMakeUpClassQuery(variables?: CourseMakeUpClassQueryVariables) {
       return { query: CourseMakeUpClassDocument, variables: variables }
+    }
+export const SubjectDocument = gql`
+    query Subject($code: String!) {
+  subject(code: $code) {
+    code
+    department
+    equivalentCode
+    isActive
+    nameEN
+    nameVN
+    oldCode
+    practicalCredit
+    previousCode
+    requiredCode
+    summary
+    theoreticalCredit
+    type
+    equivalentSubjects {
+      code
+      department
+      equivalentCode
+      isActive
+      nameEN
+      nameVN
+      oldCode
+      practicalCredit
+      previousCode
+      requiredCode
+      summary
+      theoreticalCredit
+      type
+    }
+    previousSubjects {
+      code
+      department
+      equivalentCode
+      isActive
+      nameEN
+      nameVN
+      oldCode
+      practicalCredit
+      previousCode
+      requiredCode
+      summary
+      theoreticalCredit
+      type
+    }
+    requiredSubjects {
+      code
+      department
+      equivalentCode
+      isActive
+      nameEN
+      nameVN
+      oldCode
+      practicalCredit
+      previousCode
+      requiredCode
+      summary
+      theoreticalCredit
+      type
+    }
+  }
+}
+    `;
+
+/**
+ * __useSubjectQuery__
+ *
+ * To run a query within a React component, call `useSubjectQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSubjectQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSubjectQuery({
+ *   variables: {
+ *      code: // value for 'code'
+ *   },
+ * });
+ */
+export function useSubjectQuery(baseOptions: Apollo.QueryHookOptions<SubjectQuery, SubjectQueryVariables> & ({ variables: SubjectQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SubjectQuery, SubjectQueryVariables>(SubjectDocument, options);
+      }
+export function useSubjectLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SubjectQuery, SubjectQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SubjectQuery, SubjectQueryVariables>(SubjectDocument, options);
+        }
+export function useSubjectSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<SubjectQuery, SubjectQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<SubjectQuery, SubjectQueryVariables>(SubjectDocument, options);
+        }
+export type SubjectQueryHookResult = ReturnType<typeof useSubjectQuery>;
+export type SubjectLazyQueryHookResult = ReturnType<typeof useSubjectLazyQuery>;
+export type SubjectSuspenseQueryHookResult = ReturnType<typeof useSubjectSuspenseQuery>;
+export type SubjectQueryResult = Apollo.QueryResult<SubjectQuery, SubjectQueryVariables>;
+export function refetchSubjectQuery(variables: SubjectQueryVariables) {
+      return { query: SubjectDocument, variables: variables }
     }
