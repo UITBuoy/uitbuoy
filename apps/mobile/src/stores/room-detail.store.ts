@@ -1,12 +1,12 @@
 import { router } from 'expo-router';
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
-import { Subject } from '../gql/graphql';
+import { Room } from '../gql/graphql';
 import { DeepPartial } from '@apollo/client/utilities';
 
 export type IRoomDetailRouter = {
-    id: string;
-    navigateRoom: (id: string) => any;
+    room?: DeepPartial<Room>;
+    navigateRoom: (room: DeepPartial<Room>) => any;
 };
 
 export const useDetailRoomRouter = create<
@@ -14,14 +14,13 @@ export const useDetailRoomRouter = create<
     [['zustand/immer', never]]
 >(
     immer<IRoomDetailRouter>((set, get) => ({
-        id: '',
-        navigateRoom: (id: string) => {
+        navigateRoom: (room: DeepPartial<Room>) => {
             set((state) => {
-                state.id = id;
+                state.room = room;
             });
             router.push({
                 pathname: '/modals/chat-room',
-                params: { id: get().id },
+                params: { id: get().room },
             });
         },
     })),

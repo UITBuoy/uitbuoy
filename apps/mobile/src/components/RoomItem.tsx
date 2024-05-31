@@ -16,7 +16,7 @@ export default function RoomItem({ room }: Props) {
         <View className=" m-2">
             <NativeButton
                 onPress={() => {
-                    navigateRoom(room.id);
+                    navigateRoom(room);
                 }}
             >
                 <View className=" px-4 py-2 flex-row gap-2 items-center">
