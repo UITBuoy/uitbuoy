@@ -18,6 +18,7 @@ import { AssignmentApiService } from '@/event/services/assignment-api.service';
 import { SubjectModule } from '@/subject/subject.module';
 import { SubjectService } from '@/subject/services/subject.service';
 import { UserModule } from '@/user/user.module';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
     imports: [
@@ -30,6 +31,21 @@ import { UserModule } from '@/user/user.module';
         TypeOrmModule.forFeature([CourseContentEntity]),
         forwardRef(() => SubjectModule),
         UserModule,
+        ClientsModule.register([
+            {
+                name: 'MOODLE_SERVICE',
+                transport: Transport.KAFKA,
+                options: {
+                    client: {
+                        clientId: 'moodle',
+                        brokers: ['localhost:29092'],
+                    },
+                    consumer: {
+                        groupId: 'moodle-consumer',
+                    },
+                },
+            },
+        ]),
     ],
     providers: [
         CourseResolver,

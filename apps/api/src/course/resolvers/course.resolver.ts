@@ -1,4 +1,4 @@
-import { UseGuards } from '@nestjs/common';
+import { Inject, OnModuleInit, UseGuards } from '@nestjs/common';
 import {
     Args,
     Int,
@@ -32,8 +32,11 @@ import {
 } from '@/common/args/electiveSubjects.arg';
 import { ElectiveSubjectsResult } from '../dto/elective-subject-result.dto copy';
 
+import { Client, Transport, ClientKafka } from '@nestjs/microservices';
+import { firstValueFrom, take, tap } from 'rxjs';
+
 @Resolver(() => Course)
-export class CourseResolver {
+export class CourseResolver implements OnModuleInit {
     constructor(
         private readonly courseService: CourseService,
         private readonly courseApiService: CourseApiService,
@@ -41,7 +44,20 @@ export class CourseResolver {
         private readonly lecturerService: LecturerService,
         private readonly assignmentApiService: AssignmentApiService,
         private readonly subjectService: SubjectService,
+        @Inject('MOODLE_SERVICE') private readonly client: ClientKafka,
     ) {}
+
+    onModuleInit() {
+        // this.client.connect();
+        // this.client.subscribeToResponseOf('course.crawl');
+    }
+
+    @Query(() => User)
+    @UseGuards(JwtAuthGuard)
+    async crawlCourse(@CurrentUser() user: User) {
+        this.client.emit('course.crawl', user);
+        return user;
+    }
 
     @Query(() => [ElectiveSubjectsResult], {
         description: 'Return all elective subjects recommend for user',

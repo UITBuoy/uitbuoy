@@ -3,22 +3,28 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { LoggerService } from './logger/logger.service';
+import { Transport, MicroserviceOptions } from '@nestjs/microservices';
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule);
+    // const app = await NestFactory.create(AppModule);
+    const app = await NestFactory.createMicroservice<MicroserviceOptions>(
+        AppModule,
+        {
+            transport: Transport.KAFKA,
+            options: {
+                client: {
+                    brokers: ['localhost:29092'],
+                },
+            },
+        },
+    );
 
     const logger = app.get(LoggerService);
-    const configService = app.get(ConfigService);
 
     app.useGlobalInterceptors(new LoggingInterceptor(logger));
     app.enableShutdownHooks();
     app.useLogger(logger);
-    app.enableCors({ origin: true, credentials: true });
 
-    app.startAllMicroservices();
-
-    const PORT = parseInt(configService.get<string>('APP_PORT'));
-
-    await app.listen(PORT);
+    await app.listen();
 }
 bootstrap();

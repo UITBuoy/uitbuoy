@@ -4,7 +4,7 @@
   "scripts": {
     "build": "turbo build",
     "dev:android": "turbo dev --filter=api --filter=mobile",
-    "dev:api": "turbo dev --filter=api",
+    "dev:api": "turbo dev --filter=api --filter=moodle-api",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
@@ -19,9 +19,11 @@
     "node": ">=18"
   },
   "dependencies": {
+    "@nestjs/microservices": "^10.3.8",
     "apollo-link-token-refresh": "^0.6.1",
     "axios": "^1.6.7",
     "jwt-decode": "^4.0.0",
+    "kafkajs": "^2.2.4",
     "moment": "^2.30.1",
     "serverless": "^3.38.0"
   },
