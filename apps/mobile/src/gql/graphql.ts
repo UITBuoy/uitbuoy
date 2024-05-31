@@ -421,6 +421,15 @@ export type MakeUpClass = {
   title: Scalars['String']['output'];
 };
 
+export type Message = {
+  __typename?: 'Message';
+  content: Scalars['String']['output'];
+  date: Scalars['Float']['output'];
+  id: Scalars['String']['output'];
+  receiverId: Scalars['String']['output'];
+  senderId: Scalars['String']['output'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   /** Add new event reminder */
@@ -572,6 +581,7 @@ export type Query = {
   /** Return learning code of elective subjects */
   giveLearningPathSubjectCodes: GiveLearningPathSubjectCodesResult;
   makeUpClass: Array<MakeUpClass>;
+  messages: Array<Message>;
   /** Retrieving news feed item */
   newsFeed: Array<NewsFeed>;
   /** Retrieving news feed detail with title */
@@ -583,8 +593,9 @@ export type Query = {
   recommendLearningPath: Array<SemesterProgram>;
   /** Return all subjects recommend for user */
   recommendSubject: Array<Subject>;
+  rooms: Array<Room>;
   sections: Array<Section>;
-  subject: Subject;
+  subject?: Maybe<Subject>;
   /** Return all course of current user */
   userCourses: Array<Course>;
   /** Current user's education program */
@@ -646,6 +657,11 @@ export type QueryMakeUpClassArgs = {
 };
 
 
+export type QueryMessagesArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type QueryNewsFeedArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   skip?: InputMaybe<Scalars['Int']['input']>;
@@ -704,6 +720,13 @@ export type QueryUserEventsArgs = {
   keyword?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type Room = {
+  __typename?: 'Room';
+  id: Scalars['String']['output'];
+  lastMessage: Message;
+  user: User;
+};
+
 export type Section = {
   __typename?: 'Section';
   id: Scalars['String']['output'];
@@ -734,6 +757,7 @@ export type SectionSubject = {
   practicalCredit?: Maybe<Scalars['Int']['output']>;
   previousCode?: Maybe<Scalars['String']['output']>;
   previousSubjects: Array<Subject>;
+  priority?: Maybe<Scalars['Int']['output']>;
   requiredCode?: Maybe<Scalars['String']['output']>;
   requiredSubjects: Array<Subject>;
   summary?: Maybe<Scalars['String']['output']>;
@@ -754,12 +778,14 @@ export type Subject = {
   equivalentCode?: Maybe<Scalars['String']['output']>;
   equivalentSubjects: Array<Subject>;
   isActive: Scalars['Boolean']['output'];
+  isLearned: Scalars['Boolean']['output'];
   nameEN: Scalars['String']['output'];
   nameVN: Scalars['String']['output'];
   oldCode?: Maybe<Scalars['String']['output']>;
   practicalCredit: Scalars['Int']['output'];
   previousCode?: Maybe<Scalars['String']['output']>;
   previousSubjects: Array<Subject>;
+  priority?: Maybe<Scalars['Int']['output']>;
   requiredCode?: Maybe<Scalars['String']['output']>;
   requiredSubjects: Array<Subject>;
   summary?: Maybe<Scalars['String']['output']>;
@@ -839,6 +865,18 @@ export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', auth?: string | null, city?: string | null, confirmed?: string | null, country?: string | null, department?: string | null, email: string, firstaccess?: number | null, fullname: string, id?: number | null, isIntegrateWithGoogle?: boolean | null, lang?: string | null, lastaccess?: number | null, mailformat?: string | null, profileimageurl?: string | null, profileimageurlsmall?: string | null, suspended?: string | null, theme?: string | null, timezone?: string | null, token: string, username: string, year: string, majorName: string, semester: number } };
+
+export type MessagesQueryVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type MessagesQuery = { __typename?: 'Query', messages: Array<{ __typename?: 'Message', content: string, date: number, id: string, receiverId: string, senderId: string }> };
+
+export type RoomsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type RoomsQuery = { __typename?: 'Query', rooms: Array<{ __typename?: 'Room', id: string, lastMessage: { __typename?: 'Message', content: string, date: number, id: string, receiverId: string, senderId: string }, user: { __typename?: 'User', auth?: string | null, city?: string | null, confirmed?: string | null, country?: string | null, department?: string | null, email: string, firstaccess?: number | null, fullname: string, id?: number | null, isIntegrateWithGoogle?: boolean | null, lang?: string | null, lastaccess?: number | null, mailformat?: string | null, majorName: string, profileimageurl?: string | null, profileimageurlsmall?: string | null, semester: number, suspended?: string | null, theme?: string | null, timezone?: string | null, token: string, username: string, year: string } }> };
 
 export type UploadNotificationConfigMutationVariables = Exact<{
   beforeDay?: InputMaybe<Scalars['Float']['input']>;
@@ -942,7 +980,7 @@ export type SubjectQueryVariables = Exact<{
 }>;
 
 
-export type SubjectQuery = { __typename?: 'Query', subject: { __typename?: 'Subject', code: string, department: string, equivalentCode?: string | null, isActive: boolean, nameEN: string, nameVN: string, oldCode?: string | null, practicalCredit: number, previousCode?: string | null, requiredCode?: string | null, summary?: string | null, theoreticalCredit: number, type: string, equivalentSubjects: Array<{ __typename?: 'Subject', code: string, department: string, equivalentCode?: string | null, isActive: boolean, nameEN: string, nameVN: string, oldCode?: string | null, practicalCredit: number, previousCode?: string | null, requiredCode?: string | null, summary?: string | null, theoreticalCredit: number, type: string }>, previousSubjects: Array<{ __typename?: 'Subject', code: string, department: string, equivalentCode?: string | null, isActive: boolean, nameEN: string, nameVN: string, oldCode?: string | null, practicalCredit: number, previousCode?: string | null, requiredCode?: string | null, summary?: string | null, theoreticalCredit: number, type: string }>, requiredSubjects: Array<{ __typename?: 'Subject', code: string, department: string, equivalentCode?: string | null, isActive: boolean, nameEN: string, nameVN: string, oldCode?: string | null, practicalCredit: number, previousCode?: string | null, requiredCode?: string | null, summary?: string | null, theoreticalCredit: number, type: string }> } };
+export type SubjectQuery = { __typename?: 'Query', subject?: { __typename?: 'Subject', code: string, department: string, equivalentCode?: string | null, isActive: boolean, nameEN: string, nameVN: string, oldCode?: string | null, practicalCredit: number, previousCode?: string | null, requiredCode?: string | null, summary?: string | null, theoreticalCredit: number, type: string, equivalentSubjects: Array<{ __typename?: 'Subject', code: string, department: string, equivalentCode?: string | null, isActive: boolean, nameEN: string, nameVN: string, oldCode?: string | null, practicalCredit: number, previousCode?: string | null, requiredCode?: string | null, summary?: string | null, theoreticalCredit: number, type: string }>, previousSubjects: Array<{ __typename?: 'Subject', code: string, department: string, equivalentCode?: string | null, isActive: boolean, nameEN: string, nameVN: string, oldCode?: string | null, practicalCredit: number, previousCode?: string | null, requiredCode?: string | null, summary?: string | null, theoreticalCredit: number, type: string }>, requiredSubjects: Array<{ __typename?: 'Subject', code: string, department: string, equivalentCode?: string | null, isActive: boolean, nameEN: string, nameVN: string, oldCode?: string | null, practicalCredit: number, previousCode?: string | null, requiredCode?: string | null, summary?: string | null, theoreticalCredit: number, type: string }> } | null };
 
 
 export const AddGoogleUserDocument = gql`
@@ -1102,6 +1140,127 @@ export type ProfileSuspenseQueryHookResult = ReturnType<typeof useProfileSuspens
 export type ProfileQueryResult = Apollo.QueryResult<ProfileQuery, ProfileQueryVariables>;
 export function refetchProfileQuery(variables?: ProfileQueryVariables) {
       return { query: ProfileDocument, variables: variables }
+    }
+export const MessagesDocument = gql`
+    query Messages($id: String!) {
+  messages(id: $id) {
+    content
+    date
+    id
+    receiverId
+    senderId
+  }
+}
+    `;
+
+/**
+ * __useMessagesQuery__
+ *
+ * To run a query within a React component, call `useMessagesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMessagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMessagesQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useMessagesQuery(baseOptions: Apollo.QueryHookOptions<MessagesQuery, MessagesQueryVariables> & ({ variables: MessagesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MessagesQuery, MessagesQueryVariables>(MessagesDocument, options);
+      }
+export function useMessagesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MessagesQuery, MessagesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MessagesQuery, MessagesQueryVariables>(MessagesDocument, options);
+        }
+export function useMessagesSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<MessagesQuery, MessagesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<MessagesQuery, MessagesQueryVariables>(MessagesDocument, options);
+        }
+export type MessagesQueryHookResult = ReturnType<typeof useMessagesQuery>;
+export type MessagesLazyQueryHookResult = ReturnType<typeof useMessagesLazyQuery>;
+export type MessagesSuspenseQueryHookResult = ReturnType<typeof useMessagesSuspenseQuery>;
+export type MessagesQueryResult = Apollo.QueryResult<MessagesQuery, MessagesQueryVariables>;
+export function refetchMessagesQuery(variables: MessagesQueryVariables) {
+      return { query: MessagesDocument, variables: variables }
+    }
+export const RoomsDocument = gql`
+    query Rooms {
+  rooms {
+    id
+    lastMessage {
+      content
+      date
+      id
+      receiverId
+      senderId
+    }
+    user {
+      auth
+      city
+      confirmed
+      country
+      department
+      email
+      firstaccess
+      fullname
+      id
+      isIntegrateWithGoogle
+      lang
+      lastaccess
+      mailformat
+      majorName
+      profileimageurl
+      profileimageurlsmall
+      semester
+      suspended
+      theme
+      timezone
+      token
+      username
+      year
+    }
+  }
+}
+    `;
+
+/**
+ * __useRoomsQuery__
+ *
+ * To run a query within a React component, call `useRoomsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRoomsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRoomsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useRoomsQuery(baseOptions?: Apollo.QueryHookOptions<RoomsQuery, RoomsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RoomsQuery, RoomsQueryVariables>(RoomsDocument, options);
+      }
+export function useRoomsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RoomsQuery, RoomsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RoomsQuery, RoomsQueryVariables>(RoomsDocument, options);
+        }
+export function useRoomsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<RoomsQuery, RoomsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<RoomsQuery, RoomsQueryVariables>(RoomsDocument, options);
+        }
+export type RoomsQueryHookResult = ReturnType<typeof useRoomsQuery>;
+export type RoomsLazyQueryHookResult = ReturnType<typeof useRoomsLazyQuery>;
+export type RoomsSuspenseQueryHookResult = ReturnType<typeof useRoomsSuspenseQuery>;
+export type RoomsQueryResult = Apollo.QueryResult<RoomsQuery, RoomsQueryVariables>;
+export function refetchRoomsQuery(variables?: RoomsQueryVariables) {
+      return { query: RoomsDocument, variables: variables }
     }
 export const UploadNotificationConfigDocument = gql`
     mutation UploadNotificationConfig($beforeDay: Float, $token: String!) {

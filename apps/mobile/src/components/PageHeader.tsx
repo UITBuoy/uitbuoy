@@ -11,7 +11,12 @@ export default function PageHeader() {
                 <DrawerIcon />
             </TouchableOpacity>
             <View className=" flex flex-row gap-6">
-                <TouchableOpacity className=" p-1">
+                <TouchableOpacity
+                    onPress={() => {
+                        router.push('/modals/chat-list');
+                    }}
+                    className=" p-1"
+                >
                     <MessageIcon />
                 </TouchableOpacity>
                 <TouchableOpacity

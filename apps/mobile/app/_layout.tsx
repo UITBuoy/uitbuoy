@@ -118,6 +118,32 @@ function Layout() {
                         }}
                     />
                     <Stack.Screen
+                        name="modals/chat-list"
+                        options={{
+                            title: 'Nhắn tin',
+                            presentation: 'modal',
+                            animation: 'simple_push',
+                            headerShadowVisible: false,
+                            headerStyle: { backgroundColor: 'white' },
+                            headerTintColor: 'black',
+                            headerTitleStyle: { fontSize: 16 },
+                            headerTitleAlign: 'center',
+                        }}
+                    />
+                    <Stack.Screen
+                        name="modals/chat-room"
+                        options={{
+                            title: 'Nhắn tin',
+                            presentation: 'modal',
+                            animation: 'slide_from_right',
+                            headerShadowVisible: false,
+                            headerStyle: { backgroundColor: 'white' },
+                            headerTintColor: 'black',
+                            headerTitleStyle: { fontSize: 16 },
+                            headerTitleAlign: 'center',
+                        }}
+                    />
+                    <Stack.Screen
                         name="modals/google-integration"
                         options={{
                             title: 'Google integration',

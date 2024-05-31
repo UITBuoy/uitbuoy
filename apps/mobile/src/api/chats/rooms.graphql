@@ -1,0 +1,37 @@
+query Rooms {
+    rooms {
+        id
+        lastMessage {
+            content
+            date
+            id
+            receiverId
+            senderId
+        }
+        user {
+            auth
+            city
+            confirmed
+            country
+            department
+            email
+            firstaccess
+            fullname
+            id
+            isIntegrateWithGoogle
+            lang
+            lastaccess
+            mailformat
+            majorName
+            profileimageurl
+            profileimageurlsmall
+            semester
+            suspended
+            theme
+            timezone
+            token
+            username
+            year
+        }
+    }
+}

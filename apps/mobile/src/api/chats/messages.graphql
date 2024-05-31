@@ -1,0 +1,9 @@
+query Messages($id: String!) {
+    messages(id: $id) {
+        content
+        date
+        id
+        receiverId
+        senderId
+    }
+}
