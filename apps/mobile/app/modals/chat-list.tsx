@@ -7,7 +7,7 @@ import RoomItem from '../../src/components/RoomItem';
 export default function Page() {
     const navigation = useNavigation();
 
-    const { data, loading } = useRoomsQuery();
+    const { data, loading } = useRoomsQuery({ fetchPolicy: 'network-only' });
 
     useEffect(() => {
         navigation.setOptions({ title: 'Nhắn tin' });

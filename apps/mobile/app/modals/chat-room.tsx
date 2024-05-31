@@ -2,10 +2,15 @@ import { useNavigation } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { FlatList, View, Text } from 'react-native';
 import MessageItem from './MessageItem';
-import { Message, useMessagesQuery } from '../../src/gql/graphql';
+import {
+    Message,
+    useMessagesQuery,
+    useProfileQuery,
+} from '../../src/gql/graphql';
 import { useDetailRoomRouter } from '../../src/stores/room-detail.store';
 import TextField from '../../src/components/TextField/TextField';
 import PrimaryButton from '../../src/components/PrimaryButton';
+import socket from '../../src/api/socket';
 
 export default function Page() {
     const navigation = useNavigation();
@@ -19,6 +24,8 @@ export default function Page() {
         variables: { id: room.id },
         fetchPolicy: 'network-only',
     });
+
+    const { data: profile } = useProfileQuery();
 
     useEffect(() => {
         if (data) {
@@ -56,6 +63,11 @@ export default function Page() {
                         <PrimaryButton
                             onPress={() => {
                                 setContent('');
+                                socket.emit('chat', {
+                                    content,
+                                    senderId: profile.profile.id.toString(),
+                                    receiverId: room.id,
+                                } as Message);
                             }}
                         >
                             <Text className=" text-white py-2 font-semibold">
