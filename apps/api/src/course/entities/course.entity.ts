@@ -3,6 +3,7 @@ import type { MakeUpClass } from '@/make-up-class/entities/make-up-class.entity'
 import type { User } from '@/user/entities/user.entity';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import {
+    AfterInsert,
     AfterLoad,
     Column,
     Entity,
@@ -12,6 +13,7 @@ import {
     Relation,
 } from 'typeorm';
 import type { CourseSectionEntity } from './course-section.entity';
+import { EventEntity } from '@/event/entities/event.entity';
 
 @ObjectType()
 @Entity()
@@ -164,6 +166,9 @@ export class Course {
 
     @OneToMany('MakeUpClass', 'course')
     makeUpClasses: Relation<MakeUpClass>[];
+
+    @OneToMany('EventEntity', 'course')
+    events: Relation<EventEntity>[];
 
     @AfterLoad()
     loadFullName?() {

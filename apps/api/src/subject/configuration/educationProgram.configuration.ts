@@ -35,7 +35,7 @@ export class EducationProgramConfiguration {
                 const educationProgram = { ...major, year: year.yearName };
 
                 try {
-                        await this.educationProgramRepo.save(educationProgram);
+                    await this.educationProgramRepo.save(educationProgram);
                 } catch (error) {
                     console.log({ major, error });
                 }
@@ -194,7 +194,8 @@ export class EducationProgramConfiguration {
             let textIndex = await this.getTextIndex(0, tableIndex, $data);
             if (textIndex.match(RegEx.typeRegex)) {
                 sections.push({
-                    name: textIndex,
+                    order: sections.length,
+                    name: 'đại cương',
                     subjects: [],
                 });
             } else {
@@ -232,11 +233,71 @@ export class EducationProgramConfiguration {
                     .match(RegEx.multitypeRegex)
                     ?.at(2)
                     .split(':')
-                    .at(0);
-                sections.push({
-                    name: typeTitles,
-                    subjects: [],
-                });
+                    .at(0)
+                    .normalize('NFD');
+
+                //
+                if (typeTitles.includes('cơ sở ngành'.normalize('NFD')))
+                    sections.push({
+                        order: sections.length,
+                        name: 'cơ sở ngành',
+                        subjects: [],
+                    });
+                else if (
+                    typeTitles.includes('cơ sở nhóm ngành'.normalize('NFD'))
+                )
+                    sections.push({
+                        order: sections.length,
+                        name: 'cơ sở nhóm ngành',
+                        subjects: [],
+                    });
+                else if (typeTitles.includes('chuyên ngành'.normalize('NFD')))
+                    sections.push({
+                        order: sections.length,
+                        name: 'chuyên ngành',
+                        subjects: [],
+                    });
+                else if (typeTitles.includes('khác'.normalize('NFD')))
+                    sections.push({
+                        order: sections.length,
+                        name: 'khác',
+                        subjects: [],
+                    });
+                else if (typeTitles.includes('Thực tập'.normalize('NFD')))
+                    sections.push({
+                        order: sections.length,
+                        name: 'thực tập',
+                        subjects: [],
+                    });
+                else if (typeTitles.includes('đồ án'.normalize('NFD')))
+                    sections.push({
+                        order: sections.length,
+                        name: 'đồ án',
+                        subjects: [],
+                    });
+                else if (typeTitles.includes('Khóa luận'.normalize('NFD')))
+                    sections.push({
+                        order: sections.length,
+                        name: 'khoá luận',
+                        subjects: [],
+                    });
+                else if (
+                    typeTitles.includes(
+                        ' chuyên đề tốt nghiệp'.normalize('NFD'),
+                    )
+                )
+                    sections.push({
+                        order: sections.length,
+                        name: 'chuyên đề tốt nghiệp',
+                        subjects: [],
+                    });
+                //
+                else
+                    sections.push({
+                        order: sections.length,
+                        name: typeTitles + 1,
+                        subjects: [],
+                    });
 
                 for (
                     let tableElementIndex = 1;
@@ -270,9 +331,24 @@ export class EducationProgramConfiguration {
                         .trim();
 
                     if (code.match(RegEx.subjectRegex)) {
+                        let minimumOptionalCredit = null;
+                        if (
+                            type
+                                .toLowerCase()
+                                .normalize('NFD')
+                                .includes('tự chọn'.normalize('NFD'))
+                        ) {
+                            const creditRegex = /(\d+)\s?(TC|tc)/i;
+                            minimumOptionalCredit = parseInt(
+                                type.match(creditRegex)?.at(1) || '0',
+                            );
+                            // console.log({ type, minimumOptionalCredit });
+                        }
+
                         sections.at(-1).subjects.push({
                             code,
                             type,
+                            minimumOptionalCredit,
                             isRequired: false,
                         });
                     }

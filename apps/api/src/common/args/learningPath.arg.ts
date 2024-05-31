@@ -4,9 +4,9 @@ import { ArgsType, Field, registerEnumType } from '@nestjs/graphql';
 export class LearningPathArgs {
     @Field(() => LearningPathOptionEnum, {
         description: 'The keyword to get suitable subject codes',
-        nullable: true,
+        nullable: false,
     })
-    option?: LearningPathOptionEnum; //later
+    option: LearningPathOptionEnum; //later
 }
 
 export enum LearningPathOptionEnum {

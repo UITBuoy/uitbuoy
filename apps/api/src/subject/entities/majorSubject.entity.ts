@@ -2,13 +2,11 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import {
     Column,
     Entity,
-    JoinColumn,
     ManyToMany,
-    ManyToOne,
-    PrimaryColumn,
     PrimaryGeneratedColumn,
-    Relation,
+    Relation
 } from 'typeorm';
+import { KnowledgeBlock } from './knowledgeBlock';
 import type { Section } from './section.entity';
 
 @ObjectType()
@@ -48,4 +46,7 @@ export class MajorSubject {
 
     @ManyToMany('Section', 'subjects')
     sections: Relation<Section[]>;
+
+    @ManyToMany('KnowledgeBlock', 'subjects')
+    knowledgeBlocks: Relation<KnowledgeBlock[]>;
 }

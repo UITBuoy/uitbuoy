@@ -78,7 +78,7 @@ export class EventApiService {
 
         if (isComing)
             return eventList.filter(
-                (event) => event.timeusermidnight * 1000 > new Date().getTime(),
+                (event) => event.timestart * 1000 > new Date().getTime(),
             );
         return eventList;
     }

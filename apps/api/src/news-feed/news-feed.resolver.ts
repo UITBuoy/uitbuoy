@@ -1,4 +1,6 @@
+import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { PaginationArgs } from '@/common/args/pagination.arg';
+import { UseGuards } from '@nestjs/common';
 import {
     Args,
     Int,
@@ -8,12 +10,10 @@ import {
     ResolveField,
     Resolver,
 } from '@nestjs/graphql';
+import { NewsFeedFile } from './entities/news-feed-file';
+import { NewsFeedTag } from './entities/news-feed-tag.entity';
 import { NewsFeed } from './entities/news-feed.entity';
 import { NewsFeedService } from './news-feed.service';
-import { UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
-import { NewsFeedTag } from './entities/news-feed-tag.entity';
-import { NewsFeedFile } from './entities/news-feed-file';
 
 @Resolver(() => NewsFeed)
 export class NewsFeedResolver {
@@ -46,7 +46,7 @@ export class NewsFeedResolver {
         description: 'Crawl the most recent news',
     })
     async dailyCrawlNewsFeed() {
-        await this.newsFeedService.crawlData(0, 2);
+        await this.newsFeedService.crawlData(0, 1);
         return true;
     }
 
@@ -66,15 +66,27 @@ export class NewsFeedResolver {
         return news;
     }
 
+    @Query(() => NewsFeed, {
+        description: 'Retrieving news feed detail with title',
+    })
+    @UseGuards(JwtAuthGuard)
+    async newsFeedDetail(
+        @Args('title', { description: 'Title to find' })
+        title: string,
+    ) {
+        const news = await this.newsFeedService.findOne(title);
+        return news;
+    }
+
     @ResolveField(() => [NewsFeedTag])
     @UseGuards(JwtAuthGuard)
     async tags(@Parent() newsFeed: NewsFeed) {
-        return (await this.newsFeedService.findOne(newsFeed.id)).tags;
+        return (await this.newsFeedService.findOne(newsFeed.title)).tags;
     }
 
     @ResolveField(() => [NewsFeedFile])
     @UseGuards(JwtAuthGuard)
     async files(@Parent() newsFeed: NewsFeed) {
-        return (await this.newsFeedService.findOne(newsFeed.id)).files;
+        return (await this.newsFeedService.findOne(newsFeed.title)).files;
     }
 }

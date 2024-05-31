@@ -149,6 +149,7 @@ export function useUpdateEventNotification(
 
             if (events) {
                 events
+                    .slice()
                     .reverse()
                     .filter((event) =>
                         notifications.every(

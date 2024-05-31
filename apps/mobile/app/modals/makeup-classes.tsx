@@ -1,35 +1,27 @@
-import { useEffect, useState } from 'react';
 import { FlatList, RefreshControl, ScrollView, View } from 'react-native';
 import Animated, { FadeInUp, FadeOutUp } from 'react-native-reanimated';
 import UserMakeupClass from '../../src/components/UserMakeupClass';
-import { useUserMakeUpClassQuery } from '../../src/gql/graphql';
 import PreviewMakeupClassSkeleton from '../../src/skeletons/PreviewMakeupClassSkeleton';
+import { useMakeupClass } from '../../src/stores/makeup-class.store';
 
 export default function MakeupClass() {
-    const { data, loading, error, refetch } = useUserMakeUpClassQuery();
-    const [isLoading, setIsLoading] = useState(false);
-
-    useEffect(() => {
-        refetch();
-    }, []);
+    const { classes, refetch, loading } = useMakeupClass();
 
     return (
         <View className=" flex-1 bg-white">
             <ScrollView
                 refreshControl={
                     <RefreshControl
-                        refreshing={isLoading}
+                        refreshing={loading}
                         onRefresh={async () => {
-                            setIsLoading(true);
                             await refetch();
-                            setIsLoading(false);
                         }}
                     />
                 }
                 style={{ paddingTop: 20 }}
                 className=" flex-1"
             >
-                {loading || isLoading || !data?.makeUpClass ? (
+                {loading || loading || !classes ? (
                     <PreviewMakeupClassSkeleton />
                 ) : (
                     <Animated.View entering={FadeInUp} exiting={FadeOutUp}>
@@ -39,7 +31,7 @@ export default function MakeupClass() {
                                 gap: 8,
                             }}
                             scrollEnabled={false}
-                            data={data.makeUpClass}
+                            data={classes}
                             renderItem={({ item }) => (
                                 <UserMakeupClass makeupClass={item} />
                             )}

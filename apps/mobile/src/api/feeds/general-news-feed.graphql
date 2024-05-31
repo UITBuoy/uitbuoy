@@ -1,0 +1,20 @@
+query GeneralNewsFeed($limit: Int, $skip: Int, $tags: [String!]) {
+    newsFeed(limit: $limit, skip: $skip, tags: $tags) {
+        date
+        description
+        htmlContent
+        imageUrl
+        link
+        plainContent
+        title
+        view
+        tags {
+            description
+            name
+        }
+        files {
+            title
+            url
+        }
+    }
+}

@@ -26,6 +26,11 @@ import { LearningPathArgs } from '@/common/args/learningPath.arg';
 import { SubjectService } from '@/subject/services/subject.service';
 import { Subject } from '@/subject/entities/subject.entity';
 import { GiveLearningPathSubjectCodesResult } from '../dto/give-learning-path-subject-codes-result.dto';
+import {
+    ElectiveObjectArgs,
+    ElectiveSubjectsArgs,
+} from '@/common/args/electiveSubjects.arg';
+import { ElectiveSubjectsResult } from '../dto/elective-subject-result.dto copy';
 
 @Resolver(() => Course)
 export class CourseResolver {
@@ -37,6 +42,22 @@ export class CourseResolver {
         private readonly assignmentApiService: AssignmentApiService,
         private readonly subjectService: SubjectService,
     ) {}
+
+    @Query(() => [ElectiveSubjectsResult], {
+        description: 'Return all elective subjects recommend for user',
+    })
+    @UseGuards(JwtAuthGuard)
+    async recommendElectiveSubject(
+        @CurrentUser() user: User,
+        @Args() queryArgs: QueryArgs,
+        @Args() electiveObjectArgs: ElectiveObjectArgs,
+    ): Promise<ElectiveSubjectsResult[]> {
+        return this.courseService.recommendElectiveSubject(
+            user,
+            queryArgs,
+            electiveObjectArgs,
+        );
+    }
 
     @Query(() => [Subject], {
         description: 'Return all subjects recommend for user',
@@ -54,21 +75,25 @@ export class CourseResolver {
                 user,
                 queryArgs,
             );
-        const result: Subject[] = [];
-        for (
-            let i = 0;
-            i <
-            giveLearningPathSubjectCodesResult[learningPathArgs.option].length;
-            i++
-        ) {
-            result.push(
-                await this.subjectService.findSubjectDataByCode(
-                    giveLearningPathSubjectCodesResult[learningPathArgs.option][
-                        i
-                    ],
-                ),
+        // const result: Subject[] = [];
+        const result: Subject[] =
+            await this.subjectService.findSubjectsDataByCodes(
+                giveLearningPathSubjectCodesResult[learningPathArgs.option],
             );
-        }
+        // for (
+        //     let i = 0;
+        //     i <
+        //     giveLearningPathSubjectCodesResult[learningPathArgs.option].length;
+        //     i++
+        // ) {
+        //     result.push(
+        //         await this.subjectService.findSubjectDataByCode(
+        //             giveLearningPathSubjectCodesResult[learningPathArgs.option][
+        //                 i
+        //             ],
+        //         ),
+        //     );
+        // }
         return result;
     }
 
@@ -96,8 +121,60 @@ export class CourseResolver {
 
     @Query(() => [Course], { description: 'Return all course of current user' })
     @UseGuards(JwtAuthGuard)
+    // async userCourses(@CurrentUser() user: User, @Args() queryArgs: QueryArgs) {
+    //     return this.courseService.userCourses(user, queryArgs);
+    // }
     async userCourses(@CurrentUser() user: User, @Args() queryArgs: QueryArgs) {
-        return this.courseService.userCourses(user, queryArgs);
+        if (queryArgs.isNew) {
+            const apiCourses = (
+                await this.courseApiService.findAllCoursesOfUser({
+                    ...user,
+                    ...queryArgs,
+                })
+            ).map((course) => ({ ...course, users: [user] }));
+            await this.courseService.save(apiCourses);
+
+            return (
+                queryArgs.isRecent
+                    ? apiCourses.filter(
+                          ({ startdate }) =>
+                              moment().diff(
+                                  moment(new Date(startdate * 1000)),
+                                  'months',
+                                  true,
+                              ) < 5,
+                      )
+                    : apiCourses
+            ).map((course) => ({
+                ...course,
+                display_name: course.fullname.split(' - ').at(0),
+            }));
+        }
+
+        const courses = await this.courseService.findAllCoursesOfUser(
+            user,
+            queryArgs,
+        );
+
+        if (queryArgs.isRecent) {
+            return courses
+                .filter(
+                    ({ startdate }) =>
+                        moment().diff(
+                            moment(new Date(startdate * 1000)),
+                            'months',
+                            true,
+                        ) < 5,
+                )
+                .map((course) => ({
+                    ...course,
+                    display_name: course.fullname.split(' - ').at(0),
+                }));
+        }
+        return courses.map((course) => ({
+            ...course,
+            display_name: course.fullname.split(' - ').at(0),
+        }));
     }
 
     @Query(() => Course, {
@@ -121,6 +198,7 @@ export class CourseResolver {
                 apiCourse.contacts.map((contact) => contact.id),
             );
             await this.courseService.save(apiCourse);
+            apiCourse.display_name = apiCourse.fullname.split(' - ').at(0);
             return apiCourse;
         }
 

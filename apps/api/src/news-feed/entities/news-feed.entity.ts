@@ -5,6 +5,7 @@ import {
     JoinTable,
     ManyToMany,
     OneToMany,
+    PrimaryColumn,
     PrimaryGeneratedColumn,
     Relation,
 } from 'typeorm';
@@ -15,11 +16,7 @@ import type { NewsFeedTag } from './news-feed-tag.entity';
 @Entity()
 export class NewsFeed {
     @Field()
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
-
-    @Field()
-    @Column()
+    @PrimaryColumn()
     title: string;
 
     @Field(() => Float)
@@ -52,7 +49,7 @@ export class NewsFeed {
 
     @ManyToMany('NewsFeedTag', 'newsFeeds', { cascade: true })
     @JoinTable()
-    tags: Relation<NewsFeedTag>;
+    tags: Relation<NewsFeedTag[]>;
 
     @OneToMany('NewsFeedFile', 'newsFeed', { cascade: true })
     files: Relation<NewsFeedFile[]>;

@@ -11,31 +11,27 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import SLANG_TO_THE_MOON from '../../assets/slang-to-the-moon.png';
 import NativeButton from '../../src/components/NativeButton/NativeButton';
 import ProgressText from '../../src/components/ProgressText';
-import {
-    useUserCoursesLazyQuery,
-    useUserEventsLazyQuery,
-} from '../../src/gql/graphql';
+import { useUserCoursesLazyQuery } from '../../src/gql/graphql';
 import { useAuth } from '../../src/stores/auth.store';
+import { useEvents } from '../../src/stores/event.store';
 
 export default function SignInResolve() {
     const { isLogin, authData } = useAuth();
     const [getCourses, { data: coursesData, loading: coursesLoading }] =
         useUserCoursesLazyQuery({
-            fetchPolicy: 'no-cache',
+            fetchPolicy: 'network-only',
         });
-    const [getEvents, { data: eventsData, loading: eventsLoading }] =
-        useUserEventsLazyQuery({
-            fetchPolicy: 'no-cache',
-        });
+    const { events, refetch, loading } = useEvents();
 
     useEffect(() => {
         if (isLogin) {
+            refetch();
             getCourses({
                 variables: {
                     isNew: true,
                 },
                 onCompleted(data) {
-                    getEvents({ variables: { isNew: true } });
+                    refetch();
                 },
             });
         }
@@ -85,15 +81,15 @@ export default function SignInResolve() {
                             exiting={FadeOut}
                         >
                             <ProgressText
-                                loaded={!!eventsData}
-                                loading={eventsLoading || !isLogin}
+                                loaded={!!events}
+                                loading={loading || !isLogin}
                                 title="Lấy danh sách bài tập"
                                 description="Tải danh sách bài tập của bạn từ hệ thống course của UIT"
                             />
                         </Animated.View>
                     </View>
                 </View>
-                {eventsData ? (
+                {events ? (
                     <Animated.View
                         entering={FadeInUp}
                         exiting={FadeOutUp}

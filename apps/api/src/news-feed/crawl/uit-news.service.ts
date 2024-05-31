@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import axios from 'axios';
 import { load } from 'cheerio';
-import { Repository } from 'typeorm';
+import { DeepPartial, Repository } from 'typeorm';
 import { NewsFeed } from '../entities/news-feed.entity';
 import { extractDateFromCreatedDateString } from '../utils/converter';
 import { extractUitNotification } from '../utils/extract-uit-notification';
@@ -16,7 +16,7 @@ export class UITNewsService {
     ) {}
 
     async crawlData(startPage: number = 0, pageNum: number = 1) {
-        const news = [];
+        const news: DeepPartial<NewsFeed>[] = [];
 
         for (let i = startPage; i < startPage + pageNum; i++) {
             const url = `https://student.uit.edu.vn/thong-bao-chung?page=${i}`;

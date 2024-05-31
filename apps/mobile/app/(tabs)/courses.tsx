@@ -2,9 +2,9 @@ import { Spinner } from '@gluestack-ui/themed';
 import { useEffect } from 'react';
 import { RefreshControl, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import CourseItem from '../../src/components/CourseItem/CourseItem';
+import CourseItem from '../../src/components/CourseItem';
 import CourseSearch from '../../src/components/CourseSearch/CourseSearch';
-import PageHeader from '../../src/components/PageHeader/PageHeader';
+import PageHeader from '../../src/components/PageHeader';
 import { useUserCoursesLazyQuery } from '../../src/gql/graphql';
 import CourseListSkeleton from '../../src/skeletons/CourseListSkeleton';
 import Animated, { FadeInLeft, FadeOutLeft } from 'react-native-reanimated';
@@ -12,14 +12,15 @@ import { useRecentCourse } from '../../src/stores/recent-course.store';
 import RecentCourseItem from '../../src/components/RecentCourseItem';
 
 export default function Page() {
-    const [fetchCourses, { data: courses, loading, error }] =
+    const [fetchCourses, { data: courses, loading, error, refetch }] =
         useUserCoursesLazyQuery();
 
     const { recentCourses } = useRecentCourse();
 
     useEffect(() => {
         fetchCourses({
-            variables: { isNew: false, isRecent: true },
+            variables: { isNew: true, isRecent: true },
+            fetchPolicy: 'cache-first',
         });
     }, []);
 
@@ -36,7 +37,7 @@ export default function Page() {
                             onRefresh={() => {
                                 fetchCourses({
                                     variables: { isNew: true, isRecent: true },
-                                    fetchPolicy: 'no-cache',
+                                    fetchPolicy: 'network-only',
                                 });
                             }}
                         />

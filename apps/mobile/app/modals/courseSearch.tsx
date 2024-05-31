@@ -21,7 +21,7 @@ export default function Modal() {
     const { recentSearchStrings, addSearchString } = useRecentSearch();
 
     const { data, loading, error } = useSearchCoursesQuery({
-        variables: { keyword },
+        variables: { keyword, isNew: false, isRecent: false },
         skip: !keyword,
     });
 

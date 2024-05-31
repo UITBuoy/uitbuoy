@@ -31,6 +31,9 @@ import { NoteModule } from './note/note.module';
 import { SubjectModule } from './subject/subject.module';
 import { UserModule } from './user/user.module';
 import { NewsFeedModule } from './news-feed/news-feed.module';
+import { NotificationModule } from './notification/notification.module';
+import { LearningPathModule } from './learning-path/learning-path.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
     imports: [
@@ -180,6 +183,9 @@ import { NewsFeedModule } from './news-feed/news-feed.module';
         MakeUpClassModule,
         NoteModule,
         NewsFeedModule,
+        NotificationModule,
+        LearningPathModule,
+        ChatModule,
     ],
     controllers: [AppController],
     providers: [

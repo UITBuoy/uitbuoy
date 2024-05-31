@@ -1,0 +1,62 @@
+query Subject($code: String!) {
+    subject(code: $code) {
+        code
+        department
+        equivalentCode
+        isActive
+        nameEN
+        nameVN
+        oldCode
+        practicalCredit
+        previousCode
+        requiredCode
+        summary
+        theoreticalCredit
+        type
+        equivalentSubjects {
+            code
+            department
+            equivalentCode
+            isActive
+            nameEN
+            nameVN
+            oldCode
+            practicalCredit
+            previousCode
+            requiredCode
+            summary
+            theoreticalCredit
+            type
+        }
+        previousSubjects {
+            code
+            department
+            equivalentCode
+            isActive
+            nameEN
+            nameVN
+            oldCode
+            practicalCredit
+            previousCode
+            requiredCode
+            summary
+            theoreticalCredit
+            type
+        }
+        requiredSubjects {
+            code
+            department
+            equivalentCode
+            isActive
+            nameEN
+            nameVN
+            oldCode
+            practicalCredit
+            previousCode
+            requiredCode
+            summary
+            theoreticalCredit
+            type
+        }
+    }
+}

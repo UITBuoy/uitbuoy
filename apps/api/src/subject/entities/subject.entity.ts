@@ -52,7 +52,12 @@ export class Subject {
     @Column({ nullable: true })
     practicalCredit: number;
 
-    @Field(() => String, { nullable: true }) // Graphql
+    @Field(() => String, { nullable: true })
     @Column({ nullable: true })
     summary: string;
+
+    @Field(() => Int, { nullable: true })
+    priority?: number;
+
+    additionSubjects?: string[];
 }

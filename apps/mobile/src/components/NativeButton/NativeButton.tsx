@@ -4,6 +4,7 @@ export default function NativeButton({
     className,
     children,
     onPress,
+    onLongPress,
     opacity = 1,
     borderRadius = 12,
     disabled = false,
@@ -19,6 +20,7 @@ export default function NativeButton({
         >
             <TouchableNativeFeedback
                 disabled={disabled}
+                onLongPress={onLongPress}
                 onPress={onPress}
                 background={TouchableNativeFeedback.Ripple('#aaa', true)}
             >

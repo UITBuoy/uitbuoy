@@ -37,7 +37,7 @@ export default function Page() {
     const [syncEvent] = useSyncEventMutation();
 
     useEffect(() => {
-        refetch({ fetchPolicy: 'no-cache' });
+        refetch({ fetchPolicy: 'cache-and-network' });
     }, []);
 
     return (
@@ -48,7 +48,7 @@ export default function Page() {
                         <RefreshControl
                             refreshing={loading}
                             onRefresh={() =>
-                                refetch({ fetchPolicy: 'no-cache' })
+                                refetch({ fetchPolicy: 'network-only' })
                             }
                         />
                     }

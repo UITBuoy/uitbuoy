@@ -35,8 +35,16 @@ export class UserService {
 
     async findYear(user: User) {
         const responseUser = await this.findById(user.id);
-        return Math.floor(
-            parseInt(responseUser.username) / 1000000,
-        ).toString();
+        return Math.floor(parseInt(responseUser.username) / 1000000).toString();
+    }
+
+    async findSemester(user: User) {
+        const currentYear = new Date().getFullYear() - 2000;
+        const userYear = parseInt(user.username.slice(0, 2));
+
+        const currentMonth = new Date().getMonth();
+        if (currentMonth >= 2 && currentMonth <= 8)
+            return (currentYear - userYear) * 2;
+        return (currentYear - userYear) * 2 + 1;
     }
 }
