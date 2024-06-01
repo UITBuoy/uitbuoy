@@ -13,41 +13,10 @@ import { AppService } from './app.service';
 import { CommonModule } from './common/common.module';
 import { EnvironmentType } from './config/type';
 import { LoggerModule } from './logger/logger.module';
+import { NewsFeedModule } from './news-feed/news-feed.module';
 
 @Module({
     imports: [
-        GraphQLModule.forRootAsync<ApolloDriverConfig>({
-            imports: [ConfigModule],
-            inject: [ConfigService],
-            driver: ApolloDriver,
-            useFactory: async (configService: ConfigService) => ({
-                autoSchemaFile: join(
-                    configService.get<string>('ENVIRONMENT') === 'development'
-                        ? process.cwd()
-                        : '/tmp',
-                    '/schema.gql',
-                ),
-                playground: {
-                    settings: {
-                        'request.credentials': 'include',
-                    },
-                },
-                // cors: {
-                //     origin: '*',
-                //     credentials: true,
-                // },
-                context: ({ req, res }) => ({
-                    req,
-                    res,
-                }),
-                sortSchema: true,
-                formatError: (error) => ({
-                    message: error.message,
-                    ...error.extensions,
-                    path: error.path,
-                }),
-            }),
-        }),
         ConfigModule.forRoot({
             isGlobal: true,
             envFilePath: [
@@ -149,6 +118,7 @@ import { LoggerModule } from './logger/logger.module';
         }),
         LoggerModule,
         CommonModule,
+        NewsFeedModule,
     ],
     controllers: [AppController],
     providers: [AppService, AppResolver],

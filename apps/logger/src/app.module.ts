@@ -8,6 +8,7 @@ import * as winston from 'winston';
 import { WinstonModule } from 'nest-winston';
 import * as winstonMongoDB from 'winston-mongodb';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ecsFormat } from '@elastic/ecs-winston-format';
 
 @Module({
     imports: [
@@ -62,6 +63,7 @@ import { MongooseModule } from '@nestjs/mongoose';
             ],
             inject: [ConfigService],
             useFactory: (configService: ConfigService) => ({
+                format: ecsFormat({ convertReqRes: true }),
                 transports: [
                     new winston.transports.Console({
                         format: winston.format.combine(
