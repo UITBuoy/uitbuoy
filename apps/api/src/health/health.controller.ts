@@ -9,11 +9,12 @@ import {
 export class HealthController {
     constructor(
         private health: HealthCheckService,
-        private db: TypeOrmHealthIndicator,
+        // private db: TypeOrmHealthIndicator,
     ) {}
 
     @Get()
     check() {
-        return this.health.check([() => this.db.pingCheck('database')]);
+        // return this.health.check([() => this.db.pingCheck('database')]);
+        return this.health.check([]);
     }
 }
