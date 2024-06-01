@@ -13,9 +13,8 @@ export class AppController {
     }
 
     @EventPattern('course.crawl')
-    crawlCourse(data: any) {
-        console.log({ data });
-        return data;
+    crawlCourse(token: string) {
+        return token;
     }
 }
 

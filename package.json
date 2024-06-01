@@ -4,7 +4,7 @@
   "scripts": {
     "build": "turbo build",
     "dev:android": "turbo dev --filter=api --filter=mobile",
-    "dev:api": "turbo dev --filter=api --filter=moodle-api",
+    "dev:api": "turbo dev --filter=api --filter=moodle-api --filter=logger",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },

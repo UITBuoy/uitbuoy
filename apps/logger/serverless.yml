@@ -1,0 +1,30 @@
+service: uitbuoy
+
+plugins:
+  - serverless-offline
+
+useDotenv: true
+
+custom:
+  serverless-offline:
+    httpPort: 3001
+
+provider:
+  profile: production
+  name: aws
+  region: ap-southeast-1
+  role: arn:aws:iam::519048229161:role/uitbuoy_admin
+  runtime: nodejs20.x
+
+functions:
+  uitbuoy:
+    handler: dist/serverless.handler
+    events:
+      - http:
+          cors: true
+          method: ANY
+          path: /
+      - http:
+          cors: true
+          method: ANY
+          path: "{proxy+}"
