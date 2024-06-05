@@ -26,7 +26,7 @@ export default function CourseItem({
                 addRecentCourse({ display_name, shortname, id });
                 router.push({
                     pathname: `/modals/courseDetail`,
-                    params: { display_name, shortname, id },
+                    params: { display_name, shortname, id, idnumber },
                 });
             }}
         >
