@@ -132,7 +132,7 @@ services:
             - ${KIBANA_PORT}:5601
         environment:
             - SERVERNAME=kibana
-            - ELASTICSEARCH_HOSTS=https://es01:9200
+            - ELASTICSEARCH_HOSTS=http://es01:9200
             - ELASTICSEARCH_USERNAME=kibana_system
             - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
             - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=config/certs/ca/ca.crt
@@ -180,13 +180,13 @@ services:
         volumes:
             - certs:/usr/share/filebeat/certs
             - filebeatdata01:/usr/share/filebeat/data
-            - './filebeat_ingest_data/:/usr/share/filebeat/ingest_data/'
+            - '../filebeat_ingest_data/:/usr/share/filebeat/ingest_data/'
             - './filebeat.yml:/usr/share/filebeat/filebeat.yml:ro'
             - '/var/lib/docker/containers:/var/lib/docker/containers:ro'
             - '/var/run/docker.sock:/var/run/docker.sock:ro'
         environment:
             - ELASTIC_USER=elastic
             - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-            - ELASTIC_HOSTS=https://es01:9200
+            - ELASTIC_HOSTS=http://es01:9200
             - KIBANA_HOSTS=http://kibana:5601
             - LOGSTASH_HOSTS=http://logstash01:9600

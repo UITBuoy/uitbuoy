@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@elastic/ecs-winston-format": "^1.5.3",
+    "@elastic/elasticsearch": "^8.13.1",
     "@nestjs/microservices": "^10.3.8",
     "@nestjs/terminus": "^10.2.3",
     "apollo-link-token-refresh": "^0.6.1",
@@ -27,7 +28,8 @@
     "jwt-decode": "^4.0.0",
     "kafkajs": "^2.2.4",
     "moment": "^2.30.1",
-    "serverless": "^3.38.0"
+    "serverless": "^3.38.0",
+    "winston-elasticsearch": "^0.19.0"
   },
   "resolutions": {
     "graphql": "^16.8.1"

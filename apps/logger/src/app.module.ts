@@ -9,6 +9,8 @@ import { WinstonModule } from 'nest-winston';
 import * as winstonMongoDB from 'winston-mongodb';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ecsFormat } from '@elastic/ecs-winston-format';
+import { ElasticsearchTransport } from 'winston-elasticsearch';
+import { Client } from '@elastic/elasticsearch';
 
 @Module({
     imports: [
@@ -105,6 +107,12 @@ import { ecsFormat } from '@elastic/ecs-winston-format';
                             winston.format.json(),
                             winston.format.metadata(),
                         ),
+                    }),
+                    new ElasticsearchTransport({
+                        client: new Client({
+                            node: 'http://localhost:9200',
+                        }),
+                        level: 'info',
                     }),
                 ],
             }),
