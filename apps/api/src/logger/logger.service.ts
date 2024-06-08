@@ -1,15 +1,29 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices';
+import { Client, ClientKafka, Transport } from '@nestjs/microservices';
 
 @Injectable()
 export class LoggerService {
+    @Client({
+        transport: Transport.KAFKA,
+        options: {
+            client: {
+                clientId: 'logger',
+                brokers: ['localhost:29092'],
+            },
+            consumer: {
+                groupId: 'logger-consumer',
+            },
+        },
+    })
+    client: ClientKafka;
+
     constructor(
         @Inject('LOGGER_SERVICE') private readonly logger: ClientKafka,
     ) {}
 
     log(message: string, meta?: any, context?: string) {
         this.logger.emit('log', {
-            service: 'moodle-api',
+            service: 'api',
             level: 'log',
             message,
             context,
@@ -19,7 +33,7 @@ export class LoggerService {
 
     info(message: string, meta?: any, context?: string) {
         this.logger.emit('log', {
-            service: 'moodle-api',
+            service: 'api',
             level: 'info',
             message,
             context,
@@ -29,7 +43,7 @@ export class LoggerService {
 
     error(message: string, context?: string, meta?: Record<string, any>) {
         this.logger.emit('log', {
-            service: 'moodle-api',
+            service: 'api',
             level: 'error',
             message,
             context,
@@ -39,7 +53,7 @@ export class LoggerService {
 
     warn(message: string, meta?: any, context?: string) {
         this.logger.emit('log', {
-            service: 'moodle-api',
+            service: 'api',
             level: 'warn',
             message,
             context,
@@ -49,7 +63,7 @@ export class LoggerService {
 
     debug(message: string, meta?: any, context?: string) {
         this.logger.emit('log', {
-            service: 'moodle-api',
+            service: 'api',
             level: 'debug',
             message,
             context,

@@ -111,8 +111,19 @@ import { Client } from '@elastic/elasticsearch';
                     new ElasticsearchTransport({
                         client: new Client({
                             node: 'http://localhost:9200',
+                            auth: {
+                                username:
+                                    configService.get<string>(
+                                        'ELASTIC_USERNAME',
+                                    ),
+                                password:
+                                    configService.get<string>(
+                                        'ELASTIC_PASSWORD',
+                                    ),
+                            },
                         }),
                         level: 'info',
+                        dataStream: true,
                     }),
                 ],
             }),

@@ -10,6 +10,8 @@ async function bootstrap() {
     const logger = app.get(LoggerService);
     const configService = app.get(ConfigService);
 
+    logger.info('Api service started');
+
     app.useGlobalInterceptors(new LoggingInterceptor(logger));
     app.enableShutdownHooks();
     app.useLogger(logger);
