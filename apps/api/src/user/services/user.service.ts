@@ -38,6 +38,33 @@ export class UserService {
         return Math.floor(parseInt(responseUser.username) / 1000000).toString();
     }
 
+    async findByKeyword(userKeyword: string) {
+        const keyword = userKeyword?.trim();
+
+        const response = await this.repo
+            .createQueryBuilder('user')
+            .where(
+                keyword
+                    ? `to_tsquery('${keyword.split(' ').join(' & ')}') @@ to_tsvector(unaccent(user.fullname))`
+                    : 'true',
+                { keyword },
+            )
+            .orWhere(
+                keyword
+                    ? `unaccent(user.fullname) ilike ('%' || unaccent(:keyword) || '%')`
+                    : 'true',
+                { keyword },
+            )
+            .orWhere(
+                keyword
+                    ? `unaccent(user.username) ilike ('%' || unaccent(:keyword) || '%')`
+                    : 'true',
+                { keyword },
+            )
+            .getMany();
+        return response;
+    }
+
     async findSemester(user: User) {
         const currentYear = new Date().getFullYear() - 2000;
         const userYear = parseInt(user.username.slice(0, 2));

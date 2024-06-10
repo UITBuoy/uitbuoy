@@ -23,6 +23,11 @@ export class UserResolver {
         return user;
     }
 
+    @Query(() => [User])
+    users(@Args('keyword') keyword: string) {
+        return this.userService.findByKeyword(keyword);
+    }
+
     @Query(() => String)
     @UseGuards(JwtAuthGuard)
     async year(@CurrentUser() user: User) {

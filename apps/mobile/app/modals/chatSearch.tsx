@@ -4,17 +4,17 @@ import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Animated, { FadeInLeft, FadeOutLeft } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDebounceValue } from 'usehooks-ts';
-import CourseSearchResultItem from '../../src/components/CourseSearchResultItem';
 import TextField from '../../src/components/TextField/TextField';
-import { useSearchCoursesQuery } from '../../src/gql/graphql';
+import UserSearchResultItem from '../../src/components/UserSearchResultItem';
+import { useSearchUsersQuery } from '../../src/gql/graphql';
 import CourseSearchListSkeleton from '../../src/skeletons/CourseSearchListSkeleton';
 
 export default function Modal() {
     const [text, setText] = useState('');
     const [keyword] = useDebounceValue<string>(text || '', 300);
 
-    const { data, loading, error } = useSearchCoursesQuery({
-        variables: { keyword, isNew: false, isRecent: false },
+    const { data, loading, error } = useSearchUsersQuery({
+        variables: { keyword },
         skip: !keyword,
     });
 
@@ -30,7 +30,7 @@ export default function Modal() {
                             fieldClassName=" text-sm"
                             title="Search"
                             type="text"
-                            placeholder="Search for courses..."
+                            placeholder="Search for user..."
                         />
                     </View>
                     <TouchableOpacity
@@ -47,16 +47,16 @@ export default function Modal() {
                         {loading ? (
                             <CourseSearchListSkeleton />
                         ) : (
-                            data?.userCourses.map((course, index) => (
+                            data?.users.map((user, index) => (
                                 <Animated.View
-                                    key={course.id}
+                                    key={user.id}
                                     entering={FadeInLeft.delay(
                                         (index + 1) * 100,
                                     )}
                                     exiting={FadeOutLeft}
                                 >
-                                    <CourseSearchResultItem
-                                        {...course}
+                                    <UserSearchResultItem
+                                        {...user}
                                         onPress={() => {}}
                                     />
                                 </Animated.View>
