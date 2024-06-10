@@ -11,6 +11,7 @@ import TextField from '../../src/components/TextField/TextField';
 import { useRoomsQuery } from '../../src/gql/graphql';
 import SearchIcon from '../../src/icons/search';
 import ChatListSkeleton from '../../src/skeletons/ChatListSkeleton';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 export default function Page() {
     const navigation = useNavigation();
@@ -44,7 +45,11 @@ export default function Page() {
             {loading ? (
                 <ChatListSkeleton></ChatListSkeleton>
             ) : (
-                <View className=" flex-1 mt-4">
+                <Animated.View
+                    entering={FadeIn}
+                    exiting={FadeOut}
+                    className=" flex-1 mt-4"
+                >
                     <FlatList
                         className=" flex-1"
                         data={[...data.rooms].sort(
@@ -61,7 +66,7 @@ export default function Page() {
                             />
                         }
                     />
-                </View>
+                </Animated.View>
             )}
         </View>
     );
