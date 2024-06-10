@@ -63,6 +63,7 @@ export default function Page() {
                         <PrimaryButton
                             onPress={() => {
                                 setContent('');
+                                if (!profile) return;
                                 socket.emit('chat', {
                                     content,
                                     senderId: profile.profile.id.toString(),
