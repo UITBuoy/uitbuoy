@@ -1,6 +1,11 @@
 import { router, useNavigation } from 'expo-router';
 import React, { useEffect } from 'react';
-import { FlatList, TouchableNativeFeedback, View } from 'react-native';
+import {
+    FlatList,
+    RefreshControl,
+    TouchableNativeFeedback,
+    View,
+} from 'react-native';
 import RoomItem from '../../src/components/RoomItem';
 import TextField from '../../src/components/TextField/TextField';
 import { useRoomsQuery } from '../../src/gql/graphql';
@@ -9,7 +14,9 @@ import SearchIcon from '../../src/icons/search';
 export default function Page() {
     const navigation = useNavigation();
 
-    const { data, loading } = useRoomsQuery({ fetchPolicy: 'network-only' });
+    const { data, loading, refetch } = useRoomsQuery({
+        fetchPolicy: 'network-only',
+    });
 
     useEffect(() => {
         navigation.setOptions({ title: 'Nhắn tin' });
@@ -36,11 +43,22 @@ export default function Page() {
             {loading ? (
                 <></>
             ) : (
-                <View className=" mt-4">
+                <View className=" flex-1 mt-4">
                     <FlatList
-                        data={data.rooms}
+                        className=" flex-1"
+                        data={[...data.rooms].sort(
+                            (a, b) => b.lastMessage.date - a.lastMessage.date,
+                        )}
                         renderItem={({ item }) => <RoomItem room={item} />}
                         keyExtractor={(item) => item.id}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={loading}
+                                onRefresh={() => {
+                                    refetch();
+                                }}
+                            />
+                        }
                     />
                 </View>
             )}
