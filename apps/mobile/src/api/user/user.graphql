@@ -1,0 +1,19 @@
+query SearchUsers($keyword: String!) {
+    users(keyword: $keyword) {
+        auth
+        city
+        confirmed
+        country
+        department
+        email
+        firstaccess
+        fullname
+        id
+        lang
+        lastaccess
+        mailformat
+        username
+        profileimageurlsmall
+        profileimageurl
+    }
+}

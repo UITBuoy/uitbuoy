@@ -602,6 +602,7 @@ export type Query = {
   userEducationProgram: EducationProgram;
   /** All events of current user */
   userEvents: Array<EventEntity>;
+  users: Array<User>;
   year: Scalars['String']['output'];
 };
 
@@ -718,6 +719,11 @@ export type QueryUserEventsArgs = {
   isNew?: InputMaybe<Scalars['Boolean']['input']>;
   isRecent?: InputMaybe<Scalars['Boolean']['input']>;
   keyword?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryUsersArgs = {
+  keyword: Scalars['String']['input'];
 };
 
 export type Room = {
@@ -981,6 +987,13 @@ export type SubjectQueryVariables = Exact<{
 
 
 export type SubjectQuery = { __typename?: 'Query', subject?: { __typename?: 'Subject', code: string, department: string, equivalentCode?: string | null, isActive: boolean, nameEN: string, nameVN: string, oldCode?: string | null, practicalCredit: number, previousCode?: string | null, requiredCode?: string | null, summary?: string | null, theoreticalCredit: number, type: string, equivalentSubjects: Array<{ __typename?: 'Subject', code: string, department: string, equivalentCode?: string | null, isActive: boolean, nameEN: string, nameVN: string, oldCode?: string | null, practicalCredit: number, previousCode?: string | null, requiredCode?: string | null, summary?: string | null, theoreticalCredit: number, type: string }>, previousSubjects: Array<{ __typename?: 'Subject', code: string, department: string, equivalentCode?: string | null, isActive: boolean, nameEN: string, nameVN: string, oldCode?: string | null, practicalCredit: number, previousCode?: string | null, requiredCode?: string | null, summary?: string | null, theoreticalCredit: number, type: string }>, requiredSubjects: Array<{ __typename?: 'Subject', code: string, department: string, equivalentCode?: string | null, isActive: boolean, nameEN: string, nameVN: string, oldCode?: string | null, practicalCredit: number, previousCode?: string | null, requiredCode?: string | null, summary?: string | null, theoreticalCredit: number, type: string }> } | null };
+
+export type SearchUsersQueryVariables = Exact<{
+  keyword: Scalars['String']['input'];
+}>;
+
+
+export type SearchUsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', auth?: string | null, city?: string | null, confirmed?: string | null, country?: string | null, department?: string | null, email: string, firstaccess?: number | null, fullname: string, id?: number | null, lang?: string | null, lastaccess?: number | null, mailformat?: string | null, username: string, profileimageurlsmall?: string | null, profileimageurl?: string | null }> };
 
 
 export const AddGoogleUserDocument = gql`
@@ -2150,4 +2163,61 @@ export type SubjectSuspenseQueryHookResult = ReturnType<typeof useSubjectSuspens
 export type SubjectQueryResult = Apollo.QueryResult<SubjectQuery, SubjectQueryVariables>;
 export function refetchSubjectQuery(variables: SubjectQueryVariables) {
       return { query: SubjectDocument, variables: variables }
+    }
+export const SearchUsersDocument = gql`
+    query SearchUsers($keyword: String!) {
+  users(keyword: $keyword) {
+    auth
+    city
+    confirmed
+    country
+    department
+    email
+    firstaccess
+    fullname
+    id
+    lang
+    lastaccess
+    mailformat
+    username
+    profileimageurlsmall
+    profileimageurl
+  }
+}
+    `;
+
+/**
+ * __useSearchUsersQuery__
+ *
+ * To run a query within a React component, call `useSearchUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchUsersQuery({
+ *   variables: {
+ *      keyword: // value for 'keyword'
+ *   },
+ * });
+ */
+export function useSearchUsersQuery(baseOptions: Apollo.QueryHookOptions<SearchUsersQuery, SearchUsersQueryVariables> & ({ variables: SearchUsersQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchUsersQuery, SearchUsersQueryVariables>(SearchUsersDocument, options);
+      }
+export function useSearchUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchUsersQuery, SearchUsersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchUsersQuery, SearchUsersQueryVariables>(SearchUsersDocument, options);
+        }
+export function useSearchUsersSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<SearchUsersQuery, SearchUsersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<SearchUsersQuery, SearchUsersQueryVariables>(SearchUsersDocument, options);
+        }
+export type SearchUsersQueryHookResult = ReturnType<typeof useSearchUsersQuery>;
+export type SearchUsersLazyQueryHookResult = ReturnType<typeof useSearchUsersLazyQuery>;
+export type SearchUsersSuspenseQueryHookResult = ReturnType<typeof useSearchUsersSuspenseQuery>;
+export type SearchUsersQueryResult = Apollo.QueryResult<SearchUsersQuery, SearchUsersQueryVariables>;
+export function refetchSearchUsersQuery(variables: SearchUsersQueryVariables) {
+      return { query: SearchUsersDocument, variables: variables }
     }
