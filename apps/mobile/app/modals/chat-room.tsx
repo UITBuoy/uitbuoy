@@ -20,7 +20,7 @@ export default function Page() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [content, setContent] = useState<string>();
 
-    const { data, loading } = useMessagesQuery({
+    const { data, loading, refetch } = useMessagesQuery({
         variables: { id: room.id },
         fetchPolicy: 'network-only',
     });
@@ -34,6 +34,21 @@ export default function Page() {
         } else navigation.setOptions({ title: 'Nhắn tin' });
     }, [data]);
 
+    useEffect(() => {
+        if (!profile) return;
+
+        const listener = socket.on(
+            `chat:${profile.profile.id.toString()}`,
+            (data) => {
+                setMessages((prev) => [data, ...prev]);
+            },
+        );
+
+        return () => {
+            socket.removeListener(`chat:${profile.profile.id.toString()}`);
+        };
+    }, [profile]);
+
     return (
         <View className=" flex-1 bg-white pt-0">
             {loading ? (
@@ -41,7 +56,7 @@ export default function Page() {
             ) : (
                 <View className=" flex-1" style={{ paddingBottom: 16 }}>
                     <FlatList
-                        data={[...data.messages].reverse()}
+                        data={[...messages].reverse()}
                         renderItem={({ item }) => (
                             <MessageItem message={item} />
                         )}
@@ -69,6 +84,16 @@ export default function Page() {
                                     senderId: profile.profile.id.toString(),
                                     receiverId: room.id,
                                 } as Message);
+                                setMessages((prev) => [
+                                    {
+                                        id: content,
+                                        content,
+                                        senderId: profile.profile.id.toString(),
+                                        receiverId: room.id,
+                                        date: new Date().getTime(),
+                                    },
+                                    ...prev,
+                                ]);
                             }}
                         >
                             <Text className=" text-white py-2 font-semibold">
