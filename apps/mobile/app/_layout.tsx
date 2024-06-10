@@ -67,6 +67,14 @@ function Layout() {
                         }}
                     />
                     <Stack.Screen
+                        name="modals/chatSearch"
+                        options={{
+                            headerShown: false,
+                            presentation: 'modal',
+                            animation: 'fade_from_bottom',
+                        }}
+                    />
+                    <Stack.Screen
                         name="modals/courseDetail"
                         options={{
                             title: 'Detail course',
