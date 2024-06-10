@@ -10,6 +10,7 @@ import RoomItem from '../../src/components/RoomItem';
 import TextField from '../../src/components/TextField/TextField';
 import { useRoomsQuery } from '../../src/gql/graphql';
 import SearchIcon from '../../src/icons/search';
+import ChatListSkeleton from '../../src/skeletons/ChatListSkeleton';
 
 export default function Page() {
     const navigation = useNavigation();
@@ -41,7 +42,7 @@ export default function Page() {
                 </View>
             </TouchableNativeFeedback>
             {loading ? (
-                <></>
+                <ChatListSkeleton></ChatListSkeleton>
             ) : (
                 <View className=" flex-1 mt-4">
                     <FlatList
